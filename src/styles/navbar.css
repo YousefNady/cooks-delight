@@ -1,0 +1,112 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    background-color: #F0EBE1;
+}
+
+.navbar__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 10px 30px;
+    border-radius: 50px;
+    border: 1px solid #e0e0e0;
+    width: 90%;
+    max-width: 1200px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo Styling */
+.navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.navbar__logo img {
+    width: 40px;
+}
+
+.navbar__logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    font-weight: 800;
+    color: #262522;
+}
+
+.navbar__logo-cooks {
+    font-size: 16px;
+}
+
+.navbar__logo-delight {
+    font-size: 14px;
+}
+
+/* Navigation Links Styling */
+.navbar__links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar__link {
+    text-decoration: none;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 5px 5px 5px;
+    transition: 0.3s;
+}
+
+/* BEM Modifier for active state */
+.navbar__link--active {
+    color: #333;
+    border-bottom: 3px solid #EE6352;
+}
+
+/* Search Box Styling */
+.navbar__search-box {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 8px 15px;
+    border-radius: 20px;
+    width: 250px;
+    animation: expand 0.3s ease-out;
+}
+
+.navbar__search-icon {
+    color: #666;
+    margin-right: 8px;
+}
+
+.navbar__search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+}
+
+.navbar__search-btn {
+    background: #e0e0e0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.6s;
+}
+
+.navbar__search-btn:hover {
+    background: #d0d0d0;
+}
