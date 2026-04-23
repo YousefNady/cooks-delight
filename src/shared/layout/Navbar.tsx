@@ -1,5 +1,5 @@
 import { NavLink, Link } from 'react-router-dom';
-import logo from '../../assets/logo.svg';  
+import logo from '../../assets/logo/logo.svg';  
 import '../../styles/navbar.css';
 import { FiSearch } from 'react-icons/fi'; 
 import { useState } from 'react';
