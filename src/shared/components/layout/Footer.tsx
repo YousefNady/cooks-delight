@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FaTiktok, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
-import logo from '../../assets/logo/Logo-white.svg'; 
-import '../../styles/footer.css';
+import logo from '../../../assets/logo/Logo-white.svg';
+import '../../../styles/footer.css';
 
 const Footer = () => {
   return (
