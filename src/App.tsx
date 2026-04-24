@@ -4,23 +4,27 @@ import Recipes from './pages/Recipes';
 import RecipeDetails from './pages/RecipeDetails';
 import CookingTips from './pages/CookingTips';
 import AboutUs from './pages/AboutUs';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-import Layout from './shared/layout/Layout';
+import Login from './features/auth/components/LoginForm';
+import NotFound from './pages/NotFound'; 
+import Layout from './shared/components/layout/Layout';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout/>}>
+        <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="recipes" element={<Recipes />} />
           <Route path="recipe/:id" element={<RecipeDetails />} />
           <Route path="tips" element={<CookingTips />} />
           <Route path="about" element={<AboutUs />} />
-          <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+
+        <Route path="login" element={<Login />} />
+                
+        {/* Future feature: Coming soon */}
+        {/* <Route path="register" element={<Register />} /> */}
       </Routes>
     </BrowserRouter>
   );
