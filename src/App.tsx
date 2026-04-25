@@ -4,8 +4,8 @@ import Recipes from './pages/Recipes';
 import RecipeDetails from './pages/RecipeDetails';
 import CookingTips from './pages/CookingTips';
 import AboutUs from './pages/AboutUs';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound'; 
+import Login from './features/auth/components/LoginForm';
+import NotFound from './pages/NotFound/NotFound'; 
 import Layout from './shared/components/layout/Layout';
 import Signup from './pages/Signup';
 
