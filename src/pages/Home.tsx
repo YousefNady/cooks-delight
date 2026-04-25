@@ -1,2 +1,10 @@
-const Component = () => <h1>Home Page</h1>;
-export default Component;
+import Recipes from "./Recipes";
+import "../styles/Home.css";
+export default function Home() {
+  return (
+    <>
+      <Recipes />
+    
+    </>
+  );
+}
