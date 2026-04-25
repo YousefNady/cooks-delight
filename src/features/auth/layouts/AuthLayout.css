@@ -1,0 +1,196 @@
+/* =========================================================
+   AuthLayout.css — Shared layout for all auth pages
+   Cooks Delight · features/auth/layouts/
+   ========================================================= */
+
+/* ---------- Page wrapper ---------- */
+.auth-layout {
+    min-height: 100vh;
+    background-color: #F0EBE1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 24px 32px;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- Navbar ---------- */
+/*
+  Sits above the card in normal flow (not absolute),
+  so the card still centers in the remaining space.
+  max-width matches the card so they stay visually aligned.
+*/
+.auth-layout__navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    padding: 10px 4px;
+    margin-bottom: 16px;
+}
+
+/* Brand link */
+.auth-layout__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.auth-layout__brand-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+
+.auth-layout__brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.auth-layout__brand-cooks {
+    font-size: 16px;
+    font-weight: 800;
+    color: #262522;
+}
+
+.auth-layout__brand-delight {
+    font-size: 14px;
+    font-weight: 800;
+    color: #262522;
+}
+
+/* Hamburger — hidden on desktop */
+.auth-layout__menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    width: 32px;
+    height: 32px;
+}
+
+.auth-layout__menu-btn svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- Card ---------- */
+.auth-layout__card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1.5px solid #26252299;
+    background: #f5f0e8;
+    box-shadow: 0 8px 40px rgba(60, 40, 10, 0.10);
+}
+
+/* ---------- Left image panel ---------- */
+.auth-layout__image-panel {
+    flex: 0 0 44%;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    position: relative;
+    min-height: 0;
+}
+
+/* Dark overlay for readability / mood */
+.auth-layout__image-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(50, 28, 6, 0.40);
+}
+
+/* ---------- Right form panel ---------- */
+/*
+  No min-height — content drives card height.
+  padding creates breathing room around the form.
+*/
+.auth-layout__form-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 44px 52px 40px;
+    min-width: 0;
+    /* prevent flex blowout */
+}
+
+/* =========================================================
+   Tablet (641px – 1024px)
+   ========================================================= */
+@media (max-width: 1024px) and (min-width: 641px) {
+    .auth-layout__image-panel {
+        flex: 0 0 40%;
+    }
+
+    .auth-layout__form-panel {
+        padding: 36px 36px 32px;
+    }
+}
+
+/* =========================================================
+   Mobile (≤ 640px)
+   ========================================================= */
+@media (max-width: 640px) {
+    .auth-layout {
+        padding: 16px 16px 40px;
+        justify-content: flex-start;
+    }
+
+    /* Pill navbar — matches original mobile design */
+    .auth-layout__navbar {
+        background: #f5f0e8;
+        border-radius: 50px;
+        border: 1.5px solid #d6cfc3;
+        padding: 10px 18px;
+        margin-bottom: 24px;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Show hamburger on mobile */
+    .auth-layout__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(38, 37, 34, 0.08);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        transition: background 0.2s;
+    }
+
+    .auth-layout__menu-btn:hover {
+        background: rgba(38, 37, 34, 0.16);
+    }
+
+    /* Flat card on mobile — borderless */
+    .auth-layout__card {
+        flex-direction: column;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        max-width: 100%;
+    }
+
+    /* Hide image panel on mobile — form is the focus */
+    .auth-layout__image-panel {
+        display: none;
+    }
+
+    .auth-layout__form-panel {
+        padding: 0;
+    }
+}
