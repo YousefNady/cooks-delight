@@ -7,6 +7,7 @@ import AboutUs from './pages/AboutUs';
 import Login from './features/auth/components/LoginForm';
 import NotFound from './pages/NotFound'; 
 import Layout from './shared/components/layout/Layout';
+import Signup from './pages/Signup';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
         <Route path="login" element={<Login />} />
                 
         {/* Future feature: Coming soon */}
-        {/* <Route path="register" element={<Register />} /> */}
+        <Route path="/register" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );
