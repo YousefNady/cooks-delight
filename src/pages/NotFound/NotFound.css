@@ -1,0 +1,180 @@
+/* =========================================================
+   NotFound.css — 404 Page
+   Cooks Delight · src/pages/
+   ========================================================= */
+
+/* ---------- Outer wrapper ---------- */
+/*
+  Fills whatever space the Layout's <main> provides.
+  Uses flex to center the card both axes.
+*/
+.not-found {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 48px 24px;
+    background-color: #F0EBE1;
+    box-sizing: border-box;
+}
+
+/* ---------- Card ---------- */
+.not-found__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 56px;
+    max-width: 860px;
+    width: 100%;
+}
+
+/* ---------- Image wrapper ---------- */
+.not-found__image-wrapper {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.not-found__image {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 50%;
+
+    /* Warm shadow that echoes the orange brand colour */
+    box-shadow:
+        0 0 0 10px #f5f0e8,
+        0 0 0 12px #e08c2e33,
+        0 12px 48px rgba(60, 40, 10, 0.14);
+
+    display: block;
+}
+
+/* ---------- 404 badge ---------- */
+/*
+  Floats over the bottom-right of the plate image.
+  Gives a "stamp" feeling — like a kitchen label.
+*/
+.not-found__badge {
+    position: absolute;
+    bottom: 8px;
+    right: -8px;
+    background: #e08c2e;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    font-family: 'Montserrat', 'Lato', 'Helvetica Neue', Arial, sans-serif;
+    padding: 8px 16px;
+    border-radius: 50px;
+    box-shadow: 0 4px 16px rgba(224, 140, 46, 0.35);
+    user-select: none;
+}
+
+/* ---------- Text content ---------- */
+.not-found__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.not-found__heading {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.25;
+    font-family: 'Montserrat', 'Lato', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.not-found__subtext {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #26252299;
+    margin: 0;
+    max-width: 380px;
+    font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- CTA button ---------- */
+.not-found__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    padding: 0 32px;
+    height: 48px;
+    border-radius: 50px;
+    background: #e08c2e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background 0.18s ease, transform 0.12s ease;
+    white-space: nowrap;
+}
+
+.not-found__btn:hover {
+    background: #c97c20;
+    transform: translateY(-2px);
+}
+
+.not-found__btn:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   Tablet (641px – 900px)
+   ========================================================= */
+@media (max-width: 900px) {
+    .not-found__container {
+        gap: 40px;
+    }
+
+    .not-found__image {
+        width: 220px;
+        height: 220px;
+    }
+
+    .not-found__heading {
+        font-size: 24px;
+    }
+}
+
+/* =========================================================
+   Mobile (≤ 640px) — stacked layout
+   ========================================================= */
+@media (max-width: 640px) {
+    .not-found {
+        padding: 40px 20px;
+        min-height: 55vh;
+    }
+
+    /* Stack image above text */
+    .not-found__container {
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        text-align: center;
+    }
+
+    .not-found__image {
+        width: 200px;
+        height: 200px;
+    }
+
+    .not-found__content {
+        align-items: center;
+    }
+
+    .not-found__heading {
+        font-size: 22px;
+    }
+
+    .not-found__subtext {
+        font-size: 14px;
+        max-width: 100%;
+    }
+}

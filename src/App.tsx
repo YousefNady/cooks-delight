@@ -5,7 +5,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import CookingTips from './pages/CookingTips';
 import AboutUs from './pages/AboutUs';
 import Login from './features/auth/components/LoginForm';
-import NotFound from './pages/NotFound'; 
+import NotFound from './pages/NotFound/NotFound'; 
 import Layout from './shared/components/layout/Layout';
 
 function App() {
