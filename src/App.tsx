@@ -8,10 +8,12 @@ import Login from './features/auth/components/LoginForm';
 import NotFound from './pages/NotFound/NotFound'; 
 import Layout from './shared/layout/Layout';
 import Signup from './pages/Signup';
+import ScrollToTop from './shared/components/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
