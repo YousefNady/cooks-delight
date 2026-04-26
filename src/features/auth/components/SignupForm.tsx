@@ -1,9 +1,10 @@
 // src/features/auth/components/SignupForm.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSignupForm } from '../hooks/useSignupForm';
 import AuthLayout from '../layouts/AuthLayout';
+import MobileMenu from '../../../shared/layout/Mobilemenu';
 import './SignupForm.css';
 
 // Unsplash image URL used as the left-panel background
@@ -27,8 +28,15 @@ const SignupForm: React.FC = () => {
     handleSubmit,
   } = useSignupForm();
 
+    // ── Mobile menu state — same pattern as Navbar ──
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <AuthLayout imageSrc={SIGNUP_IMAGE}>
+    <>
+      <AuthLayout
+        imageSrc={SIGNUP_IMAGE}
+        onMenuOpen={() => setIsMobileMenuOpen(true)}
+      >
 
       <h1 className="signup-form__heading">CREATE ACCOUNT</h1>
       <p className="signup-form__subtext">
@@ -177,6 +185,13 @@ const SignupForm: React.FC = () => {
       </p>
 
     </AuthLayout>
+
+          {/* Mobile menu — same pattern as Navbar */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
+    </>
   );
 };
 

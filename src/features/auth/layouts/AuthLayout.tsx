@@ -13,11 +13,14 @@ interface AuthLayoutProps {
   imageAlt?: string;
   /** Form content rendered in the right panel */
   children: React.ReactNode;
+
+  onMenuOpen?: () => void;   // ← connects hamburger to parent's MobileMenu state
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({
   imageSrc,
   children,
+  onMenuOpen
 }) => {
   return (
     <div className="auth-layout">
@@ -41,7 +44,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           className="auth-layout__menu-btn"
           type="button"
           aria-label="Open menu"
-          onClick={() => console.log('Menu clicked')}
+          onClick={onMenuOpen}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 18L20 18" stroke="#262522" strokeWidth="2" strokeLinecap="round" />
