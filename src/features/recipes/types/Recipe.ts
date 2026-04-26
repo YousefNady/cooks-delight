@@ -7,6 +7,5 @@ export type Recipe = {
   servings: number;
   difficulty: string;
   cuisine: string;
-  recipes: Recipe[];
-  mealType: string;
-}
+  mealType: string[];
+};

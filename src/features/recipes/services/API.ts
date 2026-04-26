@@ -1,5 +1,5 @@
-import api from "./Get-recipe";
-export async function getProducts() {
+import api from "../components/Get-recipe";
+export async function getRecipes() {
   try {
     const res = await api.get("/recipes");
     return res.data;
