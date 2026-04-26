@@ -3,6 +3,8 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../../shared/layout/Navbar';
 import Footer from '../../shared/layout/Footer';
+import ScrollToTop from '../components/ui/BackToTopButton'; // ← new
+
 
 const Layout = () => {
   return (
@@ -15,6 +17,9 @@ const Layout = () => {
       </main>
 
       <Footer />
+      
+      {/* Back to top button sits outside main flow, fixed to viewport */}
+      <ScrollToTop />
     </div>
   );
 };
