@@ -1,9 +1,10 @@
 // src/features/auth/components/LoginForm.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLoginForm } from '../hooks/useLoginForm';
 import AuthLayout from '../layouts/AuthLayout';
+import MobileMenu from '../../../shared/layout/Mobilemenu';
 import loginImage from '../../../assets/login/pexels-zain-abba-1.png';
 import './LoginForm.css';
 
@@ -19,8 +20,15 @@ const LoginForm: React.FC = () => {
     handleSubmit,
   } = useLoginForm();
 
+    // ── Mobile menu state — same pattern as Navbar ──
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   return (
-    <AuthLayout imageSrc={loginImage}>
+    <>
+          <AuthLayout
+        imageSrc={loginImage}
+        onMenuOpen={() => setIsMobileMenuOpen(true)}
+      >
 
       <h1 className="login-form__heading">LOG IN</h1>
       <p className="login-form__subtext">
@@ -109,6 +117,13 @@ const LoginForm: React.FC = () => {
       </p>
 
     </AuthLayout>
+
+          {/* Mobile menu — same pattern as Navbar */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
+      </>
   );
 };
 

@@ -1,0 +1,87 @@
+/* =========================================================
+   BackToTopButton.css
+   Cooks Delight · src/shared/components/ui/
+   ========================================================= */
+
+.scroll-to-top {
+    /* Position — fixed to viewport, bottom-right */
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 100;
+
+    /* Size & shape */
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    /* Brand colors */
+    background-color: #e08c2e;
+    color: #fff;
+
+    /* Center the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Shadow for depth */
+    box-shadow: 0 4px 20px rgba(224, 140, 46, 0.40);
+
+    /* Hidden by default — invisible and non-interactive */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+
+    /* Smooth fade + slide transition */
+    transition:
+        opacity 0.28s ease,
+        transform 0.28s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+/* Visible state — triggered by JS adding the modifier */
+.scroll-to-top--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Hover */
+.scroll-to-top:hover {
+    background-color: #c97c20;
+    box-shadow: 0 6px 24px rgba(224, 140, 46, 0.55);
+    transform: translateY(-3px);
+}
+
+/* Active / click */
+.scroll-to-top:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 12px rgba(224, 140, 46, 0.35);
+}
+
+/* Icon size */
+.scroll-to-top__icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5px;
+}
+
+/* =========================================================
+   Mobile (≤ 768px) — slightly smaller, closer to edge
+   ========================================================= */
+@media (max-width: 768px) {
+    .scroll-to-top {
+        width: 42px;
+        height: 42px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .scroll-to-top__icon {
+        width: 18px;
+        height: 18px;
+    }
+}

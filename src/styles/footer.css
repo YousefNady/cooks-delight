@@ -1,3 +1,7 @@
+/* =========================================================
+   footer.css — Cooks Delight
+   ========================================================= */
+
 .footer {
     display: flex;
     justify-content: center;
@@ -5,7 +9,7 @@
 }
 
 .footer__content {
-    background-color: #1a1a1a;
+    background-color: #262522;
     width: 90%;
     max-width: 1200px;
     padding: 30px 50px;
@@ -62,14 +66,14 @@
 .footer__links a {
     color: #F0EBE1;
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     letter-spacing: 1px;
     transition: 0.3s;
 }
 
 .footer__links a:hover {
-    color: white;
+    color: #F0EBE1;
 }
 
 /* Social Icons Styling */
@@ -79,7 +83,7 @@
 }
 
 .footer__social-icons a {
-    color: white;
+    color: #F0EBE1;
     font-size: 20px;
     transition: 0.3s;
 }
@@ -91,7 +95,7 @@
 /* Divider & Bottom Section */
 .footer__divider {
     border: 0;
-    border-top: 1px solid #F0EBE114;
+    border-top: 1px solid #F0EBE13D;
     margin: 25px 0;
 }
 
@@ -116,4 +120,87 @@
     height: 20px;
     background-color: #F0EBE114;
     margin: 0 0 0 20px;
+}
+
+/* =========================================================
+   Mobile (≤ 768px)
+   ========================================================= */
+@media (max-width: 768px) {
+    .footer {
+        padding: 20px 16px;
+    }
+
+    .footer__content {
+        width: 100%;
+        padding: 28px 24px;
+        border-radius: 32px;
+        box-sizing: border-box;
+    }
+
+    /* Stack everything vertically, centered */
+    .footer__top {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+
+    /* ---------- Logo — circular badge, centered ---------- */
+    .footer__logo {
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    /* Circular dark container around the white logo */
+    .footer__logo-badge {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #1a1917;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        /* Standardize logo dimensions across all layout components */
+    .footer__logo-badge img {
+    width: 40px;
+    height: 35px;
+    object-fit: contain;
+    }
+
+    .footer__logo-text {
+        align-items: center;
+    }
+
+    /* ---------- Links — vertical stack, full width, dividers ---------- */
+    .footer__links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    .footer__links li:not(:last-child) {
+        border-bottom: 1px solid #F0EBE13D;
+        width: 100%;
+    }
+
+    .footer__links a {
+        display: block;
+        padding: 16px 0;
+        font-size: 14px;
+    }
+
+    /* Hide the desktop pipe separators */
+    .footer__links li:not(:last-child)::after {
+        display: none;
+    }
+
+    /* ---------- Social icons — centered row ---------- */
+    .footer__social-icons {
+        justify-content: center;
+        margin-top: 28px;
+    }
 }
