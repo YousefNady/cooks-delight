@@ -162,10 +162,11 @@
         justify-content: center;
     }
 
+        /* Standardize logo dimensions across all layout components */
     .footer__logo-badge img {
-        width: 34px;
-        height: 34px;
-        object-fit: contain;
+    width: 40px;
+    height: 35px;
+    object-fit: contain;
     }
 
     .footer__logo-text {
