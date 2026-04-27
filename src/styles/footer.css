@@ -5,13 +5,13 @@
 .footer {
     display: flex;
     justify-content: center;
-    padding: 20px 0;
+    padding: 20px 64px;
 }
 
 .footer__content {
     background-color: #262522;
-    width: 90%;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1312px;
     padding: 30px 50px;
     border-radius: 60px;
     color: white;
