@@ -28,7 +28,7 @@ body {
     padding: 40px 64px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     width: 100%;
     box-sizing: border-box;
 }
