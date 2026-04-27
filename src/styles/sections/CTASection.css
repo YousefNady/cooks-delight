@@ -20,7 +20,7 @@
     /* clip the glows to the card */
 
     width: 100%;
-    max-width: 1300px;
+    max-width: 1312px;
     border-radius: 24px;
 
     /* Coral/salmon background from design */
@@ -32,8 +32,7 @@
     align-items: center;
     text-align: center;
 
-    padding: 64px 80px;
-    box-sizing: border-box;
+    padding: 64px;
 }
 
 /* ---------- Decorative radial glows ---------- */

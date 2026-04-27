@@ -1,3 +1,9 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-display: swap;
@@ -18,8 +24,12 @@ body {
 
 /* ---------- Main content area ---------- */
 .main-content {
-    min-height: 80vh;
-    padding: 50px;
+    flex: 1;
+    padding: 40px 64px;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    width: 100%;
     box-sizing: border-box;
 }
 
