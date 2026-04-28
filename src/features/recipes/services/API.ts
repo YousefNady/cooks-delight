@@ -1,7 +1,17 @@
 import api from "../components/Get-recipe";
+
 export async function getRecipes() {
   try {
     const res = await api.get("/recipes");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getRecipeById(id: string | undefined) {
+  try {
+    const res = await api.get(`/recipes/${id}`);
     return res.data;
   } catch (error) {
     console.log(error);
