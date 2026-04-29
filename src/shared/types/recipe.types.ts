@@ -1,4 +1,5 @@
-export interface AboutRecipe {
+// The base shape every card needs — keep all your existing fields
+export interface RecipeCard {
   id: number;
   name: string;
   image: string;
@@ -14,9 +15,11 @@ export interface AboutRecipe {
   mealType: string;
 }
 
-export interface AboutRecipesApiResponse {
-  recipes: AboutRecipe[];
+export interface RecipesApiResponse {
+  recipes: RecipeCard[];
   total: number;
   skip: number;
   limit: number;
 }
+// Your feature-specific types extend this if they need extra fields
+// e.g. TipCard might have a `readTimeMinutes` field instead
