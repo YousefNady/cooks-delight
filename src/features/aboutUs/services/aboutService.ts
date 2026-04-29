@@ -1,12 +1,12 @@
 import axios from 'axios';
-import type { AboutRecipe, AboutRecipesApiResponse } from '../types/about.types';
+import type { RecipeCard, RecipesApiResponse  } from '../../../shared/types/recipe.types';
 
 const BASE_URL = 'https://dummyjson.com/recipes';
 
-export const fetchAboutRecipes = async (): Promise<AboutRecipe[]> => {
+export const fetchAboutRecipes = async (): Promise<RecipeCard[]> => {
   try {
     // Axios automatically parses the JSON response and supports generic types
-    const response = await axios.get<AboutRecipesApiResponse>(`${BASE_URL}?limit=100`);
+    const response = await axios.get<RecipesApiResponse>(`${BASE_URL}?limit=100`);
     
     // The parsed data is readily available in response.data
     return response.data.recipes;

@@ -7,7 +7,7 @@
 .cta-section {
     display: flex;
     justify-content: center;
-    padding: 0 24px 0;
+    padding: 0 64px 16px;
     background-color: #F0EBE1;
     /* matches page background */
 }

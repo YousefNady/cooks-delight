@@ -11,6 +11,8 @@
 /* ── HERO ─────────────────────────────────────────────── */
 .about__hero {
     padding: 64px 0;
+    display: flex;
+    justify-content: center;
 }
 
 .about__hero-inner {
