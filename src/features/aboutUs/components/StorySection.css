@@ -7,11 +7,16 @@
 }
 
 .about__content-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 1312px;
+
+    margin: 0 auto;
     background-color: transparent;
     border: 1px solid #2625223D;
     border-radius: 32px;
     padding: 16px;
-    margin: 0 0 64px 0;
 }
 
 .story__inner {
