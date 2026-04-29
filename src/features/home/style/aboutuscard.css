@@ -112,7 +112,7 @@
   }
 
   .about-us-card__container {
-    grid-template-columns: 1fr; /* كله تحت بعض */
+    grid-template-columns: 1fr; 
     
   }
 
