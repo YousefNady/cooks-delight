@@ -101,6 +101,21 @@
     flex: 1;
 }
 
+.section-grid__grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.section-grid__grid--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.section-grid__inner--   {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
 @keyframes featured-spin {
     to {
         transform: rotate(360deg);

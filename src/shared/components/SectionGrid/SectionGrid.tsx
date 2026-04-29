@@ -17,6 +17,9 @@ interface SectionGridProps<T> {
   title: string;
   items: T[];
   renderItem: (item: T) => React.ReactNode;
+  columns?: 2 | 3; // ← default 2
+  variant?: 'boxed' | 'plain'; // ← add this, default 'boxed'
+
 
   // Optional — pagination
   pagination?: PaginationProps;
@@ -36,6 +39,8 @@ function SectionGrid<T>({
   title,
   items,
   renderItem,
+  columns = 2,      // ← ADD with default
+  variant = 'boxed', // ← ADD with default
   pagination,
   tabs,
   activeTab,
@@ -46,7 +51,7 @@ function SectionGrid<T>({
 }: SectionGridProps<T>) {
   return (
     <section className="section-grid">
-      <div className="section-grid__inner">
+      <div className={`section-grid__inner section-grid__inner--${variant}`}>
 
         {/* Header: title + optional pagination arrows */}
         <div className="section-grid__header">
@@ -112,7 +117,7 @@ function SectionGrid<T>({
 
         {/* Grid */}
         {!loading && !error && (
-          <div className="section-grid__grid">
+          <div className={`section-grid__grid section-grid__grid--cols-${columns ?? 2}`}>
             {items.map((item, index) => (
               <div key={index} className="section-grid__item">
                 {renderItem(item)}
