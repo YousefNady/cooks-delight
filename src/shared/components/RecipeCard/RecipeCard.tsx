@@ -4,6 +4,7 @@ import './RecipeCard.css'; // ← same file, just moved to shared/
 
 interface RecipeCardProps {
   recipe: RecipeCardType;
+  size?: 'lg' | 'md'; // ← default lg
 }
 
 const StarRating = ({ rating }: { rating: number }) => (
@@ -19,11 +20,11 @@ const StarRating = ({ rating }: { rating: number }) => (
   </span>
 );
 
-const RecipeCard = ({ recipe }: RecipeCardProps) => {
+const RecipeCard = ({ recipe, size = 'lg' }: RecipeCardProps) => {
   const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
   return (
-    <article className="recipe-card"> {/* ← was about-recipe-card */}
+    <article className={`recipe-card recipe-card--${size}`}> {/* ← was about-recipe-card */}
       <div className="recipe-card__img-wrapper">
         <img src={recipe.image} alt={recipe.name} className="recipe-card__img" loading="lazy" />
       </div>
