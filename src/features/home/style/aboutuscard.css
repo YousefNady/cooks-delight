@@ -1,0 +1,160 @@
+
+.about-us-card {
+  max-width: 1312px;
+  margin: auto;
+  padding: 16px;
+  border: 1px solid hsla(45, 6%, 14%, 0.24);
+  margin: 64px 0;
+  border-radius: 32px;
+}
+
+/* ===== GRID LAYOUT ===== */
+.about-us-card__container {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  gap: 8px;
+}
+
+/* ===== LEFT SIDE ===== */
+.about-us-card__left {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+}
+
+
+.about-us-card_left-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+ gap:136px;
+  margin-left: 24px;
+}
+
+/* ===== TEXT ===== */
+.about-us-card__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin:50px 24px 0 0;
+}
+
+.about-us-card__title {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.about-us-card__description {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.5;
+ 
+}
+
+/* ===== IMAGES ===== */
+
+
+.about-us-card__image1 {
+  max-width: 3316px;
+  max-height: 326px;
+}
+.about-us-card__image1 img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.about-us__img2 img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+
+.about-us__img3 img {
+  max-width: 411px;
+  height: 665px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+
+.about-us__img2 {
+  max-height: 331px;
+}
+
+.about-us__img3 {
+  height: 100%;
+}
+
+/* ===== BUTTON ===== */
+.button {
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: 1px solid hsla(45, 6%, 14%, 1);
+  cursor: pointer;
+  width: fit-content;
+  margin-top: 12px;
+}
+
+.button--primary {
+  background: none;
+  color: #1c1a17;
+}
+@media (max-width: 1024px) {
+
+  .about-us-card {
+    padding: 16px;
+    margin: 40px 16px;
+    height: auto;
+  }
+
+  .about-us-card__container {
+    grid-template-columns: 1fr; /* كله تحت بعض */
+    
+  }
+
+  .about-us-card__left {
+    gap: 16px;
+  }
+
+  .about-us-card_left-top {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-left: 0;
+  }
+
+  .about-us-card__text {
+    margin: 0;
+    text-align: center;
+    align-items: center;
+  }
+
+  .about-us-card__title {
+    font-size: 28px;
+  }
+
+  .about-us-card__description {
+    font-size: 14px;
+  }
+
+  /* الصور */
+  .about-us-card__image1,
+  .about-us__img2,
+  .about-us__img3 {
+    width: 100%;
+  
+  }
+
+  .about-us-card__image1 img,
+  .about-us__img2 img,
+  .about-us__img3 img {
+    width: 100%;
+    height: 324px;
+    object-fit: cover;
+    object-position: top;
+    margin-bottom: 16px;
+  }
+}

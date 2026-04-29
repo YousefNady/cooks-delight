@@ -1,0 +1,122 @@
+.home {
+  max-width: 1312px;
+  margin: auto;
+}
+
+/* ================= HERO ================= */
+
+.home-hero {
+  border-radius: 32px;
+  overflow: hidden;
+  background: linear-gradient(
+      hsla(45, 6%, 14%, 0.6),
+      hsla(45, 6%, 14%, 0.6)
+    ),
+    url("../../../assets/home/2.png");
+
+  height: 577px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-hero__content {
+  text-align: center;
+  color: white;
+  max-width: 900px;
+}
+
+.home-hero__title {
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.home-hero__description {
+  font-size: 21px;
+  font-weight: 400;
+  margin: 12px 0 40px;
+}
+
+.home-hero__actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* ================= BUTTONS ================= */
+
+.button {
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+}
+
+.button--primary {
+  background: hsla(33, 88%, 57%, 1);
+  color: hsla(45, 6%, 14%, 1);
+}
+
+.button--secondary {
+  background: black;
+  color: white;
+}
+
+.button--outline {
+  border: 1px solid black;
+  background: transparent;
+}
+
+/* ================= PALETTE ================= */
+
+.home-palette {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+  background: hsla(205, 90%, 88%, 1);
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.home-palette__content {
+  width: 40%;
+}
+
+.home-palette__tag {
+  background: hsla(7, 82%, 63%, 1);
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+}
+
+.home-palette__title {
+  font-size: 40px;
+  margin-top: 16px;
+}
+
+.home-palette__description {
+  margin: 12px 0 40px;
+  color: #555;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.home-palette__categories {
+  width: 40%;
+}
+
+.home-palette__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #aaa;
+  font-weight: 500;
+}
+
+.home-palette__item img {
+  width: 40px;
+  height: 40px;
+}

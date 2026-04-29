@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getRecipeById } from "../features/recipes/services/API";
+import { getRecipeById, getRecipes } from "../features/recipes/services/API";
 import type { Recipe } from "../features/recipes/types/Recipe";
 import "../features/recipe-details/style/recipe-details.css";
 
@@ -12,6 +12,7 @@ import difficultyIcon from "../assets/recipe-details/difficulty.svg";
 import icon1 from "../assets/recipe-details/icon1.svg";
 import icon2 from "../assets/recipe-details/icon2.svg";
 import icon3 from "../assets/recipe-details/icon3.svg";
+import SimilarRecipesSection from "../features/recipe-details/components/SimilarRecipes";
 
 
 export default function RecipeDetails() {
@@ -21,12 +22,19 @@ export default function RecipeDetails() {
 
   const tags = recipe?.tags ?? [];
 
-  useEffect(() => {
-    if (!id) return;
+const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
 
-    getRecipeById(id).then((data) => setRecipe(data));
-  }, [id]);
+useEffect(() => {
+  if (!id) return;
 
+  getRecipeById(id).then((data) => setRecipe(data));
+
+  getRecipes().then((data) => {
+    setAllRecipes(data.recipes);
+  });
+}, [id]);
+
+if (!recipe) return <p>Loading...</p>;
   if (!recipe) return <p>Loading...</p>;
 
   // (prep + cook)
@@ -71,7 +79,7 @@ export default function RecipeDetails() {
     <>
     <div className="recipe-container">
   <div className="recipe-details__header">
-      <h1 className="recipe-name">{recipe.name}</h1>
+      <h1 className="recipe-name"> {recipe.name}</h1>
 
       <p className="recipe-intro">
         Welcome to Cooks Delight, where culinary dreams come alive! Today,
@@ -152,12 +160,13 @@ export default function RecipeDetails() {
          <div className="recipe-details__side">
         <div className="recipe-details__ingredients">
           <h3 className="ingredients-title">Ingredients</h3>
-
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
+            <ul className="ingredients-sublist">
+            {recipe.ingredients.map((item, index) => (
+              <li key={index} className="ingredients-item">
+            {item}
+              </li>
+              ))}
+           </ul>
           </div>
           <div className="recipe-details__nutrition">
            <h3 className="nutrition-title">Nutritional Value </h3>
@@ -173,7 +182,12 @@ export default function RecipeDetails() {
 
   <div className="similar-recipes-container">
         {/* <SimilarRecipes currentRecipeId={recipe.id} /> */ }
+       <SimilarRecipesSection
+  recipes={allRecipes}
+  currentRecipe={recipe}
+/>
         </div>
+        
           </>
-  );
+   );
 }

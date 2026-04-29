@@ -11,6 +11,7 @@ export interface AboutRecipe {
   cuisine: string;
   caloriesPerServing: number;
   tags: string[];
+  mealType: string;
 }
 
 export interface AboutRecipesApiResponse {

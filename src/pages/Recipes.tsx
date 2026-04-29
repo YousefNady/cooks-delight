@@ -6,6 +6,7 @@ import FilterButtons from "../features/recipes/components/FilterButtons";
 import RecipeCard from "../features/recipes/components/RecipeCard";
 import "../features/recipes/styles/Card-recipe.css";
 
+
 export default function Recipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
