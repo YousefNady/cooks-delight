@@ -1,4 +1,3 @@
-
 .about-us-card {
   max-width: 1312px;
   margin: auto;
@@ -22,11 +21,10 @@
   gap: 8px;
 }
 
-
 .about-us-card_left-top {
   display: grid;
   grid-template-columns: 1fr 1fr;
- gap:136px;
+  gap: 136px;
   margin-left: 24px;
 }
 
@@ -35,7 +33,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin:50px 24px 0 0;
+  margin: 50px 24px 0 0;
 }
 
 .about-us-card__title {
@@ -48,16 +46,14 @@
   font-size: 15px;
   color: #555;
   line-height: 1.5;
- 
 }
 
 /* ===== IMAGES ===== */
-
-
 .about-us-card__image1 {
   max-width: 3316px;
   max-height: 326px;
 }
+
 .about-us-card__image1 img {
   width: 100%;
   height: 100%;
@@ -65,21 +61,17 @@
   object-fit: cover;
 }
 
-.about-us__img2 img {
+.about-us__img2 img,
+.about-us__img3 img {
   width: 100%;
-  height: 100%;
   border-radius: 16px;
   object-fit: cover;
 }
-
 
 .about-us__img3 img {
   max-width: 411px;
   height: 665px;
-  border-radius: 16px;
-  object-fit: cover;
 }
-
 
 .about-us__img2 {
   max-height: 331px;
@@ -103,6 +95,8 @@
   background: none;
   color: #1c1a17;
 }
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
 
   .about-us-card {
@@ -112,8 +106,7 @@
   }
 
   .about-us-card__container {
-    grid-template-columns: 1fr; 
-    
+    grid-template-columns: 1fr;
   }
 
   .about-us-card__left {
@@ -140,12 +133,10 @@
     font-size: 14px;
   }
 
-  /* الصور */
   .about-us-card__image1,
   .about-us__img2,
   .about-us__img3 {
     width: 100%;
-  
   }
 
   .about-us-card__image1 img,
