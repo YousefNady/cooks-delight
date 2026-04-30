@@ -68,7 +68,7 @@
 /* ── Recipe grid ── */
 .section-grid__grid {
     display: grid;
-    gap: 24px;
+    gap: 16px;
 }
 
 /* ── Loading ── */
@@ -80,6 +80,9 @@
     padding: 48px 0;
     color: #888;
     font-size: 14px;
+}
+.recipe-card__info{
+    width: 45%;
 }
 
 .section-grid__spinner {

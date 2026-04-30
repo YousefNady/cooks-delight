@@ -1,0 +1,48 @@
+/* =========================================================
+   CookingTipsPage.css — page wrapper + scroll animations
+   ========================================================= */
+
+.cooking-tips-page {
+  min-height: 100vh;
+  padding: 0 24px;
+  overflow-x: hidden;
+}
+
+/* ── Scroll reveal animation ─────────────────────────────── */
+
+/*
+  Add class="reveal" to any element you want to animate on scroll.
+  Use data-delay="100" etc for stagger.
+  Attach via IntersectionObserver in CookingTipsPage or a global hook.
+*/
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .cooking-tips-page {
+    padding: 0 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cooking-tips-page {
+    padding: 0 12px;
+  }
+}
