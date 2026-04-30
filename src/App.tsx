@@ -5,9 +5,10 @@ import RecipeDetails from './pages/RecipeDetails';
 import CookingTips from './pages/CookingTips';
 import AboutUs from './pages/AboutUs';
 import Login from './features/auth/components/LoginForm';
+import Signup from './features/auth/components/SignupForm';
 import NotFound from './pages/NotFound/NotFound'; 
 import Layout from './shared/layout/Layout';
-import Signup from './pages/Signup';
+import { ContactPage } from './features/contact';
 import ScrollRestoration from './shared/components/ScrollRestoration';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="recipes/:id" element={<RecipeDetails />} />
           <Route path="tips" element={<CookingTips />} />
           <Route path="about" element={<AboutUs />} />
+          <Route path="contact" element={<ContactPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

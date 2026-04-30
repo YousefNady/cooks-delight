@@ -68,6 +68,16 @@ const Navbar = () => {
                 ABOUT US
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  isActive ? 'navbar__link navbar__link--active' : 'navbar__link'
+                }
+              >
+                CONTACT
+              </NavLink>
+            </li>
           </ul>
 
           {/* Search Section — unchanged, hidden via CSS on mobile */}

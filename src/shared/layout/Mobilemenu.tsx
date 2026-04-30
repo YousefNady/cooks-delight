@@ -46,6 +46,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             { to: '/recipes', label: 'RECIPES'      },
             { to: '/tips',    label: 'COOKING TIPS' },
             { to: '/about',   label: 'ABOUT US'     },
+            { to: '/contact', label: 'CONTACT'      },
           ].map(({ to, label }) => (
             <li key={to} className="mobile-menu__link-item">
               <NavLink

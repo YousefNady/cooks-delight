@@ -1,0 +1,360 @@
+/* src/features/contact/styles/ContactForm.css */
+
+/* ─── Design tokens (mirror your existing codebase) ─────────────────────────── */
+:root {
+  --cd-cream:       #f0ebe0;
+  --cd-cream-dark:  #e8e0d0;
+  --cd-orange:      #F29C33;
+  --cd-orange-dark: #c8880a;
+  --cd-coral:       #e8573a;
+  --cd-charcoal:    #262522;
+  --cd-dark:        #000000;
+  --cd-gray:        #26252299;
+  --cd-gray-light:  #d4cfc6;
+  --cd-white:       #ffffff;
+  --cd-red-error:   #d93025;
+  --cd-green:       #2e7d32;
+
+  --cd-radius:      10px;
+  --cd-radius-sm:   6px;
+  --cd-transition:  0.25s ease;
+  --cd-font:        'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ─── Form wrapper ───────────────────────────────────────────────────────────── */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: contactFormSlideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.2s;
+}
+
+/* ─── Two-column row ─────────────────────────────────────────────────────────── */
+.contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 580px) {
+  .contact-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Field wrapper ──────────────────────────────────────────────────────────── */
+.contact-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  animation: contactFieldFadeIn 0.4s ease both;
+}
+
+/* Stagger each field */
+.contact-form__field:nth-child(1) { animation-delay: 0.30s; }
+.contact-form__field:nth-child(2) { animation-delay: 0.40s; }
+.contact-form__field:nth-child(3) { animation-delay: 0.50s; }
+.contact-form__field:nth-child(4) { animation-delay: 0.60s; }
+
+/* ─── Labels ─────────────────────────────────────────────────────────────────── */
+.contact-form__label {
+  font-family: var(--cd-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cd-charcoal);
+}
+
+.contact-form__required {
+  color: var(--cd-coral);
+}
+
+/* ─── Inputs, Textarea, Select ───────────────────────────────────────────────── */
+.contact-form__input,
+.contact-form__textarea,
+.contact-form__select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--cd-gray-light);
+  border-radius: var(--cd-radius-sm);
+  background-color: var(--cd-white);
+  font-family: var(--cd-font);
+  font-size: 0.95rem;
+  color: var(--cd-charcoal);
+  outline: none;
+  transition:
+    border-color var(--cd-transition),
+    box-shadow var(--cd-transition),
+    background-color var(--cd-transition);
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.contact-form__input::placeholder,
+.contact-form__textarea::placeholder {
+  color: var(--cd-gray-light);
+}
+
+.contact-form__input:focus,
+.contact-form__textarea:focus,
+.contact-form__select:focus {
+  border-color: var(--cd-orange);
+  box-shadow: 0 0 0 3px rgba(232, 160, 32, 0.18);
+  background-color: #fffdf8;
+}
+
+.contact-form__textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* Select arrow */
+.contact-form__select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+/* ─── Error state ────────────────────────────────────────────────────────────── */
+.contact-form__field--error .contact-form__input,
+.contact-form__field--error .contact-form__textarea,
+.contact-form__field--error .contact-form__select {
+  border-color: var(--cd-red-error);
+  box-shadow: 0 0 0 3px rgba(217, 48, 37, 0.12);
+}
+
+.contact-form__error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cd-red-error);
+  margin: 0;
+  animation: contactErrorShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.contact-form__error-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cd-red-error);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* ─── Server error banner ────────────────────────────────────────────────────── */
+.contact-form__server-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--cd-radius-sm);
+  background: rgba(217, 48, 37, 0.08);
+  border: 1.5px solid rgba(217, 48, 37, 0.3);
+  color: var(--cd-red-error);
+  font-size: 0.88rem;
+  font-weight: 600;
+  animation: contactFormSlideUp 0.3s ease both;
+}
+
+.contact-form__server-error svg {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+}
+
+.contact-form__server-error p {
+  margin: 0;
+  flex: 1;
+}
+
+.contact-form__dismiss {
+  background: none;
+  border: none;
+  color: var(--cd-red-error);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity var(--cd-transition);
+}
+
+.contact-form__dismiss:hover {
+  opacity: 1;
+}
+
+/* ─── Submit button ──────────────────────────────────────────────────────────── */
+.contact-form__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.9rem 2rem;
+  border-radius: var(--cd-radius-sm);
+  border: none;
+  font-family: var(--cd-font);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color var(--cd-transition),
+    transform var(--cd-transition),
+    box-shadow var(--cd-transition),
+    opacity var(--cd-transition);
+  animation: contactFieldFadeIn 0.4s ease 0.7s both;
+}
+
+.contact-form__btn--primary {
+  background-color: var(--cd-orange);
+  color: var(--cd-white);
+  width: 100%;
+}
+
+.contact-form__btn--primary:hover:not(:disabled) {
+  background-color: var(--cd-orange-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 160, 32, 0.35);
+}
+
+.contact-form__btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.contact-form__btn--primary:disabled,
+.contact-form__btn--loading {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.contact-form__btn--secondary {
+  background-color: transparent;
+  color: var(--cd-orange);
+  border: 2px solid var(--cd-orange);
+  margin-top: 0.5rem;
+}
+
+.contact-form__btn--secondary:hover {
+  background-color: var(--cd-orange);
+  color: var(--cd-white);
+  transform: translateY(-2px);
+}
+
+/* ─── Spinner ────────────────────────────────────────────────────────────────── */
+.contact-form__spinner {
+  display: inline-flex;
+  animation: contactSpinCW 0.8s linear infinite;
+}
+
+/* ─── Success state ──────────────────────────────────────────────────────────── */
+.contact-form__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  animation: contactSuccessPop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-form__success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(46, 125, 50, 0.1);
+  color: var(--cd-green);
+  font-size: 2.2rem;
+  animation: contactSuccessIconScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.contact-form__success-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--cd-charcoal);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.contact-form__success-text {
+  font-size: 0.98rem;
+  color: var(--cd-gray);
+  line-height: 1.65;
+  max-width: 380px;
+  margin: 0;
+}
+
+/* ─── Keyframe animations ────────────────────────────────────────────────────── */
+
+@keyframes contactFormSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contactFieldFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contactErrorShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  40%       { transform: translateX(4px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+@keyframes contactSpinCW {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes contactSuccessPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes contactSuccessIconScale {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
