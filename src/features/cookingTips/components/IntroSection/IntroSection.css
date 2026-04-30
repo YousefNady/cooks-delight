@@ -1,0 +1,129 @@
+/* =========================================================
+   IntroSection.css
+   ========================================================= */
+
+.intro {
+  padding: 60px 0 16px;
+}
+
+.intro__inner {
+  width: 100%;
+  max-width: 1312px;
+  margin: 0 auto;
+}
+
+/* Top: heading + paragraph side by side */
+.intro__top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.intro__heading {
+  font-size: clamp(32px, 4vw, 80px);
+  font-weight: 800;
+  color: #262522;
+  margin: 0;
+  font-family: 'Montserrat', 'Lato', Arial, sans-serif;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  padding: 24px 24px 0;
+}
+
+.intro__body {
+  font-size: 21px;
+  color: #26252299;
+  line-height: 1.7;
+  margin: 0;
+  padding-top: 8px;
+}
+
+/* Highlights row */
+.intro__highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  background: #F0EBE1;
+  border-radius: 24px;
+  border: 1px solid #2625223D;
+  padding: 43px 32px;
+}
+
+.intro__highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  transition: transform 0.2s ease;
+}
+
+.intro__highlight:hover {
+  transform: translateY(-2px);
+}
+
+.intro__highlight-icon {
+  max-width: 64px;
+  max-height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro__highlight-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.intro__highlight-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.intro__highlight-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #EE6352;
+  text-transform: uppercase;
+  letter-spacing: 2%;
+}
+
+.intro__highlight-desc {
+  font-size: 16px;
+  color: #262522;
+  width: 300;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .intro__top {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .intro__highlights {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 20px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .intro {
+    padding: 40px 0 24px;
+  }
+
+  .intro__highlights {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .intro__top {
+    margin-bottom: 32px;
+  }
+}

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import RecipeCard from "../../recipes/components/RecipeCard";
+import RecipeCard from "../../../shared/components/RecipeCard/RecipeCard";
 import type { Recipe } from "../../recipes/types/Recipe";
 import "../style/similar-Recipes.css";
 

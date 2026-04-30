@@ -101,3 +101,25 @@
     flex-direction: row;
   }
 }
+.featured-card-wrapper {
+  position: relative;
+}
+
+.featured-rating {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e08c2e;
+}
+
+
+.featured-rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}

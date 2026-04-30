@@ -3,8 +3,8 @@ import { getRecipes } from "../features/recipes/services/API";
 import type { Recipe } from "../features/recipes/types/Recipe";
 import { filterRecipes } from "../features/recipes/utils/filtre";
 import FilterButtons from "../features/recipes/components/FilterButtons";
-import RecipeCard from "../features/recipes/components/RecipeCard";
-import "../features/recipes/styles/Card-recipe.css";
+import RecipeCard from "../shared//components/RecipeCard/RecipeCard";
+import "../shared/components/RecipeCard/RecipeCard.css";
 
 
 export default function Recipes() {
