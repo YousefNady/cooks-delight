@@ -15,7 +15,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const {
     searchTerm,
-    setSearchTerm,
+    handleSearchChange,
     handleSearchSubmit,
   } = useRecipeSearch();
 
@@ -89,7 +89,7 @@ const Navbar = () => {
                   type="text"
                   placeholder="Search..."
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
+                  onChange={handleSearchChange}
                   autoFocus
                   onBlur={() => setIsSearchOpen(false)}
                 />
