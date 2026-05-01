@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-display: swap;
+    background-color: #F0EBE1;
+    color: #333;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================
+   Add these rules to your existing global.css
+   =========================================================
+
+   Replaces the inline style={{ minHeight: '80vh', padding: '50px' }}
+   that was previously on Layout's <main> element.
+   Keeping layout rules in CSS makes them overridable at breakpoints.
+*/
+
+/* ---------- Main content area ---------- */
+.main-content {
+    padding: 0 64px;
+    /* align-items: center; */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   Mobile (≤ 768px)
+   ========================================================= */
+ @media (max-width: 768px) {
+    .main-content {
+        padding: 0 16px;
+    }
+} 

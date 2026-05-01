@@ -1,0 +1,170 @@
+/* =========================================================
+   SectionGrid.css — BEM block = section-grid
+   ========================================================= */
+
+.section-grid {
+    padding: 0 0 64px 0;
+}
+
+.section-grid__inner {
+    width: 100%;
+    max-width: 1312px;
+    margin: 0 auto;
+    background: #F0EBE1;
+    border-radius: 32px;
+    border: 1px solid #2625223D;
+    padding: 16px;
+}
+
+/* ── Header row ── */
+.section-grid__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 15px 15px 0;
+}
+
+.section-grid__heading {
+    font-size: clamp(20px, 2.5vw, 40px);
+    font-weight: 700;
+    color: #262522;
+    margin: 0;
+    font-family: 'Montserrat', 'Lato', Arial, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* ── Pagination arrows ── */
+.section-grid__nav {
+    display: flex;
+    gap: 8px;
+}
+
+.section-grid__arrow {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.section-grid__arrow:hover:not(:disabled) {
+    background: #e08c2e;
+    border-color: #e08c2e;
+    color: #fff;
+}
+
+.section-grid__arrow:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ── Recipe grid ── */
+.section-grid__grid {
+    display: grid;
+    gap: 16px;
+}
+
+/* ── Loading ── */
+.section-grid__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px 0;
+    color: #888;
+    font-size: 14px;
+}
+.recipe-card__info{
+    width: 45%;
+}
+
+.section-grid__spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #f0ebe1;
+    border-top-color: #e08c2e;
+    border-radius: 50%;
+    animation: featured-spin 0.7s linear infinite;
+}
+
+.section-grid__item {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-grid__item>* {
+    flex: 1;
+}
+
+.section-grid__grid--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.section-grid__grid--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.section-grid__inner--   {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
+@keyframes featured-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Error ── */
+.section-grid__error {
+    text-align: center;
+    padding: 48px 0;
+    color: #c0392b;
+    font-size: 14px;
+}
+
+.section-grid__retry {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 24px;
+    border-radius: 50px;
+    border: none;
+    background: #e08c2e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.section-grid__retry:hover {
+    background: #c97c20;
+}
+
+/* ── Tablet ── */
+@media (max-width: 1024px) and (min-width: 641px) {
+    .section-grid__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .section-grid__inner {
+        padding: 24px 16px 28px;
+        border-radius: 16px;
+    }
+
+    .section-grid__grid {
+        grid-template-columns: 1fr;
+    }
+}

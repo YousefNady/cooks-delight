@@ -1,0 +1,438 @@
+/* =========================================================
+   RECIPE DETAILS – Pixel-perfect refactor
+   ========================================================= */
+
+:root {
+  --rd-border: #ddd;
+  --rd-text-primary: hsla(45, 6%, 14%, 1);
+  --rd-text-muted: hsla(45, 6%, 14%, 0.6);
+  --rd-text-muted-strong: hsla(0, 0%, 20%, 0.8);
+  --rd-text-muted-soft: hsla(0, 0%, 20%, 0.6);
+  --rd-bg-muted: #f3f3f3;
+  --rd-bg-surface: hsla(42, 100%, 97%, 1);
+  --rd-accent: hsla(7, 82%, 63%, 1);
+  --rd-accent-2: hsla(80, 72%, 51%, 1);
+  --rd-divider: #666;
+  --rd-dark: #333;
+  --rd-white: #fff;
+  --rd-shadow: rgba(0, 0, 0, 0.2);
+  --rd-radius-lg: 32px;
+  --rd-radius-md: 24px;
+  --rd-radius-sm: 20px;
+  --rd-radius-xs: 16px;
+}
+
+/* ── Outer wrapper ─────────────────────────────────────── */
+.recipe-container {
+  border: 2px solid var(--rd-border);
+  padding: 65px 40px;
+  border-radius: var(--rd-radius-lg);
+  max-width: 1312px;
+  margin: 32px auto;
+  box-sizing: border-box;
+}
+
+/* ── RECIPE TAG pill ───────────────────────────────────── */
+.recipe-details__tag {
+  background-color: var(--rd-accent);
+  color: var(--rd-white);
+  padding: 4px 14px;
+  border-radius: var(--rd-radius-xs);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+  margin: 0 auto 16px;
+}
+
+/* ── Header block ──────────────────────────────────────── */
+.recipe-details__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.recipe-name {
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 800;
+  color: var(--rd-text-primary);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  width: 65%;
+  margin: 0 0 16px;
+}
+
+.recipe-intro {
+  width: 55%;
+  color: var(--rd-text-muted);
+  font-size: 18px;
+  line-height: 1.55;
+  font-weight: 400;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Meta row (time · servings · difficulty) ───────────── */
+.recipe-details__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0;
+  color: var(--rd-text-primary);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.recipe-details__meta p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.recipe-details__meta-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ── Hero image ────────────────────────────────────────── */
+.recipe-img {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 640px;
+  border-radius: var(--rd-radius-xs);
+  margin: 0 auto 24px;
+  object-fit: cover;
+}
+
+/* ── Rating + tags row ─────────────────────────────────── */
+.recipe-details__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-stars img {
+  width: 20px;
+  height: 20px;
+}
+
+.review-count {
+  font-size: 14px;
+  color: var(--rd-text-muted);
+  font-weight: 500;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tag {
+  padding: 6px 16px;
+  border-radius: var(--rd-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rd-dark);
+}
+
+.tag-item:nth-child(1) .tag {
+  background-color: var(--rd-accent);
+  color: var(--rd-white);
+}
+
+.tag-item:nth-child(2) .tag {
+  background-color: var(--rd-accent-2);
+  color: var(--rd-white);
+}
+
+/* Separators */
+.separator {
+  color: var(--rd-divider);
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+.separator2 {
+  color: var(--rd-divider);
+  font-size: 14px;
+  line-height: 1;
+  margin: 0 2px;
+  user-select: none;
+}
+
+/* ── Instructions heading ──────────────────────────────── */
+.recipe-details-heading {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--rd-text-primary);
+  letter-spacing: 0.02em;
+  margin: 0 0 24px;
+}
+
+/* ── Two-column layout ─────────────────────────────────── */
+.recipe-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* Left: instructions */
+.recipe-details__instructions {
+  flex: 1 1 0;
+  color: var(--rd-text-muted-strong);
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.steps-list li {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.step-title {
+  font-weight: 700;
+  color: var(--rd-text-primary);
+}
+
+/* Share pill */
+.share-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  border: 1px solid var(--rd-dark);
+  padding: 10px 20px;
+  border-radius: var(--rd-radius-md);
+}
+
+.share-text {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rd-dark);
+}
+
+.social-icons {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.social-icons img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* Right: sidebar */
+.recipe-details__side {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+/* Ingredients card */
+.recipe-details__ingredients {
+  background-color: var(--rd-bg-surface);
+  padding: 20px 24px;
+  border-radius: var(--rd-radius-md);
+}
+
+.ingredients-title,
+.nutrition-title {
+  color: var(--rd-accent);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  margin: 0 0 16px;
+}
+
+.ingredients-sublist {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingredients-sublist li {
+  font-size: 14px;
+  color: var(--rd-text-muted-strong);
+  line-height: 1.5;
+}
+
+/* Nutrition card */
+.recipe-details__nutrition {
+  background-color: var(--rd-bg-surface);
+  padding: 20px 24px;
+  border-radius: var(--rd-radius-md);
+  margin-top: 16px;
+}
+
+.nutrition-text {
+  font-size: 14px;
+  color: var(--rd-text-primary);
+  font-weight: 400;
+  margin: 0 0 4px;
+}
+
+.calories-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rd-text-primary);
+}
+
+.nutrition-text2 {
+  font-size: 11px;
+  color: var(--rd-text-muted-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  margin: 12px 0 0;
+}
+
+/* =========================================================
+   TABLET  (≤ 1024px)
+   ========================================================= */
+@media (max-width: 1024px) {
+  .recipe-container {
+    padding: 40px 24px;
+  }
+
+  .recipe-name {
+    width: 90%;
+  }
+
+  .recipe-intro {
+    width: 85%;
+    font-size: 16px;
+  }
+
+  .recipe-details {
+    flex-direction: column-reverse;
+    gap: 32px;
+  }
+
+  .recipe-details__side {
+    width: 100%;
+  }
+
+  .recipe-details__instructions {
+    width: 100%;
+  }
+
+  .recipe-details__info {
+    margin-bottom: 40px;
+  }
+}
+
+/* =========================================================
+   MOBILE  (≤ 768px)
+   ========================================================= */
+@media (max-width: 768px) {
+  .recipe-container {
+    padding: 32px 16px;
+    border-radius: var(--rd-radius-md);
+    margin: 16px;
+    width: calc(100% - 32px);
+  }
+
+  .recipe-name {
+    font-size: clamp(36px, 10vw, 52px);
+    width: 100%;
+  }
+
+  .recipe-intro {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .recipe-details__meta {
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .recipe-img {
+    border-radius: var(--rd-radius-xs);
+  }
+
+  .recipe-details__info {
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .recipe-details-heading {
+    font-size: 20px;
+  }
+
+  .recipe-details {
+    gap: 24px;
+  }
+
+  .share-section {
+    width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  .recipe-details__ingredients,
+  .recipe-details__nutrition {
+    padding: 16px 18px;
+  }
+}
+
+.story__social {
+  display: flex;
+  gap: 16px;
+}
+
+.story__social-link {
+  color: var(--rd-text-primary);
+  font-size: 18px;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.story__social-link:hover {
+  color: var(--rd-accent);
+  transform: translateY(-2px);
+}

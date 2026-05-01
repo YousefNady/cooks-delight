@@ -1,0 +1,282 @@
+/* =========================================================
+   navbar.css — Cooks Delight
+   ========================================================= */
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 20px 64px;
+    background-color: #F0EBE1;
+}
+
+.navbar__content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 10px 30px;
+    border-radius: 50px;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+    max-width: 1312px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo Styling */
+.navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #262522;
+    font-weight: bold;
+}
+
+/* Standardize logo dimensions across all layout components */
+.navbar__logo img {
+    width: 40px;
+    height: 35px;
+    object-fit: contain;
+}
+
+.navbar__logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    font-weight: 800;
+    color: #262522;
+}
+
+.navbar__logo-cooks {
+    font-size: 16px;
+}
+
+.navbar__logo-delight {
+    font-size: 14px;
+}
+
+/* Navigation Links Styling */
+.navbar__links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar__link {
+    text-decoration: none;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 5px 5px 5px;
+    transition: 0.3s;
+}
+
+/* BEM Modifier for active state */
+.navbar__link--active {
+    color: #262522;
+    border-bottom: 3px solid #EE6352;
+}
+
+.navbar__search{
+    position: absolute;
+    right: 120px;
+}
+
+
+/* Search Box Styling */
+.navbar__search-box {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 8px 15px;
+    border-radius: 20px;
+    width: 250px;
+    animation: expand 0.3s ease-out;
+}
+
+.navbar__search-icon {
+    color: #666;
+    margin-right: 8px;
+}
+
+.navbar__search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+}
+
+.navbar__search-btn {
+    background: #e0e0e0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.6s;
+}
+
+.navbar__search-btn:hover {
+    background: #d0d0d0;
+}
+
+/* ── NEW: Hamburger button ── */
+.navbar__hamburger {
+    display: none;
+    /* hidden on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: #262522;
+    padding: 4px;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   Mobile (≤ 768px)
+   ========================================================= */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 12px 16px;
+    }
+
+    .navbar__content {
+        width: 100%;
+        padding: 10px 16px;
+        border-radius: 50px;
+    }
+
+    /* Hide desktop nav links and search on mobile */
+    .navbar__links,
+    .navbar__search {
+        display: none;
+    }
+
+    /* Show hamburger on mobile */
+    .navbar__hamburger {
+        display: flex;
+    }
+}
+
+
+/* ── Actions container ───────────────────────────────────────────────────── */
+.navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    /* never squash on narrow viewports */
+}
+
+/* ── Profile link wrapper ────────────────────────────────────────────────── */
+.navbar__profile-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* ── Avatar image — THE LAYOUT FIX ──────────────────────────────────────────
+
+ * ─────────────────────────────────────────────────────────────────────────── */
+.navbar__avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    /* prevent flex from squishing it */
+    border-radius: 50%;
+    object-fit: cover;
+    /* crop to circle without distortion */
+    border: 2px solid #e8a020;
+    /* --cd-orange accent ring */
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar__profile-link:hover .navbar__avatar {
+    border-color: #c8880a;
+    /* --cd-orange-dark on hover */
+    transform: scale(1.06);
+}
+
+/* ── Avatar initials fallback (shown when image 404s via onError) ────────── */
+.navbar__avatar-fallback {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    background: #e8a020;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e8a020;
+    /* display is toggled to 'flex' by the onError handler in Navbar.tsx */
+}
+
+/* ── Logout button ───────────────────────────────────────────────────────── */
+.navbar__logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid #d4cfc6;
+    background: transparent;
+    color: #6b6b6b;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.navbar__logout-btn:hover {
+    color: #e8573a;
+    border-color: #e8573a;
+    background: rgba(232, 87, 58, 0.06);
+    transform: translateY(-1px);
+}
+
+/* ── Login button (pill) ─────────────────────────────────────────────────── */
+.navbar__login-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    background: #e8a020;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.navbar__login-btn:hover {
+    background: #c8880a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(232, 160, 32, 0.35);
+}
+
+/* ── Hide actions on mobile (hamburger takes over) ───────────────────────── */
+@media (max-width: 768px) {
+    .navbar__actions {
+        display: none;
+    }
+}

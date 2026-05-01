@@ -1,0 +1,359 @@
+/* ===== Intro ===== */
+*{
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --bg-surface: #FFFBF2;
+  --border-surface: #e8e3db;
+  --text-primary: hsla(45, 6%, 14%, 1);
+  --text-muted: #6b6a66;
+  --text-muted-soft: #26252266;
+  --text-strong: #1a1a1a;
+  --text-white: #ffffff;
+  --button-border: 1px solid var(--text-primary);
+  --border-radius-lg: 24px;
+  --button-padding: 12px 24px;
+  --button-bg-light: hsla(40, 33%, 91%, 1);
+  --button-border-soft: hsla(45, 6%, 14%, 0.4);
+  --button-bg-active: #9FDC26;
+  --button-radius-round: 50px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --heart-inactive: #999;
+  --heart-active: #e8573a;
+  --heart-bg-light: rgba(255, 255, 255, 0.85);
+  --heart-bg-active: rgba(255, 255, 255, 0.95);
+  --heart-shadow-active: rgba(232, 87, 58, 0.30);
+}
+.recipe-card {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-surface);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+.recipes-intro {
+  margin-top: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  
+  justify-content: center;
+  text-align: center;
+}
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 40px 0px;
+}
+.recipes-heading {
+  text-align: center;
+  font-size: 40px;
+  color: var(--text-primary);
+  margin-top: 20px;
+  width: 40%;
+  text-transform: uppercase;
+}
+
+.recipes-text {
+  width: 40%;
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* ===== Grid ===== */
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+
+/* ===== Card ===== */
+
+
+.recipe-card__image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+}
+
+.recipe-card__content{
+  padding: 24px;
+}
+
+.recipe-card__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-bottom: 12px;
+}
+
+.recipe-card__footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  gap: 8px;
+}
+.recipe-card__details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recipe-card__description {
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+.recipe-card__info {
+  font-size: 12px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  width: 50%;
+}
+
+/* ===== Button ===== */
+.recipe-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 50px;
+  border: var(--button-border);
+  background: transparent;
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.recipe-card__button:hover {
+  background: var(--text-strong);
+  color: var(--text-white);
+  transform: scale(1.03);
+}
+/* ===== Hover ===== */
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== Buttons Filter ===== */
+
+.buttons-container button {
+  background-color: var(--button-bg-light);
+  color: var(--text-muted-soft);
+  border: 1px solid var(--button-border-soft);
+  padding: var(--button-padding);
+  border-radius: var(--border-radius-lg);
+  font-size: 14px;
+  margin-top: auto;
+}
+
+.buttons-container button:hover {
+  color: var(--text-primary);
+  border: var(--button-border);
+  cursor: pointer;
+}
+
+.buttons-container button.active {
+  background-color: var(--button-bg-active);
+  color: var(--text-primary);
+  border: var(--button-border);
+}
+
+/* ===== Tablet ===== */
+@media (max-width: 1024px) {
+  .recipes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .recipes-heading,
+  .recipes-text {
+    width: 70%;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+
+    
+  .recipes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recipes-heading {
+    font-size: 28px;
+    width: 100%;
+  }
+
+  .recipes-text {
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .recipes-intro {
+      padding: 0 16px 32px;
+  }
+
+.buttons-container {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+  .buttons-container button {
+  
+    font-size: 12px;
+  }
+.recipe-card__details{
+  flex-direction: column;
+  align-items: flex-start;
+}
+.recipe-card__button{
+  width: 100%;
+  margin-bottom: 10px;
+}
+.recipe-card__info{
+  width: 100%;  
+}
+  .recipe-card {
+    max-width: 100%;
+  }
+}
+
+/* ── Image wrapper (new) ─────────────────────────────────────────────────────
+ * Wraps the <img> so the heart button can be absolutely positioned over it
+ * without affecting the surrounding card layout.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.recipe-card__image-wrap {
+position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+/* Ensure the image fills its new wrapper exactly as before */
+.recipe-card__image-wrap .recipe-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-height: 234px;
+}
+
+/* ── Heart button ────────────────────────────────────────────────────────────
+ * Absolute top-left over the image. Uses a frosted-glass backdrop so it
+ * reads clearly on any image without a harsh background.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.recipe-card__heart {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  /* Frosted glass base */
+  background: var(--heart-bg-light);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  /* Unfavourited = medium grey icon */
+  color: var(--heart-inactive);
+
+  box-shadow: var(--shadow-sm);
+
+  /* Smooth all properties */
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+
+  /* Start hidden, reveal on card hover — opacity transition */
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+}
+
+/* Show heart when the card is hovered OR when it is already favourited */
+.recipe-card:hover .recipe-card__heart,
+.recipe-card__heart--active {
+  opacity: 1;
+}
+
+/* Active / favourited state */
+.recipe-card__heart--active {
+  color: var(--heart-active);
+  background: var(--heart-bg-active);
+  box-shadow: 0 2px 12px var(--heart-shadow-active);
+}
+
+/* Hover lift */
+.recipe-card__heart:hover {
+  transform: scale(1.15);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Pop animation when toggled on */
+.recipe-card__heart--active svg {
+  animation: heartPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes heartPop {
+  0%   { transform: scale(0.7); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Mobile Adjustments ===== */
+@media (max-width: 768px) {
+  .recipe-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .recipe-card__button {
+    width: 100%;
+  }
+}
