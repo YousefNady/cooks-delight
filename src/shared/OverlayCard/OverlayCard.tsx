@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { RecipeCard } from '../../types/recipe.types';
+import type { RecipeCard } from '../types/recipe.types';
 import './OverlayCard.css';
 
 interface OverlayCardProps {

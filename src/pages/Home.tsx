@@ -1,4 +1,3 @@
-import Recipes from "./Recipes";
 import "../features/home/style/home.css";
 import icon1 from "../assets/home/icon (3).svg";
 import icon2 from "../assets/home/icon (4).svg";
@@ -8,6 +7,7 @@ import icon5 from "../assets/home/icon (7).svg";
 import FeaturedRecipesSection from "../features/aboutUs/components/FeaturedRecipesSection";
 import { useNavigate } from "react-router-dom";
 import AboutUsCard from "../features/home/components/aboutuscard";
+import HomeShowcase from "../features/home/components/HomeShowcase";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ export default function Home() {
       </section>
 
       <FeaturedRecipesSection />
-      <Recipes />
+      <HomeShowcase />
       <AboutUsCard />
     </div>
   );

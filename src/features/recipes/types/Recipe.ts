@@ -1,4 +1,4 @@
-export type Recipe = {
+export interface Recipe {
   id: number;
   name: string;
   image: string;
@@ -6,15 +6,22 @@ export type Recipe = {
   prepTimeMinutes: number;
   cookTimeMinutes: number;
   servings: number;
-  difficulty: string;
+  difficulty: "Easy" | "Medium" | "Hard" | string;
 
   cuisine: string;
   mealType: string[];
 
   ingredients: string[];
   instructions: string[];
-reviewCount: number;
+  reviewCount: number;
   caloriesPerServing?: number;
   tags?: string[];
   rating: number;
-};
+}
+
+export interface RecipesApiResponse {
+  recipes: Recipe[];
+  total: number;
+  skip: number;
+  limit: number;
+}
