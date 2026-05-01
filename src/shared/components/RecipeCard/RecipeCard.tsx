@@ -1,5 +1,3 @@
-// src/shared/components/RecipeCard/RecipeCard.tsx
-
 import { useNavigate } from 'react-router-dom';
 import { useFavoritesContext } from '../../../features/profile/context/FavoritesContext';
 import './RecipeCard.css';
@@ -32,15 +30,13 @@ export default function RecipeCard({ recipe, hideFavoriteBtn = false }: RecipeCa
   const minutes = total % 60;
 
   const handleHeartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent the card click / any parent link from firing
     e.stopPropagation();
     toggleFavorite(recipe);
   };
 
   return (
     <div className="recipe-card">
-
-      {/* ── Image wrapper — needed for absolute-positioned heart ── */}
+      
       <div className="recipe-card__image-wrap">
         <img
           className="recipe-card__image"
@@ -48,7 +44,6 @@ export default function RecipeCard({ recipe, hideFavoriteBtn = false }: RecipeCa
           alt={recipe.name}
         />
 
-        {/* ── Heart button — absolute top-right over image ── */}
         {!hideFavoriteBtn && (
           <button
             className={`recipe-card__heart${favorited ? ' recipe-card__heart--active' : ''}`}
@@ -74,24 +69,28 @@ export default function RecipeCard({ recipe, hideFavoriteBtn = false }: RecipeCa
         )}
       </div>
 
-      <h3 className="recipe-card__title">{recipe.name}</h3>
+      <div className="recipe-card__content">
+        
+        <h3 className="recipe-card__title">{recipe.name}</h3>
 
-      <p className="recipe-card__description">
-        A delicious {recipe.cuisine} recipe with easy step-by-step instructions.
-      </p>
-
-      <div className="recipe-card__details">
-        <p className="recipe-card__info">
-          {hours > 0 && `${hours}h `}{minutes}m · {recipe.difficulty} PREP · {recipe.servings} servings
+        <p className="recipe-card__description">
+          A delicious {recipe.cuisine || "Special"} recipe with easy step-by-step instructions.
         </p>
+        
+        <div className="recipe-card__footer">
+          <p className="recipe-card__info">
+            {hours > 0 && `${hours}H `}{minutes}M · {recipe.difficulty || 'Easy'} PREP · {recipe.servings || 0} SERVES
+          </p>
 
-        <button
-          className="recipe-card__button"
-          onClick={() => navigate(`/recipes/${recipe.id}`)}
-          type="button"
-        >
-          View Recipe
-        </button>
+          <button
+            className="recipe-card__button"
+            onClick={() => navigate(`/recipes/${recipe.id}`)}
+            type="button"
+          >
+            View Recipe
+          </button>
+        </div>
+
       </div>
 
     </div>

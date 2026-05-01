@@ -18,7 +18,7 @@ export default function AboutUsCard() {
         <div className="about-us-card_left-top">
           
         <div className="about-us-card__text">
-        <p className="about-us-card__tag">RECIPES</p>
+        <p className="about-us-card__tag">about us</p>
       <h2 className="about-us-card__title">Our Culinary Chronicle</h2>
       <p className="about-us-card__description">
         Our journey is crafted with dedication, creativity, and an unrelenting commitment to delivering delightful culinary experiences. Join us in savoring the essence of every dish and the stories that unfold.

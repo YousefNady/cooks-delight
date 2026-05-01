@@ -244,8 +244,8 @@
   display: none;
 }
 
-.recipe-card {
-  min-width: 220px;
+.recipe-card-container {
+  min-width: px;
   flex-shrink: 0;
 }
 

@@ -37,12 +37,12 @@
 .recipes-status {
   text-align: center;
   padding: 48px 24px;
-  color: hsla(45, 6%, 14%, 1);
+  color: #262522;
   font-size: 18px;
 }
 
 .recipes-status--error {
-  color: hsla(7, 82%, 63%, 1);
+  color: #EE6352;
 }
 
 .recipes-results .recipes-grid {
@@ -71,7 +71,7 @@
 
 .toggle-expand-btn {
   background-color: #e08c2e;
-  color: #ffffff;
+  color: #F0EBE1;
   border: none;
   padding: 12px 24px;
   border-radius: 50px;
