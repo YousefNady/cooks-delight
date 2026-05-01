@@ -31,14 +31,14 @@ export default function Home() {
 
           <div className="home-hero__actions">
             <button
-              className="button button--primary"
+              className="hero-signin-button"
               onClick={() => navigate("/register")}
             >
               SIGN UP NOW
             </button>
 
             <button
-              className="button button--secondary"
+              className="hero-button--secondary"
               onClick={() => navigate("/recipes")}
             >
               EXPLORE RECIPES

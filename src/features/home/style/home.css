@@ -47,19 +47,22 @@
 
 /* ================= BUTTONS ================= */
 
-.button {
-  padding: 8px 16px;
+.hero-signin-button {
+  padding: 12px 24px;
   border-radius: 24px;
   border: none;
   cursor: pointer;
-}
-
-.button--primary {
-  background: hsla(33, 88%, 57%, 1);
+   background: hsla(33, 88%, 57%, 1);
   color: hsla(45, 6%, 14%, 1);
 }
 
-.button--secondary {
+
+
+.hero-button--secondary {
+    padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
   background: black;
   color: white;
 }
