@@ -7,11 +7,17 @@ import { FiSearch, FiMenu, FiLogOut } from 'react-icons/fi';
 import { useState } from 'react';
 import MobileMenu from './Mobilemenu';
 import { useAuth } from '../../features/auth/context/useAuth';  // custom hook to consume AuthContext
+import { useRecipeSearch } from '../../features/search/hooks/useRecipeSearch';
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const {
+    searchTerm,
+    handleSearchChange,
+    handleSearchSubmit,
+  } = useRecipeSearch();
 
   /*
    * useAuth() reads from React state — not localStorage — so the Navbar
@@ -63,20 +69,31 @@ const Navbar = () => {
                 <FiSearch />
               </div>
             ) : (
-              <div className="navbar__search-box">
+              <form
+                className="navbar__search-box"
+                onSubmit={(event) => {
+                  handleSearchSubmit(event);
+                  setIsSearchOpen(false);
+                }}
+              >
                 <FiSearch
                   className="navbar__search-icon"
-                  onClick={() => setIsSearchOpen(false)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={(event) => {
+                    event.currentTarget.closest("form")?.requestSubmit();
+                  }}
                   style={{ cursor: 'pointer' }}
                 />
                 <input
                   className="navbar__search-input"
                   type="text"
                   placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                   autoFocus
                   onBlur={() => setIsSearchOpen(false)}
                 />
-              </div>
+              </form>
             )}
           </div>
 

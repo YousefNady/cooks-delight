@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { RecipeCard, RecipesApiResponse } from '../../shared/types/recipe.types';
+import type { RecipeCard, RecipesApiResponse } from '../../../shared/types/recipe.types';
 
 const BASE_URL = 'https://dummyjson.com/recipes';
 

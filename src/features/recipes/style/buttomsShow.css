@@ -7,6 +7,67 @@
   margin: 50px 0;
 }
 
+.recipes-results {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 56px 24px 0;
+}
+
+.recipes-results .recipes-intro {
+  margin: 0 auto 42px;
+  align-items: center;
+  text-align: center;
+}
+
+.recipes-results .recipes-heading {
+  width: min(100%, 760px);
+  margin-top: 0;
+  font-size: 40px;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.recipes-count {
+  margin-top: 14px;
+  color: rgb(107, 106, 102);
+  font-size: 18px;
+  text-align: center;
+}
+
+.recipes-status {
+  text-align: center;
+  padding: 48px 24px;
+  color: hsla(45, 6%, 14%, 1);
+  font-size: 18px;
+}
+
+.recipes-status--error {
+  color: hsla(7, 82%, 63%, 1);
+}
+
+.recipes-results .recipes-grid {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .recipes-results {
+    padding: 40px 16px 0;
+  }
+
+  .recipes-results .recipes-intro {
+    padding: 0;
+    margin-bottom: 28px;
+  }
+
+  .recipes-results .recipes-heading {
+    font-size: 28px;
+  }
+
+  .recipes-count {
+    font-size: 16px;
+  }
+}
+
 
 .toggle-expand-btn {
   background-color: #e08c2e;

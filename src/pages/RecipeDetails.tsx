@@ -27,7 +27,7 @@ const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
 useEffect(() => {
   if (!id) return;
 
-  getRecipeById(id).then((data) => setRecipe(data));
+  getRecipeById(id).then((data) => setRecipe(data ?? null));
 
   getRecipes().then((data) => {
     setAllRecipes(data.recipes);
