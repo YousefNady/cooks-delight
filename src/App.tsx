@@ -10,28 +10,36 @@ import NotFound from './pages/NotFound/NotFound';
 import Layout from './shared/layout/Layout';
 import { ContactPage } from './features/contact';
 import ScrollRestoration from './shared/components/ScrollRestoration';
+import ProfilePage from './features/profile/pages/Profilepage';
+import { FavoritesProvider } from './features/profile';
+import { AuthProvider } from './features/auth/context/AuthContext';
 
 function App() {
   return (
-    <BrowserRouter>
-    <ScrollRestoration />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="recipes" element={<Recipes />} />
-          <Route path="recipes/:id" element={<RecipeDetails />} />
-          <Route path="tips" element={<CookingTips />} />
-          <Route path="about" element={<AboutUs />} />
-          <Route path="contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
+    <AuthProvider>
+      <FavoritesProvider>
+        <BrowserRouter>
+          <ScrollRestoration />
 
-        <Route path="login" element={<Login />} />
-                
-        {/* Future feature: Coming soon */}
-        <Route path="/register" element={<Signup />} />
-      </Routes>
-    </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="recipes" element={<Recipes />} />
+              <Route path="recipes/:id" element={<RecipeDetails />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="tips" element={<CookingTips />} />
+              <Route path="about" element={<AboutUs />} />
+              <Route path="contact" element={<ContactPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Signup />} />
+          </Routes>
+
+        </BrowserRouter>
+      </FavoritesProvider>
+    </AuthProvider>
   );
 }
 

@@ -103,7 +103,7 @@ const LoginForm: React.FC = () => {
           disabled={isLoading}
           aria-busy={isLoading}
         >
-          {isLoading ? 'Logging in...' : 'SIGN UP NOW!'}
+          {isLoading ? 'Logging in...' : 'SIGN IN NOW!'}
         </button>
       </form>
 

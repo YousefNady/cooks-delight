@@ -10,6 +10,7 @@
 }
 
 .navbar__content {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,7 +29,7 @@
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    color: #333;
+    color: #262522;
     font-weight: bold;
 }
 
@@ -75,9 +76,15 @@
 
 /* BEM Modifier for active state */
 .navbar__link--active {
-    color: #333;
+    color: #262522;
     border-bottom: 3px solid #EE6352;
 }
+
+.navbar__search{
+    position: absolute;
+    right: 120px;
+}
+
 
 /* Search Box Styling */
 .navbar__search-box {
@@ -156,5 +163,120 @@
     /* Show hamburger on mobile */
     .navbar__hamburger {
         display: flex;
+    }
+}
+
+
+/* ── Actions container ───────────────────────────────────────────────────── */
+.navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    /* never squash on narrow viewports */
+}
+
+/* ── Profile link wrapper ────────────────────────────────────────────────── */
+.navbar__profile-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* ── Avatar image — THE LAYOUT FIX ──────────────────────────────────────────
+
+ * ─────────────────────────────────────────────────────────────────────────── */
+.navbar__avatar {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    /* prevent flex from squishing it */
+    border-radius: 50%;
+    object-fit: cover;
+    /* crop to circle without distortion */
+    border: 2px solid #e8a020;
+    /* --cd-orange accent ring */
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar__profile-link:hover .navbar__avatar {
+    border-color: #c8880a;
+    /* --cd-orange-dark on hover */
+    transform: scale(1.06);
+}
+
+/* ── Avatar initials fallback (shown when image 404s via onError) ────────── */
+.navbar__avatar-fallback {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    background: #e8a020;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #e8a020;
+    /* display is toggled to 'flex' by the onError handler in Navbar.tsx */
+}
+
+/* ── Logout button ───────────────────────────────────────────────────────── */
+.navbar__logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid #d4cfc6;
+    background: transparent;
+    color: #6b6b6b;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.navbar__logout-btn:hover {
+    color: #e8573a;
+    border-color: #e8573a;
+    background: rgba(232, 87, 58, 0.06);
+    transform: translateY(-1px);
+}
+
+/* ── Login button (pill) ─────────────────────────────────────────────────── */
+.navbar__login-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    background: #e8a020;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+.navbar__login-btn:hover {
+    background: #c8880a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(232, 160, 32, 0.35);
+}
+
+/* ── Hide actions on mobile (hamburger takes over) ───────────────────────── */
+@media (max-width: 768px) {
+    .navbar__actions {
+        display: none;
     }
 }
