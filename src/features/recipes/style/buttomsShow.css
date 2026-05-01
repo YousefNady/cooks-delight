@@ -1,4 +1,15 @@
 
+:root {
+  --text-muted: rgb(107, 106, 102);
+  --text-primary: #262522;
+  --status-error: #EE6352;
+  --toggle-bg: #e08c2e;
+  --toggle-text: #F0EBE1;
+  --toggle-shadow: rgba(224, 140, 46, 0.2);
+  --toggle-shadow-hover: rgba(224, 140, 46, 0.3);
+  --button-radius: 50px;
+}
+
 .load-more-container {
   display: flex;
   justify-content: center;
@@ -29,7 +40,7 @@
 
 .recipes-count {
   margin-top: 14px;
-  color: rgb(107, 106, 102);
+  color: var(--text-muted);
   font-size: 18px;
   text-align: center;
 }
@@ -37,12 +48,12 @@
 .recipes-status {
   text-align: center;
   padding: 48px 24px;
-  color: #262522;
+  color: var(--text-primary);
   font-size: 18px;
 }
 
 .recipes-status--error {
-  color: #EE6352;
+  color: var(--status-error);
 }
 
 .recipes-results .recipes-grid {
@@ -70,11 +81,11 @@
 
 
 .toggle-expand-btn {
-  background-color: #e08c2e;
-  color: #F0EBE1;
+  background-color: var(--toggle-bg);
+  color: var(--toggle-text);
   border: none;
   padding: 12px 24px;
-  border-radius: 50px;
+  border-radius: var(--button-radius);
   font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
@@ -83,18 +94,18 @@
   align-items: center;
   gap: 10px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(224, 140, 46, 0.2);
+  box-shadow: 0 4px 15px var(--toggle-shadow);
 }
 
 .toggle-expand-btn:hover {
-  background-color: #e08c2e; 
+  background-color: var(--toggle-bg);
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(224, 140, 46, 0.3);
+  box-shadow: 0 6px 20px var(--toggle-shadow-hover);
 }
 
 
 .arrow-icon {
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1;
   transition: transform 0.3s ease;
 }
