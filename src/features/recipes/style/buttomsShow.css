@@ -49,7 +49,7 @@
   width: 100%;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .recipes-results {
     padding: 40px 16px 0;
   }
@@ -100,7 +100,7 @@
 }
 
 .arrow-icon.down {
-  animation: bounceDown 1.5s infinite;
+  animation: bounceDown 0.5s infinite;
 }
 
 @keyframes bounceDown {
