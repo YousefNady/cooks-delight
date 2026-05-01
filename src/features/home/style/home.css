@@ -37,6 +37,7 @@
   text-align: center;
   color: white;
   max-width: 900px;
+  animation: heroContentReveal 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home-hero__title {
@@ -44,6 +45,7 @@
   font-weight: 800;
   line-height: 1;
   color: var(--home-hero-text);
+  animation: heroTitlePop 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .home-hero__description {
@@ -51,12 +53,14 @@
   font-weight: 400;
   margin: 12px 0 40px;
   color: var(--home-hero-text);
+  animation: heroDescFade 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
 .home-hero__actions {
   display: flex;
   justify-content: center;
   gap: 20px;
+  animation: heroActionsSlide 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 /* ================= BUTTONS ================= */
@@ -158,6 +162,7 @@
   letter-spacing: 0;
   text-align: left;
   transition: opacity 0.2s ease, transform 0.2s ease;
+  animation: paletteItemFloat 0.85s ease 0.1s both;
 }
 
 .home-palette__item:hover,
@@ -177,9 +182,6 @@
 }
 
 @media (max-width: 768px) {
-  .home {
-    padding: 0 16px;
-  }
 
   .home-hero {
     height: auto;
@@ -212,5 +214,60 @@
 
   .home-palette__description {
     margin-bottom: 24px;
+  }
+}
+
+@keyframes heroContentReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroTitlePop {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroDescFade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroActionsSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes paletteItemFloat {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

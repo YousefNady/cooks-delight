@@ -65,6 +65,10 @@
     padding: 40px 16px 0;
   }
 
+  .load-more-container {
+    margin: 16px 0;
+  }
+
   .recipes-results .recipes-intro {
     padding: 0;
     margin-bottom: 28px;

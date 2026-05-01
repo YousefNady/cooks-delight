@@ -14,6 +14,18 @@
   --button-border: 1px solid var(--text-primary);
   --border-radius-lg: 24px;
   --button-padding: 12px 24px;
+  --button-bg-light: hsla(40, 33%, 91%, 1);
+  --button-border-soft: hsla(45, 6%, 14%, 0.4);
+  --button-bg-active: #9FDC26;
+  --button-radius-round: 50px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --heart-inactive: #999;
+  --heart-active: #e8573a;
+  --heart-bg-light: rgba(255, 255, 255, 0.85);
+  --heart-bg-active: rgba(255, 255, 255, 0.95);
+  --heart-shadow-active: rgba(232, 87, 58, 0.30);
 }
 .recipe-card {
   background: var(--bg-surface);
@@ -147,15 +159,15 @@
 /* ===== Hover ===== */
 .recipe-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08)
+  box-shadow: var(--shadow-md);
 }
 
 /* ===== Buttons Filter ===== */
 
 .buttons-container button {
-  background-color: hsla(40, 33%, 91%, 1);
+  background-color: var(--button-bg-light);
   color: var(--text-muted-soft);
-  border: 1px solid hsla(45, 6%, 14%, 0.4);
+  border: 1px solid var(--button-border-soft);
   padding: var(--button-padding);
   border-radius: var(--border-radius-lg);
   font-size: 14px;
@@ -169,7 +181,7 @@
 }
 
 .buttons-container button.active {
-  background-color: #9FDC26;
+  background-color: var(--button-bg-active);
   color: var(--text-primary);
   border: var(--button-border);
 }
@@ -192,7 +204,6 @@
     
   .recipes-grid {
     grid-template-columns: 1fr;
-   padding: 0 16px 32px;
   }
 
   .recipes-heading {
@@ -278,14 +289,14 @@ position: relative;
   cursor: pointer;
 
   /* Frosted glass base */
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--heart-bg-light);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 
   /* Unfavourited = medium grey icon */
-  color: #999;
+  color: var(--heart-inactive);
 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
 
   /* Smooth all properties */
   transition:
@@ -312,15 +323,15 @@ position: relative;
 
 /* Active / favourited state */
 .recipe-card__heart--active {
-  color: #e8573a;        /* matches --cd-coral from your design system */
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 12px rgba(232, 87, 58, 0.30);
+  color: var(--heart-active);
+  background: var(--heart-bg-active);
+  box-shadow: 0 2px 12px var(--heart-shadow-active);
 }
 
 /* Hover lift */
 .recipe-card__heart:hover {
   transform: scale(1.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-hover);
 }
 
 /* Pop animation when toggled on */

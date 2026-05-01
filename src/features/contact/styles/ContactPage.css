@@ -475,7 +475,7 @@
 }
 
 /* ─── Tablet adjustments ─────────────────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .contact-info {
     position: static; /* un-sticky on mobile */
   }
@@ -485,7 +485,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .contact-hero__heading {
     font-size: 2.4rem;
   }
