@@ -37,9 +37,10 @@ const AboutUs = () => {
 
           {/* ── GALLERY ── */}
           <GallerySection />
+
+      {/* ── FEATURED RECIPES ── */}
     </div>
     
-      {/* ── FEATURED RECIPES ── */}
       <FeaturedRecipesSection />
 
     </div>

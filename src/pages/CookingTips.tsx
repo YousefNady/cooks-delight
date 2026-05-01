@@ -14,7 +14,7 @@ const CookingTipsPage = () => {
       <IntroSection />
       <NewestRecipesSection />
       <MasteringSection />
-      //<NourishingSection />
+      <NourishingSection />
       <TipsSection />
       {/* <CTASection /> */}
     </main>

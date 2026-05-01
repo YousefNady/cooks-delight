@@ -3,7 +3,7 @@
    ========================================================= */
 
 .section-grid {
-    padding: 64px 0;
+    padding: 0 0 64px 0;
 }
 
 .section-grid__inner {
@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    padding: 15px 15px 15px 0;
 }
 
 .section-grid__heading {

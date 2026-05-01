@@ -9,21 +9,24 @@ export default function AboutUsCard() {
   const navigate = useNavigate();
 
   return (
+    <section className="about-us-section">
     <div className="about-us-card">
         <div className="about-us-card__container">
 
        
       <div className="about-us-card__left">
         <div className="about-us-card_left-top">
+          
         <div className="about-us-card__text">
-      <h2 className="about-us-card__title">About Us</h2>
+        <p className="about-us-card__tag">about us</p>
+      <h2 className="about-us-card__title">Our Culinary Chronicle</h2>
       <p className="about-us-card__description">
         Our journey is crafted with dedication, creativity, and an unrelenting commitment to delivering delightful culinary experiences. Join us in savoring the essence of every dish and the stories that unfold.
       </p>
 <button
   className="button button--primary"
   onClick={() => navigate("/about")}>
-  Learn More
+  Read More
 </button>
       </div>
       <div className="about-us-card__image1">
@@ -40,5 +43,6 @@ export default function AboutUsCard() {
        </div>
     </div>
     </div>
+    </section>
   );
 }

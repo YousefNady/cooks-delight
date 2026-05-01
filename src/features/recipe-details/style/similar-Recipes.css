@@ -1,55 +1,79 @@
 /* ===== Similar Recipes Frame ===== */
+:root {
+  --similar-border: hsla(45, 6%, 14%, 0.15);
+  --similar-text: #262522;
+  --similar-button-border: #e0e0e0;
+  --similar-button-bg: #ffffff;
+  --similar-button-color: #555;
+  --similar-button-hover-bg: #e08c2e;
+  --similar-button-hover-color: #ffffff;
+  --similar-rating-bg: #ffffff;
+  --similar-rating-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== OUTER WRAPPER (Shared Component Fix) ===== */
+.similar-recipes-container {
+  width: 100%;
+  max-width: 1312px;
+  margin: 40px auto;
+  flex-basis: 100%;
+  flex-shrink: 0;
+  clear: both;
+  box-sizing: border-box;
+}
+
 .similar-recipes {
-  margin: 60px auto;
-  padding: 40px 64px;
-  border: 1px solid hsla(45, 6%, 14%, 0.15);
+  width: 100%;
+  padding: 32px 24px;
+  border: 1px solid var(--similar-border);
   border-radius: 20px;
+  box-sizing: border-box;
+  margin: 65px auto;
+    max-width: 1312px;
 }
 
 /* ===== Header ===== */
 .similar-recipes__header {
-  display: flex;
+display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0;
   margin-bottom: 28px;
 }
 
 .similar-recipes__heading {
-  font-size: clamp(20px, 2.5vw, 40px);
+  font-size: clamp(20px, 2.5vw, 36px);
   font-weight: 700;
-  color: #262522;
+  color: var(--similar-text);
   margin: 0;
+  text-transform: uppercase;
 }
 
-/* ===== NAV (RIGHT SIDE) ===== */
+/* ===== NAV ARROWS ===== */
 .similar-recipes__nav {
   display: flex;
   gap: 10px;
   margin-left: auto;
 }
 
-/* ===== ARROWS (SAME AS FEATURED) ===== */
 .similar-recipes__nav button {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1.5px solid #e0e0e0;
-  background: #fff;
-
+  border: 1.5px solid var(--similar-button-border);
+  background: var(--similar-button-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-  color: #555;
-
+  color: var(--similar-button-color);
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .similar-recipes__nav button:hover:not(:disabled) {
-  background: #e08c2e;
-  border-color: #e08c2e;
-  color: #fff;
+  background: var(--similar-button-hover-bg);
+  border-color: var(--similar-button-hover-bg);
+  color: var(--similar-button-hover-color);
 }
 
 .similar-recipes__nav button:disabled {
@@ -62,25 +86,51 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+  padding: 0 8px;
 }
 
-/* ===== CARD OVERRIDE ===== */
+/* ===== CARD OVERRIDES ===== */
 .similar-recipes .recipe-card {
   width: 100%;
   max-width: 100%;
+  transition: transform 0.2s ease;
 }
 
 .similar-recipes .recipe-card:hover {
   transform: translateY(-6px);
 }
 
-/* ===== IMAGE SIZE ===== */
 .similar-recipes .recipe-card__image {
   max-height: 220px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ===== RATING BADGE ===== */
+.featured-card-wrapper {
+  position: relative;
+}
+
+.featured-rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--similar-rating-bg);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--similar-button-hover-bg);
+  box-shadow: 0 2px 6px var(--similar-rating-shadow);
 }
 
 /* ===== TABLET ===== */
 @media (max-width: 1024px) {
+  .similar-recipes-container {
+    margin-top: 20px;
+    padding: 0 24px;
+  }
+
   .similar-recipes__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -88,38 +138,23 @@
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
+  .similar-recipes-container {
+    margin-top: 16px;
+    padding: 0 16px;
+  }
+
   .similar-recipes {
-    padding: 24px 16px;
+    padding: 24px 12px;
     border-radius: 16px;
+  }
+
+  .similar-recipes__header {
+    padding: 0 12px;
+    flex-direction: row;
   }
 
   .similar-recipes__grid {
     grid-template-columns: 1fr;
+    padding: 0 4px;
   }
-
-  .similar-recipes__header {
-    flex-direction: row;
-  }
-}
-.featured-card-wrapper {
-  position: relative;
-}
-
-.featured-rating {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e08c2e;
-}
-
-
-.featured-rating {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #fff;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }

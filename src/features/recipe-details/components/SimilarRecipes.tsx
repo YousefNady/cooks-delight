@@ -40,7 +40,6 @@ const SimilarRecipesSection = ({ recipes, currentRecipe }: Props) => {
   return (
     <section className="similar-recipes">
       <div className="similar-recipes__inner">
-
         <div className="similar-recipes__header">
           <h2 className="similar-recipes__heading">
             SIMILAR RECIPES

@@ -1,11 +1,12 @@
 // src/shared/layout/MobileMenu.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa'; // TikTok removed
 import { FiSearch, FiX } from 'react-icons/fi';
 import logo from '../../assets/logo/Logo.svg';
 import '../../styles/MobileMenu.css';
+import { useRecipeSearch } from '../../features/search/hooks/useRecipeSearch';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -13,6 +14,18 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const {
+    searchTerm,
+    handleSearchChange,
+    handleSearchSubmit,
+  } = useRecipeSearch();
+
+  const handleClose = () => {
+    setIsSearchOpen(false);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -20,7 +33,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
       {/* Header row: logo + close button */}
       <div className="mobile-menu__header">
-        <Link to="/" className="mobile-menu__brand" onClick={onClose}>
+        <Link to="/" className="mobile-menu__brand" onClick={handleClose}>
           <img src={logo} alt="Cooks Delight" className="mobile-menu__brand-logo" />
           <div className="mobile-menu__brand-text">
             <span className="mobile-menu__brand-cooks">Cooks</span>
@@ -30,7 +43,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
         <button
           className="mobile-menu__close-btn"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Close menu"
           type="button"
         >
@@ -55,7 +68,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                 className={({ isActive }) =>
                   `mobile-menu__link${isActive ? ' mobile-menu__link--active' : ''}`
                 }
-                onClick={onClose}
+                onClick={handleClose}
               >
                 {label}
               </NavLink>
@@ -66,12 +79,38 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
       {/* Search + CTA — single merged pill container */}
       <div className="mobile-menu__actions">
-        <button className="mobile-menu__search-btn" type="button" aria-label="Search">
-          <FiSearch />
-        </button>
-        <Link to="/register" className="mobile-menu__cta" onClick={onClose}>
-          SIGN UP NOW!
-        </Link>
+        <form
+          className={`search-wrapper mobile-menu__search-wrapper${isSearchOpen ? ' mobile-menu__search-wrapper--open' : ''}`}
+          onSubmit={(event) => {
+            handleSearchSubmit(event);
+            handleClose();
+          }}
+        >
+          <button
+            className="mobile-menu__search-btn"
+            type="button"
+            aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+            aria-expanded={isSearchOpen}
+            onClick={() => setIsSearchOpen((current) => !current)}
+          >
+            <FiSearch />
+          </button>
+          {isSearchOpen && (
+            <input
+              className="mobile-menu__search-input"
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              autoFocus
+            />
+          )}
+        </form>
+        {!isSearchOpen && (
+          <Link to="/register" className="mobile-menu__cta" onClick={handleClose}>
+            SIGN UP NOW!
+          </Link>
+        )}
       </div>
 
       {/* Social icons — Facebook, Instagram, YouTube only */}

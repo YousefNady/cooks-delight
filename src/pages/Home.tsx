@@ -1,13 +1,9 @@
 import "../features/home/style/home.css";
-import icon1 from "../assets/home/icon (3).svg";
-import icon2 from "../assets/home/icon (4).svg";
-import icon3 from "../assets/home/icon (5).svg";
-import icon4 from "../assets/home/icon (6).svg";
-import icon5 from "../assets/home/icon (7).svg";
 import FeaturedRecipesSection from "../features/aboutUs/components/FeaturedRecipesSection";
 import { useNavigate } from "react-router-dom";
 import AboutUsCard from "../features/home/components/aboutuscard";
 import HomeShowcase from "../features/home/components/HomeShowcase";
+import DiversePalette from "../features/home/components/DiversePalette";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -49,59 +45,7 @@ export default function Home() {
 
       </section>
 
-      {/* ===== PALETTE SECTION ===== */}
-      <section className="home-palette">
-
-        <div className="home-palette__content">
-
-          <span className="home-palette__tag">EXPLORE</span>
-
-          <h2 className="home-palette__title">
-            OUR DIVERSE <br /> PALETTE
-          </h2>
-
-          <p className="home-palette__description">
-            If you are a breakfast enthusiast, a connoisseur of savory delights,
-            or on the lookout for irresistible desserts, our curated selection
-            has something to satisfy every palate.
-          </p>
-
-          <button className="button button--outline">
-            SEE MORE
-          </button>
-
-        </div>
-
-        <div className="home-palette__categories">
-
-          <div className="home-palette__item">
-            <img src={icon1} alt="" />
-            <span>BREAKFAST</span>
-          </div>
-
-          <div className="home-palette__item">
-            <img src={icon2} alt="" />
-            <span>LUNCH</span>
-          </div>
-
-          <div className="home-palette__item">
-            <img src={icon3} alt="" />
-            <span>DINNER</span>
-          </div>
-
-          <div className="home-palette__item">
-            <img src={icon4} alt="" />
-            <span>DESSERT</span>
-          </div>
-
-          <div className="home-palette__item">
-            <img src={icon5} alt="" />
-            <span>SNACK</span>
-          </div>
-
-        </div>
-
-      </section>
+      <DiversePalette />
 
       <FeaturedRecipesSection />
       <HomeShowcase />
