@@ -12,7 +12,7 @@ export default function Recipes() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState("All");
   
-  // العدد الأولي للكروت
+
   const INITIAL_COUNT = 6;
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
@@ -25,26 +25,25 @@ export default function Recipes() {
     });
   }, []);
 
-  // إعادة العرض لـ 6 فقط عند تغيير الفلتر
+
   useEffect(() => {
     setVisibleCount(INITIAL_COUNT);
   }, [selected]);
 
   if (loading) return <p>Loading...</p>;
 
-  // تصفية البيانات
+ 
   const filteredData = filterRecipes(recipes, selected);
-  // قصر البيانات المعروضة بناءً على السيت
+ 
   const displayedRecipes = filteredData.slice(0, visibleCount);
 
-  // هل الحالة حالياً "عرض الكل"؟
   const isExpanded = visibleCount >= filteredData.length;
 
   const toggleRecipes = () => {
     if (isExpanded) {
-      setVisibleCount(INITIAL_COUNT); // ارجع لـ 6
+      setVisibleCount(INITIAL_COUNT); 
     } else {
-      setVisibleCount(filteredData.length); // اعرض الكل
+      setVisibleCount(filteredData.length); 
     }
   };
 
@@ -71,7 +70,7 @@ export default function Recipes() {
         ))}
       </div>
 
-      {/* زر عرض المزيد / عرض أقل */}
+     
       {filteredData.length > INITIAL_COUNT && (
         <div className="load-more-container">
           <button 
