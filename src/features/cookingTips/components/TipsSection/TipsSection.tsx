@@ -12,10 +12,16 @@ const TipsSection = () => {
       items={recipes}
       columns={3}
       variant="boxed"
-      renderItem={(recipe, columns) => (
-      <RecipeCard recipe={recipe} size={columns === 2 ? 'lg' : 'md'} />
+      // التعديل هنا: حذفنا columns لأن المكون لا يمررها في renderItem
+      renderItem={(recipe) => (
+        <RecipeCard recipe={recipe} />
       )}
-      pagination={{ page, totalPages, onNext: nextPage, onPrev: prevPage }}
+      pagination={{ 
+        page, 
+        totalPages, 
+        onNext: nextPage, 
+        onPrev: prevPage 
+      }}
       loading={loading}
       error={error}
       onRetry={() => window.location.reload()}
