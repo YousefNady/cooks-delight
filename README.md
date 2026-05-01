@@ -94,6 +94,10 @@ npm run preview
 ```bash
 npm run lint
 ```
+## 🧪 How to Review?
+ **Functional Test:** Try logging in with the following credentials:
+   * **Username:** `emilys`
+   * **Password:** `emilyspass`
 
 ## 🧭 Available Routes
 
