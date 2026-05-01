@@ -1,8 +1,20 @@
 /* ===== Similar Recipes Frame ===== */
+:root {
+  --similar-border: hsla(45, 6%, 14%, 0.15);
+  --similar-text: #262522;
+  --similar-button-border: #e0e0e0;
+  --similar-button-bg: #ffffff;
+  --similar-button-color: #555;
+  --similar-button-hover-bg: #e08c2e;
+  --similar-button-hover-color: #ffffff;
+  --similar-rating-bg: #ffffff;
+  --similar-rating-shadow: rgba(0, 0, 0, 0.1);
+}
+
 .similar-recipes {
-  margin: 60px auto;
-  padding: 40px 64px;
-  border: 1px solid hsla(45, 6%, 14%, 0.15);
+  margin: 49px auto 80px;
+  padding: 16px;
+  border: 1px solid var(--similar-border);
   border-radius: 20px;
 }
 
@@ -11,13 +23,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 32px;
   margin-bottom: 28px;
 }
 
 .similar-recipes__heading {
   font-size: clamp(20px, 2.5vw, 40px);
   font-weight: 700;
-  color: #262522;
+  color: var(--similar-text);
   margin: 0;
 }
 
@@ -33,23 +46,23 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1.5px solid #e0e0e0;
-  background: #fff;
+  border: 1.5px solid var(--similar-button-border);
+  background: var(--similar-button-bg);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   cursor: pointer;
-  color: #555;
+  color: var(--similar-button-color);
 
   transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .similar-recipes__nav button:hover:not(:disabled) {
-  background: #e08c2e;
-  border-color: #e08c2e;
-  color: #fff;
+  background: var(--similar-button-hover-bg);
+  border-color: var(--similar-button-hover-bg);
+  color: var(--similar-button-hover-color);
 }
 
 .similar-recipes__nav button:disabled {
@@ -106,20 +119,15 @@
 }
 
 .featured-rating {
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #e08c2e;
-}
-
-
-.featured-rating {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #fff;
+  margin-top: 8px;
+  background: var(--similar-rating-bg);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-weight: 600;
+  color: var(--similar-button-hover-bg);
+  box-shadow: 0 2px 6px var(--similar-rating-shadow);
 }
