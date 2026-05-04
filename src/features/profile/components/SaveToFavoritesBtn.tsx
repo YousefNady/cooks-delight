@@ -9,7 +9,7 @@
 import React from 'react';
 import { useFavoritesContext } from '../context/FavoritesContext';
 import type { FavoriteRecipe } from '../types/favorites';
-import './SaveToFavoritesBtn.css';
+import '../styles/SaveToFavoritesBtn.css';
 
 interface SaveToFavoritesBtnProps {
   recipe: FavoriteRecipe;

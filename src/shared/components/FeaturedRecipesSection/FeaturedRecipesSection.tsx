@@ -1,6 +1,6 @@
-import { useAboutRecipes } from '../hooks/useAboutRecipes';
+import { useAboutRecipes } from '../../../shared/hooks/useAboutRecipes';
 import RecipeCard from '../../../shared/components/RecipeCard/RecipeCard';
-import "../../recipe-details/style/similar-Recipes.css";
+import "../../../features/recipe-details/styles/similar-Recipes.css";
 
 const FeaturedRecipesSection = () => {
   const {

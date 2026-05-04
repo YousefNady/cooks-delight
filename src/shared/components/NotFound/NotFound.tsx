@@ -1,4 +1,4 @@
-// src/pages/NotFound/NotFound.tsx
+// src/shared/components/NotFound/NotFound.tsx
 
 import React from 'react';
 import { Link } from 'react-router-dom';

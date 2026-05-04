@@ -5,8 +5,8 @@ import { NavLink, Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa'; // TikTok removed
 import { FiSearch, FiX } from 'react-icons/fi';
 import logo from '../../assets/logo/Logo.svg';
-import '../../styles/MobileMenu.css';
-import { useRecipeSearch } from '../../features/search/hooks/useRecipeSearch';
+import './styles/MobileMenu.css';
+import { useRecipeSearch } from '../../shared/hooks/useRecipeSearch';
 
 interface MobileMenuProps {
   isOpen: boolean;

@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from '../../shared/layout/Navbar';
 import Footer from '../../shared/layout/Footer';
 import ScrollToTop from '../components/ui/BackToTopButton'; // ← new
-import CTASection from '../components/sections/CTASection'; // ← new
+import CTASection from '../components/CTASection/CTASection'; // ← new
 
 
 const Layout = () => {

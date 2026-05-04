@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import RecipeResults from "../features/recipes/components/RecipeResults";
+import RecipeResults from "../components/RecipeResults";
 
 export default function Recipes() {
   const [searchParams] = useSearchParams();

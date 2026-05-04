@@ -2,7 +2,7 @@ import RecipeCard from "../../../shared/components/RecipeCard/RecipeCard";
 import { useRecipes } from "../hooks/useRecipes";
 import { useShowMoreRecipes } from "../hooks/useShowMoreRecipes";
 import "../../../shared/components/RecipeCard/RecipeCard.css";
-import "../style/buttomsShow.css";
+import "../styles/buttomsShow.css";
 
 interface RecipeResultsProps {
   query: string;

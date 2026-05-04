@@ -1,15 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getRecipeById, getRecipes } from "../features/recipes/services/API";
-import type { Recipe } from "../features/recipes/types/Recipe";
-import "../features/recipe-details/style/recipe-details.css";
+import { getRecipeById, getRecipes } from "../../recipes/services/API";
+import type { Recipe } from "../../recipes/types/Recipe";
+import "../styles/recipe-details.css";
 
-import filledStar from "../assets/recipe-details/Vector2.svg";
-import unfilledStar from "../assets/recipe-details/Vector.svg";
-import timeIcon from "../assets/recipe-details/timer.svg";
-import servingsIcon from "../assets/recipe-details/servings.svg";
-import difficultyIcon from "../assets/recipe-details/difficulty.svg";
-import SimilarRecipesSection from "../features/recipe-details/components/SimilarRecipes";
+import filledStar from "../../../assets/recipe-details/Vector2.svg";
+import unfilledStar from "../../../assets/recipe-details/Vector.svg";
+import timeIcon from "../../../assets/recipe-details/timer.svg";
+import servingsIcon from "../../../assets/recipe-details/servings.svg";
+import difficultyIcon from "../../../assets/recipe-details/difficulty.svg";
+import SimilarRecipesSection from "../components/SimilarRecipes";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export default function RecipeDetails() {

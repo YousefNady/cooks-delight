@@ -1,7 +1,6 @@
 import { useNewestRecipes } from '../../hooks/useNewestRecipes';
 import SectionGrid from '../../../../shared/components/SectionGrid/SectionGrid';
 import RecipeCard from '../../../../shared/components/RecipeCard/RecipeCard';
-import "./newest.css"
 const NewestRecipesSection = () => {
   const { recipes, loading, error, page, totalPages, nextPage, prevPage } = useNewestRecipes();
 

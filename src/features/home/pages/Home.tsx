@@ -1,9 +1,9 @@
-import "../features/home/style/home.css";
-import FeaturedRecipesSection from "../features/aboutUs/components/FeaturedRecipesSection";
+import "../styles/home.css";
+import FeaturedRecipesSection from "../../../shared/components/FeaturedRecipesSection/FeaturedRecipesSection";
 import { useNavigate } from "react-router-dom";
-import AboutUsCard from "../features/home/components/aboutuscard";
-import HomeShowcase from "../features/home/components/HomeShowcase";
-import DiversePalette from "../features/home/components/DiversePalette";
+import AboutUsCard from "../components/aboutuscard";
+import HomeShowcase from "../components/HomeShowcase";
+import DiversePalette from "../components/DiversePalette";
 
 export default function Home() {
   const navigate = useNavigate();

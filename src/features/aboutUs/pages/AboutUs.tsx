@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import StorySection from '../features/aboutUs/components/StorySection';
-import GallerySection from '../features/aboutUs/components/GallerySection';
-import FeaturedRecipesSection from '../features/aboutUs/components/FeaturedRecipesSection';
-import '../features/aboutUs/AboutUs.css';
+import StorySection from '../components/StorySection';
+import GallerySection from '../components/GallerySection';
+import FeaturedRecipesSection from '../../../shared/components/FeaturedRecipesSection/FeaturedRecipesSection';
+import '../styles/AboutUs.css';
 
 const AboutUs = () => {
   return (

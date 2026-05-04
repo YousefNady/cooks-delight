@@ -1,4 +1,4 @@
-import api from "../components/Get-recipe";
+import api from "../../../shared/lib/apiClient";
 import type { Recipe, RecipesApiResponse } from "../types/Recipe";
 
 const VALID_DUMMYJSON_TAGS = ["lunch", "dinner", "dessert", "snack"];

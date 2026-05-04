@@ -1,4 +1,4 @@
-import './IntroSection.css';
+import '../../styles/IntroSection.css';
 
 // Icons — rename actual files in assets/cookingTipsPage/ to match these names
 import qualityToolsIcon from '../../../../assets/cookingTipsPage/icons/quality-tools.svg';

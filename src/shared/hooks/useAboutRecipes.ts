@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { fetchAboutRecipes } from '../services/aboutService';
-import { usePagination } from '../../../shared/hooks/usePagination';
-import type { RecipeCard } from '../../../shared/types/recipe.types';
+import { fetchAboutRecipes } from '../../features/aboutUs/services/aboutService';
+import { usePagination } from './usePagination';
+import type { RecipeCard } from '../types/recipe.types';
 
 const PAGE_SIZE = 2;
 

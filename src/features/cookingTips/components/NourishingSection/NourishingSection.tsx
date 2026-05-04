@@ -1,6 +1,6 @@
 import { useNourishingRecipes } from '../../hooks/useNourishingRecipes';
 import SectionGrid from '../../../../shared/components/SectionGrid/SectionGrid';
-import OverlayCard from '../../../../shared/OverlayCard/OverlayCard';
+import OverlayCard from '../../../../shared/components/OverlayCard/OverlayCard';
 
 const NourishingSection = () => {
   const { recipes, loading, error, page, totalPages, nextPage, prevPage } =

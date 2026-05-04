@@ -1,7 +1,7 @@
 // src/shared/components/sections/CTASection.tsx
 
 import { Link } from 'react-router-dom';
-import '../../../styles/sections/CTASection.css';
+import './CTASection.css';
 
 const CTASection = () => {
   return (

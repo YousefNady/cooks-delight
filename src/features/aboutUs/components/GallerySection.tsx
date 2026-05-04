@@ -1,4 +1,4 @@
-import './GallerySection.css';
+import '../styles/GallerySection.css';
 import gallery1 from '../../../assets/aboutUs/gallery/gallery-1.jpg';
 import gallery2 from '../../../assets/aboutUs/gallery/gallery-2.jpg';
 import gallery3 from '../../../assets/aboutUs/gallery/gallery-3.jpg';

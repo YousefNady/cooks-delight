@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './AuthLayout.css';
+import '../styles/AuthLayout.css';
 
 import logo from '../../../assets/logo/Logo.svg';
 

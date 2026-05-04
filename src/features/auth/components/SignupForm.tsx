@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSignupForm } from '../hooks/useSignupForm';
 import AuthLayout from '../layouts/AuthLayout';
 import MobileMenu from '../../../shared/layout/Mobilemenu';
-import './SignupForm.css';
+import '../styles/SignupForm.css';
 
 // Unsplash image URL used as the left-panel background
 const SIGNUP_IMAGE =

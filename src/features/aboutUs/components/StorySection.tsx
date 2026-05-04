@@ -1,5 +1,5 @@
 import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
-import './StorySection.css';
+import '../styles/StorySection.css';
 import chefProfileImage from '../../../assets/aboutUs/story/isabella-russo-profile.jpg';
 
 const StorySection = () => {
