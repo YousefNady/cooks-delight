@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface UseShowMoreRecipesOptions<T> {
   items: T[];
@@ -19,10 +19,12 @@ export function useShowMoreRecipes<T>({
   resetKey = "",
 }: UseShowMoreRecipesOptions<T>): UseShowMoreRecipesReturn<T> {
   const [visibleCount, setVisibleCount] = useState(initialCount);
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
 
-  useEffect(() => {
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey);
     setVisibleCount(initialCount);
-  }, [initialCount, resetKey]);
+  }
 
   const isExpanded = visibleCount >= items.length;
   const visibleItems = useMemo(
