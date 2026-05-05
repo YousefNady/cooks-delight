@@ -1,4 +1,3 @@
-
 :root {
   --text-muted: rgb(107, 106, 102);
   --text-primary: #262522;
@@ -16,6 +15,7 @@
   align-items: center;
   width: 100%;
   margin: 50px 0;
+  animation: containerFadeIn 0.6s ease both;
 }
 
 .recipes-results {
@@ -36,6 +36,7 @@
   font-size: 40px;
   line-height: 1.15;
   letter-spacing: 0;
+  animation: headingSlideDown 0.7s ease both;
 }
 
 .recipes-count {
@@ -43,6 +44,7 @@
   color: var(--text-muted);
   font-size: 18px;
   text-align: center;
+  animation: countFadeIn 0.7s ease 0.2s both;
 }
 
 .recipes-status {
@@ -50,6 +52,7 @@
   padding: 48px 24px;
   color: var(--text-primary);
   font-size: 18px;
+  animation: statusPulse 0.8s ease both;
 }
 
 .recipes-status--error {
@@ -99,17 +102,55 @@
   gap: 10px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px var(--toggle-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-expand-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.toggle-expand-btn:active::before {
+  width: 300px;
+  height: 300px;
 }
 
 .toggle-expand-btn:hover {
-  background-color: var(--toggle-bg);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px var(--toggle-shadow-hover);
+  background-color: #d6821f;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px var(--toggle-shadow-hover);
 }
 
 
 .arrow-icon {
-  font-size: 15px;
+  display: block;
+  font-size: 30px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon.down {
+  transform: rotate(0deg);
+    animation: bounceVertical 0.8s infinite;
+}
+
+.arrow-icon.up {
+  transform: rotate(180deg);
+    animation: bounceVertical 0.8s infinite;
+}
+
+
+.arrow-icon {
+  font-size: 30px;
   line-height: 1;
   transition: transform 0.3s ease;
 }
@@ -118,9 +159,25 @@
   animation: bounceDown 0.5s infinite;
 }
 
+@keyframes bounceVertical {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 5px;
+  }
+}
+
 @keyframes bounceDown {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(3px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
 }
 
 
@@ -130,4 +187,48 @@
 
 
 
+@keyframes containerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headingSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes countFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes statusPulse {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

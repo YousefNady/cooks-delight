@@ -68,10 +68,10 @@ export default function RecipeResults({ query }: RecipeResultsProps) {
             onClick={toggleVisibleItems}
             type="button"
           >
-            {isExpanded ? "Show Less" : "Show More"}
-            <span className={`arrow-icon ${isExpanded ? "up" : "down"}`}>
-              {isExpanded ? "^" : "v"}
-            </span>
+              {isExpanded ? "Show Less" : "Show More"}
+              <span className={`arrow-icon ${isExpanded ? "up" : "down"}`}>
+                {isExpanded ? "▴" : "▾"}
+              </span>
           </button>
         </div>
       )}

@@ -411,6 +411,10 @@
 
 /* ── Hide actions on mobile (hamburger takes over) ───────────────────────── */
 @media (max-width: 768px) {
+    .navbar__content{
+        justify-content: space-between;
+    }
+
     .navbar__actions {
         display: none;
     }

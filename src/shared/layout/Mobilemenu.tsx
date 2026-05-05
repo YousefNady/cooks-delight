@@ -115,9 +115,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
       {/* Social icons — Facebook, Instagram, YouTube only */}
       <div className="mobile-menu__social">
-        <a href="#" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebookF /></a>
-        <a href="#" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
-        <a href="#" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebookF /></a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
+        <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
       </div>
 
     </div>
