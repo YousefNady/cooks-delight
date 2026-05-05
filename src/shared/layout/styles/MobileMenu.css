@@ -3,25 +3,61 @@
    Cooks Delight · src/shared/layout/
    ========================================================= */
 
+:root {
+  --mobile-menu-bg: rgba(18, 18, 18, 0.92);
+  --mobile-menu-border: rgba(255, 255, 255, 0.08);
+  --mobile-menu-shadow: rgba(0, 0, 0, 0.42);
+  --mobile-menu-text: #f5f0e8;
+  --mobile-menu-text-strong: #ffffff;
+  --mobile-menu-accent: #f0c476;
+  --mobile-menu-hover-bg: rgba(255, 255, 255, 0.12);
+  --mobile-menu-surface: rgba(255, 255, 255, 0.06);
+  --mobile-menu-surface-strong: rgba(255, 255, 255, 0.04);
+  --mobile-menu-surface-border: rgba(255, 255, 255, 0.14);
+  --mobile-menu-control-border: rgba(255, 255, 255, 0.12);
+  --mobile-menu-shadow-soft: rgba(0, 0, 0, 0.18);
+  --mobile-menu-field-bg: #242424;
+  --mobile-menu-field-bg-focus: #292929;
+  --mobile-menu-field-border: #ffffff24;
+  --mobile-menu-placeholder: rgba(245, 240, 232, 0.6);
+  --mobile-menu-cta-start: #f5a623;
+  --mobile-menu-cta-end: #e08c2e;
+  --mobile-menu-cta-hover-start: #ffca6c;
+  --mobile-menu-cta-hover-end: #eaa132;
+  --mobile-menu-cta-shadow: rgba(224, 140, 46, 0.18);
+  --mobile-menu-icon-bg: #2e2e2e;
+  --mobile-menu-icon-bg-hover: #3a3a3a;
+}
+
 /* ---------- Overlay panel ---------- */
 .mobile-menu {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background-color: #1e1e1e;
+  background: var(--mobile-menu-bg);
+  backdrop-filter: blur(16px);
   display: flex;
   flex-direction: column;
-  padding: 24px 28px 36px;
+  padding: 28px 32px 40px;
   box-sizing: border-box;
   overflow-y: auto;
+  border: 1px solid var(--mobile-menu-border);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 32px 90px var(--mobile-menu-shadow);
 
   /* Slide in from top */
-  animation: mobile-menu-enter 0.22s ease-out;
+  animation: mobile-menu-enter 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes mobile-menu-enter {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0);     }
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ---------- Header row ---------- */
@@ -54,31 +90,38 @@
 .mobile-menu__brand-cooks,
 .mobile-menu__brand-delight {
   font-weight: 800;
-  color: #f5f0e8;
+  color: var(--mobile-menu-text);
 }
 
-.mobile-menu__brand-cooks  { font-size: 16px; }
-.mobile-menu__brand-delight { font-size: 14px; }
+.mobile-menu__brand-cooks {
+  font-size: 16px;
+}
+
+.mobile-menu__brand-delight {
+  font-size: 14px;
+}
 
 /* Close button */
 .mobile-menu__close-btn {
-  background: #333;
-  border: none;
+  background: var(--mobile-menu-surface);
+  border: 1px solid var(--mobile-menu-control-border);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #f5f0e8;
+  color: var(--mobile-menu-text);
   font-size: 20px;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
   flex-shrink: 0;
 }
 
 .mobile-menu__close-btn:hover {
-  background: #444;
+  background: var(--mobile-menu-hover-bg);
+  transform: scale(1.05);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
 }
 
 /* ---------- Nav links ---------- */
@@ -95,26 +138,49 @@
 }
 
 .mobile-menu__link-item {
-  border-bottom: 1px solid #ffffff14;
+  border-bottom: 1px solid var(--mobile-menu-surface-border);
+  opacity: 0;
+  animation: menuLinkIn 0.34s ease both;
+}
+
+.mobile-menu__link-item:nth-child(1) {
+  animation-delay: 0.08s;
+}
+
+.mobile-menu__link-item:nth-child(2) {
+  animation-delay: 0.14s;
+}
+
+.mobile-menu__link-item:nth-child(3) {
+  animation-delay: 0.20s;
+}
+
+.mobile-menu__link-item:nth-child(4) {
+  animation-delay: 0.26s;
+}
+
+.mobile-menu__link-item:nth-child(5) {
+  animation-delay: 0.32s;
 }
 
 .mobile-menu__link {
   display: block;
-  padding: 22px 0;
-  color: #f5f0e8;
+  padding: 20px 0;
+  color: var(--mobile-menu-text);
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  transition: color 0.18s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .mobile-menu__link:hover {
-  color: #e08c2e;
+  color: #f0c476;
+  transform: translateX(2px);
 }
 
 .mobile-menu__link--active {
-  color: #e08c2e;
+  color: #f0c476;
 }
 
 /* ---------- Search + CTA ---------- */
@@ -124,6 +190,9 @@
   gap: 12px;
   margin-top: 32px;
   min-height: 44px;
+  opacity: 0;
+  animation: fadeInUp 0.38s ease both;
+  animation-delay: 0.34s;
 }
 
 .mobile-menu__search-wrapper {
@@ -134,6 +203,8 @@
   min-width: 44px;
   height: 44px;
   transition: all 0.3s ease;
+  border-radius: 22px;
+  padding: 0 10px;
 }
 
 .mobile-menu__search-wrapper--open {
@@ -141,7 +212,7 @@
 }
 
 .mobile-menu__search-btn {
-  background: #2e2e2e;
+  background: var(--mobile-menu-icon-bg);
   border: none;
   border-radius: 50%;
   width: 44px;
@@ -149,7 +220,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f5f0e8;
+  color: var(--mobile-menu-text);
   font-size: 18px;
   cursor: pointer;
   flex-shrink: 0;
@@ -157,7 +228,7 @@
 }
 
 .mobile-menu__search-btn:hover {
-  background: #3a3a3a;
+  background: var(--mobile-menu-icon-bg-hover);
 }
 
 .mobile-menu__search-input {
@@ -165,22 +236,22 @@
   min-width: 0;
   height: 44px;
   padding: 0 16px;
-  border: 1px solid #ffffff24;
+  border: 1px solid var(--mobile-menu-field-border);
   border-radius: 20px;
   outline: none;
-  background: #242424;
-  color: #f5f0e8;
+  background: var(--mobile-menu-field-bg);
+  color: var(--mobile-menu-text);
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
 .mobile-menu__search-input::placeholder {
-  color: #f5f0e899;
+  color: var(--mobile-menu-placeholder);
 }
 
 .mobile-menu__search-input:focus {
-  border-color: #e08c2e;
-  background: #292929;
+  border-color: var(--mobile-menu-accent);
+  background: var(--mobile-menu-field-bg-focus);
 }
 
 .mobile-menu__cta {
@@ -190,17 +261,19 @@
   justify-content: center;
   height: 44px;
   border-radius: 50px;
-  background: #2e2e2e;
-  color: #f5f0e8;
+  background: linear-gradient(135deg, var(--mobile-menu-cta-start), var(--mobile-menu-cta-end));
+  color: var(--mobile-menu-text-strong);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-decoration: none;
   transition: all 0.3s ease;
+  box-shadow: 0 18px 34px var(--mobile-menu-cta-shadow);
 }
 
 .mobile-menu__cta:hover {
-  background: #3a3a3a;
+  background: linear-gradient(135deg, var(--mobile-menu-cta-hover-start), var(--mobile-menu-cta-hover-end));
+  transform: translateY(-1px);
 }
 
 /* ---------- Social icons ---------- */
@@ -212,11 +285,37 @@
 }
 
 .mobile-menu__social a {
-  color: #f5f0e8;
+  color: var(--mobile-menu-text);
   font-size: 20px;
-  transition: opacity 0.18s ease;
+  transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
 }
 
 .mobile-menu__social a:hover {
-  opacity: 0.6;
+  opacity: 0.85;
+  transform: translateY(-2px);
+  color: var(--mobile-menu-accent);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menuLinkIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

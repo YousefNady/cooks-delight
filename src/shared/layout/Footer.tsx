@@ -24,14 +24,15 @@ const Footer = () => {
             <li><Link to="/recipes">RECIPES</Link></li>
             <li><Link to="/tips">COOKING TIPS</Link></li>
             <li><Link to="/about">ABOUT US</Link></li>
+            <li><Link to="/contact">CONTACT</Link></li>
           </ul>
 
           {/* Social Icons */}
           <div className="footer__social-icons">
-            <a href="#" target="_blank" rel="noreferrer"><FaTiktok /></a>
-            <a href="#" target="_blank" rel="noreferrer"><FaFacebookF /></a>
-            <a href="#" target="_blank" rel="noreferrer"><FaInstagram /></a>
-            <a href="#" target="_blank" rel="noreferrer"><FaYoutube /></a>
+            <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer"><FaTiktok /></a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><FaFacebookF /></a>
+            <a href="https://instagram.com/" target="_blank" rel="noreferrer"><FaInstagram /></a>
+            <a href="https://www.youtube.com/" target="_blank" rel="noreferrer"><FaYoutube /></a>
           </div>
         </div>
 

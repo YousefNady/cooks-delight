@@ -32,7 +32,7 @@ const FeaturedRecipesSection = () => {
             <button
               className="similar-recipes__arrow"
               onClick={prevPage}
-              disabled={page === 0}
+              disabled={page === 1}
               aria-label="Previous"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

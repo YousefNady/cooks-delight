@@ -20,10 +20,8 @@
 .home-hero {
   border-radius: 32px;
   overflow: hidden;
-  background: linear-gradient(
-      var(--home-hero-overlay),
-      var(--home-hero-overlay)
-    ),
+  background: linear-gradient(var(--home-hero-overlay),
+      var(--home-hero-overlay)),
     url("../../../assets/home/2.png");
 
   height: 577px;
@@ -65,7 +63,7 @@
 
 /* ================= BUTTONS ================= */
 
- .hero-signin-button {
+.hero-signin-button {
   padding: var(--home-button-padding);
   border-radius: var(--home-button-radius);
   border: none;
@@ -74,6 +72,12 @@
   color: var(--home-text-dark);
   font-size: 14px;
   font-weight: 500;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-signin-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -87,6 +91,12 @@
   color: var(--home-white);
   font-size: 14px;
   font-weight: 500;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-button--secondary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .button--outline {
@@ -104,6 +114,7 @@
   background: var(--home-sky);
   padding: 40px;
   border-radius: 20px;
+  animation: paletteSlideIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
 .home-palette__content {
@@ -121,6 +132,7 @@
   width: fit-content;
   margin-bottom: 16px;
   text-transform: uppercase;
+  animation: tagPulse 2s ease-in-out infinite;
 }
 
 .home-palette__title {
@@ -222,6 +234,7 @@
     opacity: 0;
     transform: translateY(28px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -233,6 +246,7 @@
     opacity: 0;
     transform: translateY(24px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -244,6 +258,7 @@
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -255,6 +270,7 @@
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -266,8 +282,33 @@
     opacity: 0;
     transform: translateX(-18px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes paletteSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tagPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
   }
 }

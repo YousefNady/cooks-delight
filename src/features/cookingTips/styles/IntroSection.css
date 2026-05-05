@@ -59,11 +59,35 @@
   gap: 40px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   animation: highlightLift 0.8s ease both;
+  position: relative;
+  overflow: hidden;
 }
 
-.intro__highlight:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 22px 50px rgba(38, 37, 34, 0.08);
+.intro__highlight::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(238, 99, 82, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.intro__highlight:hover::before {
+  left: 100%;
+}
+
+.intro__highlight:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.intro__highlight:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.intro__highlight:nth-child(3) {
+  animation-delay: 0.3s;
 }
 
 .intro__highlight-icon {
@@ -79,6 +103,11 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.intro__highlight:hover .intro__highlight-icon img {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .intro__highlight-text {
@@ -93,6 +122,12 @@
   color: #EE6352;
   text-transform: uppercase;
   letter-spacing: 2%;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.intro__highlight:hover .intro__highlight-label {
+  color: #d54a3d;
+  text-shadow: 0 0 8px rgba(238, 99, 82, 0.5);
 }
 
 .intro__highlight-desc {
@@ -131,6 +166,7 @@
     margin-bottom: 32px;
   }
 }
+
 @keyframes introFadeUp {
   from {
     opacity: 0;
@@ -146,11 +182,11 @@
 @keyframes highlightLift {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(16px) scale(0.95);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }

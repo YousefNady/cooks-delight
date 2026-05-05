@@ -12,7 +12,6 @@ const TipsSection = () => {
       items={recipes}
       columns={3}
       variant="boxed"
-      // التعديل هنا: حذفنا columns لأن المكون لا يمررها في renderItem
       renderItem={(recipe) => (
         <RecipeCard recipe={recipe} />
       )}

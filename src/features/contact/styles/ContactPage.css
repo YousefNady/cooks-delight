@@ -2,25 +2,24 @@
 
 /* ─── Design tokens (keep in sync with global / ContactForm.css) ────────────── */
 :root {
-  --cd-cream:        #f0ebe0;
-  --cd-cream-dark:   #e8e0d0;
-  --cd-orange:       #F29C33;
-  --cd-orange-dark:  #c8880a;
-  --cd-coral:        #e8573a;
-  --cd-charcoal:     #262522;
-  --cd-black:        #000000;
-  --cd-gray:         #26252299;
-  --cd-gray-light:   #d4cfc6;
-  --cd-white:        #ffffff;
-  --cd-radius:       10px;
-  --cd-radius-lg:    16px;
-  --cd-transition:   0.25s ease;
-  --cd-font:         'Helvetica Neue', Arial, sans-serif;
+  --cd-cream: #f0ebe0;
+  --cd-cream-dark: #e8e0d0;
+  --cd-orange: #F29C33;
+  --cd-orange-dark: #c8880a;
+  --cd-coral: #e8573a;
+  --cd-charcoal: #262522;
+  --cd-black: #000000;
+  --cd-gray: #26252299;
+  --cd-gray-light: #d4cfc6;
+  --cd-white: #ffffff;
+  --cd-radius: 10px;
+  --cd-radius-lg: 16px;
+  --cd-transition: 0.25s ease;
+  --cd-font: 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ─── Page wrapper ───────────────────────────────────────────────────────────── */
 .contact-page {
-  background-color: var(--cd-cream);
   min-height: 100vh;
   font-family: var(--cd-font);
 }
@@ -32,7 +31,6 @@
 .contact-hero {
   position: relative;
   overflow: hidden;
-  background-color: var(--cd-cream);
   padding-top: 64px;
   text-align: center;
 }
@@ -451,6 +449,7 @@
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -462,6 +461,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -469,15 +469,26 @@
 }
 
 @keyframes contactBlobFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(12px, -18px) scale(1.04); }
-  66%       { transform: translate(-10px, 10px) scale(0.97); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(12px, -18px) scale(1.04);
+  }
+
+  66% {
+    transform: translate(-10px, 10px) scale(0.97);
+  }
 }
 
 /* ─── Tablet adjustments ─────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .contact-info {
-    position: static; /* un-sticky on mobile */
+    position: static;
+    /* un-sticky on mobile */
   }
 
   .contact-hero {

@@ -2,6 +2,22 @@
    footer.css — Cooks Delight
    ========================================================= */
 
+:root {
+    --footer-bg: #1c1915;
+    --footer-radial-light: rgba(255, 255, 255, 0.04);
+    --footer-radial-accent: rgba(159, 220, 38, 0.12);
+    --footer-panel-bg: rgba(38, 37, 34, 0.96);
+    --footer-text: #F0EBE1;
+    --footer-text-bright: #ffffff;
+    --footer-text-muted: rgba(240, 235, 225, 0.6);
+    --footer-divider: #F0EBE13D;
+    --footer-divider-soft: #F0EBE114;
+    --footer-shadow: rgba(0, 0, 0, 0.22);
+    --footer-link-hover: #ffffff;
+    --footer-social-hover: #e08c2e;
+    --footer-logo-badge: #1a1917;
+}
+
 .footer {
     display: flex;
     justify-content: center;
@@ -9,12 +25,14 @@
 }
 
 .footer__content {
-    background-color: #262522;
+    background-color: var(--footer-panel-bg);
     width: 100%;
     max-width: 1312px;
     padding: 30px 50px;
     border-radius: 60px;
-    color: white;
+    color: var(--footer-text-bright);
+    box-shadow: 0 24px 60px var(--footer-shadow);
+    backdrop-filter: blur(10px);
 }
 
 .footer__top {
@@ -30,6 +48,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease both;
+    animation-delay: 0.1s;
 }
 
 .footer__logo img {
@@ -61,41 +82,52 @@
     gap: 25px;
     margin: 0;
     padding: 0;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease both;
+    animation-delay: 0.18s;
 }
 
 .footer__links a {
-    color: #F0EBE1;
+    color: var(--footer-text);
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 1px;
-    transition: 0.3s;
+    transition: color 0.25s ease, transform 0.10s ease, opacity 0.25s ease;
+    opacity: 0.95;
 }
 
 .footer__links a:hover {
-    color: #F0EBE1;
+    color: var(--footer-link-hover);
+    transform: translateY(-2px);
+    opacity: 1;
 }
 
 /* Social Icons Styling */
 .footer__social-icons {
     display: flex;
     gap: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease both;
+    animation-delay: 0.26s;
 }
 
 .footer__social-icons a {
-    color: #F0EBE1;
+    color: var(--footer-text);
     font-size: 20px;
-    transition: 0.3s;
+    transition: color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
 }
 
 .footer__social-icons a:hover {
-    opacity: 0.7;
+    color: var(--footer-social-hover);
+    transform: translateY(-2px);
+    opacity: 1;
 }
 
 /* Divider & Bottom Section */
 .footer__divider {
     border: 0;
-    border-top: 1px solid #F0EBE13D;
+    border-top: 1px solid var(--footer-divider);
     margin: 25px 0;
 }
 
@@ -105,7 +137,7 @@
 
 .footer__bottom p {
     font-size: 11px;
-    color: #F0EBE199;
+    color: var(--footer-text-muted);
     letter-spacing: 1px;
 }
 
@@ -118,7 +150,7 @@
     content: "";
     width: 1px;
     height: 20px;
-    background-color: #F0EBE114;
+    background-color: var(--footer-divider-soft);
     margin: 0 0 0 20px;
 }
 
@@ -156,17 +188,17 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        background-color: #1a1917;
+        background-color: var(--footer-logo-badge);
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-        /* Standardize logo dimensions across all layout components */
+    /* Standardize logo dimensions across all layout components */
     .footer__logo-badge img {
-    width: 40px;
-    height: 35px;
-    object-fit: contain;
+        width: 40px;
+        height: 35px;
+        object-fit: contain;
     }
 
     .footer__logo-text {
@@ -202,5 +234,17 @@
     .footer__social-icons {
         justify-content: center;
         margin-top: 28px;
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
