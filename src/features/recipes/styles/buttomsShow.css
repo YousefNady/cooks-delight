@@ -130,33 +130,22 @@
   box-shadow: 0 8px 24px var(--toggle-shadow-hover);
 }
 
-
 .arrow-icon {
-  display: block;
+  display: inline-block;
   font-size: 30px;
   line-height: 1;
   transition: transform 0.3s ease;
 }
 
-.arrow-icon.down {
-  transform: rotate(0deg);
-    animation: bounceVertical 0.8s infinite;
-}
 
 .arrow-icon.up {
-  transform: rotate(180deg);
-    animation: bounceVertical 0.8s infinite;
+  transform: rotate(0deg);
+    animation: bounceVertical 0.5s infinite;
 }
 
-
-.arrow-icon {
-  font-size: 30px;
-  line-height: 1;
-  transition: transform 0.3s ease;
-}
 
 .arrow-icon.down {
-  animation: bounceDown 0.5s infinite;
+  animation: bounceVertical 0.5s infinite;
 }
 
 @keyframes bounceVertical {
@@ -167,24 +156,6 @@
     translate: 0 5px;
   }
 }
-
-@keyframes bounceDown {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(3px);
-  }
-}
-
-
-.arrow-icon.up {
-  animation: none;
-}
-
 
 
 @keyframes containerFadeIn {
