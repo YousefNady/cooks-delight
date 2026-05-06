@@ -187,7 +187,7 @@
 .mobile-menu__actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   margin-top: 32px;
   min-height: 44px;
   opacity: 0;
