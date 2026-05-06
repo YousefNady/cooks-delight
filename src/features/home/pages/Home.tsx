@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import AboutUsCard from "../components/aboutuscard";
 import HomeShowcase from "../components/HomeShowcase";
 import DiversePalette from "../components/DiversePalette";
+import { useAuth } from "../../auth/context/useAuth";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="home">
@@ -26,12 +28,14 @@ export default function Home() {
           </p>
 
           <div className="home-hero__actions">
-            <button
-              className="hero-signin-button"
-              onClick={() => navigate("/register")}
-            >
-              SIGN UP NOW
-            </button>
+          {!isAuthenticated && (
+              <button
+                className="hero-signin-button"
+                onClick={() => navigate("/register")}
+              >
+                SIGN UP NOW
+              </button>
+            )}
 
             <button
               className="hero-button--secondary"
