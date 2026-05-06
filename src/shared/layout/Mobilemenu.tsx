@@ -5,8 +5,8 @@ import { NavLink, Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa'; // TikTok removed
 import { FiSearch, FiX } from 'react-icons/fi';
 import logo from '../../assets/logo/Logo.svg';
-import '../../styles/MobileMenu.css';
-import { useRecipeSearch } from '../../features/search/hooks/useRecipeSearch';
+import './styles/MobileMenu.css';
+import { useRecipeSearch } from '../../shared/hooks/useRecipeSearch';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -29,10 +29,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <div className="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile navigation" onClick={() => setIsSearchOpen(false)}>
 
       {/* Header row: logo + close button */}
-      <div className="mobile-menu__header">
+      <div className="mobile-menu__header" onClick={(e) => e.stopPropagation()}>
         <Link to="/" className="mobile-menu__brand" onClick={handleClose}>
           <img src={logo} alt="Cooks Delight" className="mobile-menu__brand-logo" />
           <div className="mobile-menu__brand-text">
@@ -78,7 +78,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       </nav>
 
       {/* Search + CTA — single merged pill container */}
-      <div className="mobile-menu__actions">
+      <div className="mobile-menu__actions" onClick={(e) => e.stopPropagation()}>
         <form
           className={`search-wrapper mobile-menu__search-wrapper${isSearchOpen ? ' mobile-menu__search-wrapper--open' : ''}`}
           onSubmit={(event) => {
@@ -114,10 +114,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       </div>
 
       {/* Social icons — Facebook, Instagram, YouTube only */}
-      <div className="mobile-menu__social">
-        <a href="#" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebookF /></a>
-        <a href="#" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
-        <a href="#" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
+      <div className="mobile-menu__social" onClick={(e) => e.stopPropagation()}>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebookF /></a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
+        <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
       </div>
 
     </div>

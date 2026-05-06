@@ -6,7 +6,7 @@ import { useLoginForm } from '../hooks/useLoginForm';
 import AuthLayout from '../layouts/AuthLayout';
 import MobileMenu from '../../../shared/layout/Mobilemenu';
 import loginImage from '../../../assets/login/pexels-zain-abba-1.png';
-import './LoginForm.css';
+import '../styles/LoginForm.css';
 
 const LoginForm: React.FC = () => {
   const {

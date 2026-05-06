@@ -2,7 +2,7 @@ import RecipeCard from "../../../shared/components/RecipeCard/RecipeCard";
 import { useRecipes } from "../hooks/useRecipes";
 import { useShowMoreRecipes } from "../hooks/useShowMoreRecipes";
 import "../../../shared/components/RecipeCard/RecipeCard.css";
-import "../style/buttomsShow.css";
+import "../styles/buttomsShow.css";
 
 interface RecipeResultsProps {
   query: string;
@@ -68,10 +68,10 @@ export default function RecipeResults({ query }: RecipeResultsProps) {
             onClick={toggleVisibleItems}
             type="button"
           >
-            {isExpanded ? "Show Less" : "Show More"}
-            <span className={`arrow-icon ${isExpanded ? "up" : "down"}`}>
-              {isExpanded ? "^" : "v"}
-            </span>
+              {isExpanded ? "Show Less" : "Show More"}
+              <span className={`arrow-icon ${isExpanded ? "up" : "down"}`}>
+                {isExpanded ? "▴" : "▾"}
+              </span>
           </button>
         </div>
       )}

@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useFavoritesContext } from '../context/FavoritesContext';
 import RecipeCard from '../../../shared/components/RecipeCard/RecipeCard';
-import './ProfilePage.css';
+import '../styles/Profilepage.css';
 
 // ─── Read auth state from localStorage (written by useLoginForm) ──────────────
 

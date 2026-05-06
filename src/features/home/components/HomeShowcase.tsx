@@ -5,8 +5,8 @@ import { useRecipes } from "../../recipes/hooks/useRecipes";
 import { useShowMoreRecipes } from "../../recipes/hooks/useShowMoreRecipes";
 import { filterRecipes } from "../../recipes/utils/filtre";
 import "../../../shared/components/RecipeCard/RecipeCard.css";
-import "../../recipes/style/buttomsShow.css";
-import "../style/HomeShowcase.css";
+import "../../recipes/styles/buttomsShow.css";
+import "../styles/HomeShowcase.css";
 
 const INITIAL_VISIBLE_RECIPES = 6;
 

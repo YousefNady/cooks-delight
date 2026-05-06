@@ -1,10 +1,12 @@
 /* ===== Intro ===== */
-*{
+* {
   margin: 0;
   padding: 0;
 }
+
 :root {
   --bg-surface: #FFFBF2;
+  --surface-gradient: linear-gradient(180deg, #ffffff 0%, #f8f3e7 100%);
   --border-surface: #e8e3db;
   --text-primary: hsla(45, 6%, 14%, 1);
   --text-muted: #6b6a66;
@@ -18,17 +20,19 @@
   --button-border-soft: hsla(45, 6%, 14%, 0.4);
   --button-bg-active: #9FDC26;
   --button-radius-round: 50px;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --shadow-sm: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 16px 32px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 22px 40px rgba(0, 0, 0, 0.14);
   --heart-inactive: #999;
   --heart-active: #e8573a;
   --heart-bg-light: rgba(255, 255, 255, 0.85);
   --heart-bg-active: rgba(255, 255, 255, 0.95);
   --heart-shadow-active: rgba(232, 87, 58, 0.30);
+  --card-anim-duration: 0.52s;
 }
+
 .recipe-card {
-  background: var(--bg-surface);
+  background: var(--surface-gradient);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-surface);
@@ -36,7 +40,9 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  transition: box-shadow 0.22s ease, transform 0.22s ease;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: cardFadeIn var(--card-anim-duration) ease both;
 }
 
 .recipes-intro {
@@ -45,10 +51,11 @@
   flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
-  
+
   justify-content: center;
   text-align: center;
 }
+
 .buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -56,6 +63,7 @@
   gap: 16px;
   margin: 40px 0px;
 }
+
 .recipes-heading {
   text-align: center;
   font-size: 40px;
@@ -89,10 +97,14 @@
   width: 100%;
   max-height: 180px;
   object-fit: cover;
+  transition: transform 0.5s ease;
 }
 
-.recipe-card__content{
+.recipe-card__content {
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
 }
 
 .recipe-card__title {
@@ -100,6 +112,7 @@
   font-weight: 700;
   color: var(--text-primary);
   padding-bottom: 12px;
+  letter-spacing: -0.03em;
 }
 
 .recipe-card__footer {
@@ -110,6 +123,7 @@
   margin-top: auto;
   gap: 8px;
 }
+
 .recipe-card__details {
   display: flex;
   flex-direction: row;
@@ -124,6 +138,7 @@
   line-height: 1.5;
   margin-bottom: 32px;
 }
+
 .recipe-card__info {
   font-size: 12px;
   color: var(--text-primary);
@@ -139,7 +154,7 @@
   height: 40px;
   padding: 0 20px;
   border-radius: 50px;
-  border: var(--button-border);
+  border: 1px solid rgba(26, 26, 26, 0.12);
   background: transparent;
   color: var(--text-strong);
   font-size: 13px;
@@ -148,18 +163,28 @@
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
+
 .recipe-card__button:hover {
-  background: var(--text-strong);
+  background: linear-gradient(135deg, #1a1a1a, #333333);
   color: var(--text-white);
-  transform: scale(1.03);
+  transform: translateY(-1px) scale(1.03);
 }
+
 /* ===== Hover ===== */
 .recipe-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+.recipe-card:hover .recipe-card__image {
+  transform: scale(1.06);
+}
+
+.recipe-card:hover .recipe-card__image-wrap {
+  transform: translateY(-2px);
 }
 
 /* ===== Buttons Filter ===== */
@@ -201,7 +226,7 @@
 /* ===== Mobile ===== */
 @media (max-width: 768px) {
 
-    
+
   .recipes-grid {
     grid-template-columns: 1fr;
   }
@@ -217,32 +242,36 @@
   }
 
   .recipes-intro {
-      padding: 0 16px 32px;
+    padding: 0 16px 32px;
   }
 
-.buttons-container {
-  display: grid;
-  grid-template-columns: repeat(3, max-content);
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
+  .buttons-container {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
 
   .buttons-container button {
-  
+
     font-size: 12px;
   }
-.recipe-card__details{
-  flex-direction: column;
-  align-items: flex-start;
-}
-.recipe-card__button{
-  width: 100%;
-  margin-bottom: 10px;
-}
-.recipe-card__info{
-  width: 100%;  
-}
+
+  .recipe-card__details {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .recipe-card__button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .recipe-card__info {
+    width: 100%;
+  }
+
   .recipe-card {
     max-width: 100%;
   }
@@ -253,10 +282,11 @@
  * without affecting the surrounding card layout.
  * ─────────────────────────────────────────────────────────────────────────── */
 .recipe-card__image-wrap {
-position: relative;
+  position: relative;
   width: 100%;
   height: 220px;
   overflow: hidden;
+  transition: transform 0.35s ease, filter 0.35s ease;
 }
 
 /* Ensure the image fills its new wrapper exactly as before */
@@ -340,9 +370,45 @@ position: relative;
 }
 
 @keyframes heartPop {
-  0%   { transform: scale(0.7); }
-  60%  { transform: scale(1.25); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.7);
+  }
+
+  60% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes cardFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(159, 220, 38, 0);
+  }
+
+  50% {
+    box-shadow: 0 12px 24px rgba(159, 220, 38, 0.12);
+  }
+}
+
+.recipe-card__button:hover {
+  animation: buttonGlow 0.4s ease;
 }
 
 /* ===== Mobile Adjustments ===== */
@@ -356,4 +422,115 @@ position: relative;
   .recipe-card__button {
     width: 100%;
   }
+}
+
+
+/* =============================================================================
+   AUTH HEART FEATURE
+   Everything below this line is a pure addition. Nothing above was modified.
+   =============================================================================
+
+   Three additions:
+
+   1. .recipe-card__heart-wrap
+      A transparent full-image overlay that takes over opacity fade-in/out
+      from the heart button itself. The heart keeps position:absolute
+      top:10px left:10px — no coordinates change. The wrapper also acts as
+      the positioning context for the tooltip.
+
+      Your hover rule `.recipe-card:hover .recipe-card__image-wrap { transform:
+      translateY(-2px) }` moves the entire image-wrap on hover. Because the
+      heart-wrap lives inside image-wrap it rides along for free.
+
+   2. .recipe-card__heart--locked
+      Guest-only modifier: dims and desaturates. Your existing :hover
+      scale(1.15) and heartPop still run for authenticated users; locked
+      overrides the hover scale to a softer 1.08 to signal the restriction.
+
+   3. .recipe-card__heart-tooltip
+      CSS-only tooltip, revealed on wrapper hover. Arrow points up toward
+      the heart button. Coordinates are pixel-aligned to the 36px button
+      at top:10px left:10px so the tooltip always reads as "belonging" to it.
+   =========================================================================== */
+
+/* ── 1. Heart wrapper ────────────────────────────────────────────────────── */
+.recipe-card__heart-wrap {
+  /* Fills the full image area — heart button's top:10px left:10px is unchanged */
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  /* Fade controlled here; clicks on the empty overlay area pass through */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Re-enable pointer events for actual interactive children */
+.recipe-card__heart-wrap>* {
+  pointer-events: auto;
+}
+
+/* Reveal on card hover, or when a recipe is already saved */
+.recipe-card:hover .recipe-card__heart-wrap,
+.recipe-card__heart-wrap:has(.recipe-card__heart--active) {
+  opacity: 1;
+}
+
+/* Heart stays fully opaque — the wrapper now owns the fade, not the button */
+.recipe-card__heart {
+  opacity: 1;
+}
+
+
+/* ── 2. Locked / guest state ─────────────────────────────────────────────── */
+.recipe-card__heart--locked {
+  opacity: 0.45;
+  filter: grayscale(0.4);
+  cursor: pointer;
+  /* still clickable — redirects to /login */
+}
+
+/* Muted hover response: 1.08 instead of your normal 1.15 */
+.recipe-card__heart--locked:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ── 3. Tooltip ──────────────────────────────────────────────────────────── */
+.recipe-card__heart-tooltip {
+  /* Placed directly below the 36px heart button (10px top + 36px height + 6px gap) */
+  position: absolute;
+  top: 52px;
+  left: 10px;
+  white-space: nowrap;
+
+  background: rgba(30, 30, 30, 0.88);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 4px 9px;
+  border-radius: 5px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+/* Arrow pointing upward toward the heart button */
+.recipe-card__heart-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 13px;
+  /* visually centred over the 36px button */
+  border: 5px solid transparent;
+  border-bottom-color: rgba(30, 30, 30, 0.88);
+}
+
+/* Reveal when the wrapper (and therefore the heart area) is hovered */
+.recipe-card__heart-wrap:hover .recipe-card__heart-tooltip {
+  opacity: 1;
 }

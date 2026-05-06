@@ -2,12 +2,12 @@
 
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo/Logo.svg';
-import '../../styles/navbar.css';
+import './styles/navbar.css';
 import { FiSearch, FiMenu, FiLogOut } from 'react-icons/fi';
 import { useState } from 'react';
 import MobileMenu from './Mobilemenu';
 import { useAuth } from '../../features/auth/context/useAuth';  // custom hook to consume AuthContext
-import { useRecipeSearch } from '../../features/search/hooks/useRecipeSearch';
+import { useRecipeSearch } from '../../shared/hooks/useRecipeSearch';
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import RecipeCard from "../../../shared/components/RecipeCard/RecipeCard";
 import type { Recipe } from "../../recipes/types/Recipe";
-import "../style/recipe-details.css";
+import "../styles/recipe-details.css";
 
 type Props = {
   recipes: Recipe[];

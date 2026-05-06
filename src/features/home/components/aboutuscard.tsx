@@ -2,7 +2,7 @@ import img1 from "../../../assets/home/About us Image.png"
 import img2 from "../../../assets/home/Recipe Card (1).png"
 import img3 from "../../../assets/home/Recipe Card.png"
 import { useNavigate } from "react-router-dom";
-import "../style/aboutuscard.css";
+import "../styles/aboutuscard.css";
 
 
 export default function AboutUsCard() {
