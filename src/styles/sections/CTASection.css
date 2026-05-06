@@ -1,0 +1,214 @@
+/* =========================================================
+   CTASection.css
+   Cooks Delight · src/shared/components/ui/
+   ========================================================= */
+
+/* ---------- Section wrapper ---------- */
+.cta-section {
+    display: flex;
+    justify-content: center;
+    padding: 0 64px 16px;
+    background-color: #F0EBE1;
+    /* matches page background */
+}
+
+/* ---------- Inner card ---------- */
+.cta-section__content {
+    position: relative;
+    /* anchor for the radial glows */
+    overflow: hidden;
+    /* clip the glows to the card */
+
+    width: 100%;
+    max-width: 1312px;
+    border-radius: 24px;
+
+    /* Coral/salmon background from design */
+    background-color: #F0614A;
+
+    /* Stack everything centrally */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    padding: 64px;
+}
+
+/* ---------- Decorative radial glows ---------- */
+/*
+  Two large semi-transparent circles that bleed in from
+  the left and right edges — matching the subtle vignette
+  visible in the design screenshot.
+*/
+.cta-section__glow {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.08);
+    pointer-events: none;
+}
+
+.cta-section__glow--left {
+    left: -180px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cta-section__glow--right {
+    right: -180px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* ---------- Eyebrow label ---------- */
+.cta-section__eyebrow {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: #FFFBF2CC;
+    margin: 0 0 14px;
+    position: relative;
+    /* above glows */
+    z-index: 1;
+}
+
+/* ---------- Heading ---------- */
+.cta-section__heading {
+    font-size: clamp(36px, 6vw, 76px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #FFFBF2;
+    margin: 0 0 20px;
+    position: relative;
+    z-index: 1;
+
+    font-family: 'Montserrat', 'Lato', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ---------- Subtext ---------- */
+.cta-section__subtext {
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #FFFBF2;
+    max-width: 684px;
+    margin: 0 0 32px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- CTA Button ---------- */
+.cta-section__btn {
+    position: relative;
+    z-index: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 40px;
+    height: 50px;
+    border-radius: 50px;
+
+    background: #262522;
+    color: #F0EBE1;
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    font-family: inherit;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.cta-section__btn:hover {
+    background: #2e2e2e;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+.cta-section__btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================================
+   Tablet (641px – 1024px)
+   ========================================================= */
+@media (max-width: 1024px) and (min-width: 641px) {
+    .cta-section__content {
+        padding: 52px 48px;
+        border-radius: 20px;
+    }
+
+    .cta-section__glow {
+        width: 380px;
+        height: 380px;
+    }
+
+    .cta-section__glow--left {
+        left: -120px;
+    }
+
+    .cta-section__glow--right {
+        right: -120px;
+    }
+}
+
+/* =========================================================
+   Mobile (≤ 640px)
+   ========================================================= */
+@media (max-width: 768px) {
+    .cta-section {
+        padding: 0 16px 32px;
+    }
+
+    .cta-section__content {
+        padding: 48px 24px 40px;
+        border-radius: 20px;
+        align-items: flex-start;
+        /* left-align on mobile as per design */
+        text-align: left;
+    }
+
+    /* Glows shrink and shift so they stay decorative, not distracting */
+    .cta-section__glow {
+        width: 260px;
+        height: 260px;
+    }
+
+    .cta-section__glow--left {
+        left: -80px;
+        top: auto;
+        bottom: -60px;
+        transform: none;
+    }
+
+    .cta-section__glow--right {
+        right: -80px;
+        top: -60px;
+        transform: none;
+    }
+
+    .cta-section__subtext {
+        font-size: 14px;
+        max-width: 100%;
+    }
+
+    /* Full-width button on mobile as per design */
+    .cta-section__btn {
+        width: 100%;
+        padding: 0;
+        height: 52px;
+        margin-top: 8px;
+    }
+}
