@@ -1,164 +1,59 @@
 import "../styles/home.css";
 import FeaturedRecipesSection from "../../../shared/components/FeaturedRecipesSection/FeaturedRecipesSection";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMic, FiSearch, FiX } from "react-icons/fi";
 import AboutUsCard from "../components/aboutuscard";
 import HomeShowcase from "../components/HomeShowcase";
 import DiversePalette from "../components/DiversePalette";
 import { useAuth } from "../../auth/context/useAuth";
-
-interface SpeechRecognitionLike extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onend: (() => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
-  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
-  abort: () => void;
-  start: () => void;
-  stop: () => void;
-}
-
-interface SpeechRecognitionAlternativeLike {
-  transcript: string;
-}
-
-interface SpeechRecognitionResultLike {
-  isFinal: boolean;
-  0?: SpeechRecognitionAlternativeLike;
-}
-
-interface SpeechRecognitionResultListLike {
-  length: number;
-  item: (index: number) => SpeechRecognitionResultLike;
-  [index: number]: SpeechRecognitionResultLike;
-}
-
-interface SpeechRecognitionEventLike {
-  resultIndex: number;
-  results: SpeechRecognitionResultListLike;
-}
-
-interface SpeechRecognitionErrorEventLike {
-  error?: string;
-}
-
-type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
-
-declare global {
-  interface Window {
-    SpeechRecognition?: SpeechRecognitionConstructor;
-    webkitSpeechRecognition?: SpeechRecognitionConstructor;
-  }
-}
+// ── All Speech types + mic logic now live here ────────────────────────────────
+import { useSpeechRecognition } from "../../../shared/hooks/useSpeechRecognition";
+import { useRecipeSearch } from "../../../shared/hooks/useRecipeSearch";
 
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [mobileSearchTerm, setMobileSearchTerm] = useState("");
-  const [isListening, setIsListening] = useState(false);
-  const [voiceError, setVoiceError] = useState("");
+
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const voiceBaseTermRef = useRef("");
-  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const {
+    searchTerm,
+    setSearchTerm,
+    handleSearchChange,
+    submitSearch,
+    handleSearchSubmit,
+  } = useRecipeSearch();
 
-  useEffect(() => {
-    return () => {
-      recognitionRef.current?.abort();
-    };
-  }, []);
+  const handleVoiceResult = useCallback(
+    (transcript: string) => setSearchTerm(transcript),
+    [setSearchTerm]
+  );
 
-  const submitMobileSearch = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const query = mobileSearchTerm.trim();
-    navigate(query ? `/recipes?q=${encodeURIComponent(query)}` : "/recipes");
-  };
+  // Delegate all mic state & Web Speech API complexity to the shared hook
+  const { isListening, voiceError, toggleListening, stop, clearError } =
+    useSpeechRecognition({
+      onResult: handleVoiceResult,
+    });
 
-  const handleVoiceSearch = () => {
+  // Abort recognition if the component unmounts (e.g. navigating away mid-listen)
+  useEffect(() => () => stop(), [stop]);
+
+  const handleToggleMic = () => {
     searchInputRef.current?.focus();
 
-    const Recognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-
-    if (!Recognition) {
-      setVoiceError("Voice search is not supported in this browser.");
-      return;
-    }
-
     if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      stop();
+      submitSearch(searchTerm);
       return;
     }
 
-    const recognition = new Recognition();
-    recognitionRef.current = recognition;
-    voiceBaseTermRef.current = mobileSearchTerm.trim();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
-
-    recognition.onresult = (event) => {
-      let finalTranscript = "";
-      let interimTranscript = "";
-
-      for (let index = 0; index < event.results.length; index += 1) {
-        const result = event.results[index] ?? event.results.item(index);
-        const transcript = result?.[0]?.transcript ?? "";
-
-        if (result?.isFinal) {
-          finalTranscript += transcript;
-        } else {
-          interimTranscript += transcript;
-        }
-      }
-
-      const spokenText = `${finalTranscript} ${interimTranscript}`.trim();
-      const nextSearchTerm = `${voiceBaseTermRef.current} ${spokenText}`
-        .trim();
-
-      setVoiceError("");
-      setMobileSearchTerm(nextSearchTerm);
-    
-
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-      }
-
-      silenceTimerRef.current = setTimeout(() => {
-        recognitionRef.current?.stop();
-        setIsListening(false);
-      }, 100000); 
-    };
-
-    recognition.onerror = (event) => {
-      setIsListening(false);
-      setVoiceError(
-        event.error === "not-allowed"
-          ? "Microphone access was blocked."
-          : "We could not hear that clearly. Please try again."
-      );
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-      }
-    };
-
-    setVoiceError("");
-    setIsListening(true);
-    recognition.start();
+    toggleListening(searchTerm);
   };
 
   return (
     <div className="home">
       {/* ===== HERO ===== */}
       <section className="home-hero">
-
         <div className="home-hero__content">
 
           <h1 className="home-hero__title">
@@ -170,28 +65,31 @@ export default function Home() {
             and let the aroma of our passion for cooking fill your kitchen.
           </p>
 
+          {/* ── Mobile voice-enabled search ── */}
           <form
             className={`home-mobile-search${isListening ? " home-mobile-search--listening" : ""}`}
-            onSubmit={submitMobileSearch}
+            onSubmit={handleSearchSubmit}
             role="search"
           >
             <FiSearch className="home-mobile-search__icon" aria-hidden="true" />
+
             <input
               ref={searchInputRef}
               className="home-mobile-search__input"
               type="search"
-              placeholder="Search..."
-              value={mobileSearchTerm}
-              onChange={(event) => setMobileSearchTerm(event.target.value)}
+              placeholder="Search recipes, ingredients..."
+              value={searchTerm}
+              onChange={handleSearchChange}
               aria-label="Search recipes"
             />
-            {mobileSearchTerm && (
+
+            {searchTerm && (
               <button
                 className="home-mobile-search__clear"
                 type="button"
                 onClick={() => {
-                  setMobileSearchTerm("");
-                  setVoiceError("");
+                  setSearchTerm("");
+                  clearError();
                   searchInputRef.current?.focus();
                 }}
                 aria-label="Clear search"
@@ -199,25 +97,28 @@ export default function Home() {
                 <FiX aria-hidden="true" />
               </button>
             )}
+
             <span className="home-mobile-search__mic-wrap">
               <button
                 className={`home-mobile-search__mic${isListening ? " home-mobile-search__mic--listening" : ""}`}
                 type="button"
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={handleVoiceSearch}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={handleToggleMic}
                 aria-label={isListening ? "Stop voice search" : "Start voice search"}
                 aria-pressed={isListening}
               >
                 <FiMic aria-hidden="true" />
               </button>
             </span>
+
             <span className="home-mobile-search__status" aria-live="polite">
-              {voiceError || (isListening ? "Listening" : "")}
+              {voiceError || (isListening ? "Listening…" : "")}
             </span>
           </form>
 
+          {/* ── CTA buttons ── */}
           <div className="home-hero__actions">
-          {!isAuthenticated && (
+            {!isAuthenticated && (
               <button
                 className="hero-signin-button"
                 onClick={() => navigate("/register")}
@@ -225,7 +126,6 @@ export default function Home() {
                 SIGN UP NOW
               </button>
             )}
-
             <button
               className="hero-button--secondary"
               onClick={() => navigate("/recipes")}
@@ -235,11 +135,9 @@ export default function Home() {
           </div>
 
         </div>
-
       </section>
 
       <DiversePalette />
-
       <FeaturedRecipesSection />
       <HomeShowcase />
       <AboutUsCard />

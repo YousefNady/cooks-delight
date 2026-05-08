@@ -37,28 +37,33 @@ export function useRecipeSearch() {
   );
 
   const { schedule: scheduleSearch, cancel: cancelDebouncedSearch } =
-    useDebouncedCallback((value: string) => {
-      navigateToSearch(value);
-    }, SEARCH_DEBOUNCE_MS);
+    useDebouncedCallback(navigateToSearch, SEARCH_DEBOUNCE_MS);
 
   const submitSearch = (value = searchTerm) => {
     cancelDebouncedSearch();
     navigateToSearch(value);
   };
 
+  const setSearchTerm = useCallback(
+    (value: string) => {
+      setSearchInput({
+        query: currentQuery,
+        term: value,
+      });
+
+      if (value.trim() === currentQuery.trim()) {
+        cancelDebouncedSearch();
+        return;
+      }
+
+      scheduleSearch(value);
+    },
+    [cancelDebouncedSearch, currentQuery, scheduleSearch]
+  );
+
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setSearchInput({
-      query: currentQuery,
-      term: value,
-    });
-
-    if (value.trim() === currentQuery.trim()) {
-      cancelDebouncedSearch();
-      return;
-    }
-
-    scheduleSearch(value);
+    setSearchTerm(value);
   };
 
   const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -68,6 +73,7 @@ export function useRecipeSearch() {
 
   return {
     searchTerm,
+    setSearchTerm,
     handleSearchChange,
     submitSearch,
     handleSearchSubmit,
