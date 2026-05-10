@@ -249,7 +249,7 @@
     }
 
     .navbar__content {
-        justify-content: start;
+        justify-content: space-around;
         gap: 20px;
     }
 }
