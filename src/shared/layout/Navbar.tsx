@@ -10,7 +10,7 @@ import { useAuth } from '../../features/auth/context/useAuth';
 import { useRecipeSearch } from '../../shared/hooks/useRecipeSearch';
 import { useSpeechRecognition } from '../../shared/hooks/useSpeechRecognition';
 // new 
-import MobileSearchModal from '../../features/search/components/Mobilesearchmodal'; // new 
+import MobileSearchModal from '../../features/search/components/MobileSearchModal'; // new 
 import { FiSearch as FiSearchMobile } from 'react-icons/fi'; // new 
 
 const Navbar = () => {
