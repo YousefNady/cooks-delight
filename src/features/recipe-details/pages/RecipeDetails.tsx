@@ -8,7 +8,7 @@ import filledStar from "../../../assets/recipe-details/Vector2.svg";
 import unfilledStar from "../../../assets/recipe-details/Vector.svg";
 import timeIcon from "../../../assets/recipe-details/timer.svg";
 import servingsIcon from "../../../assets/recipe-details/servings.svg";
-import difficultyIcon from "../../../assets/recipe-details/difficulty.svg";
+import difficultyIcon from "../../../assets/recipe-details/temp-icon.svg";
 import SimilarRecipesSection from "../components/SimilarRecipes";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 

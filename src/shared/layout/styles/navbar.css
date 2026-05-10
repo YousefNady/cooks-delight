@@ -11,25 +11,10 @@
     --navbar-text: #262522;
     --navbar-link-text: #7a7a7a;
     --navbar-link-hover: #EE6352;
-    --navbar-search-bg: #f7f6f3;
-    --navbar-search-icon: #7a7a7a;
-    --navbar-input-text: #3d3d3d;
-    --navbar-input-placeholder: #a19e9a;
-    --navbar-btn-bg: #e5e2d8;
-    --navbar-btn-hover-bg: #d0d0d0;
-    --navbar-avatar-border: #e8a020;
-    --navbar-avatar-border-hover: #c8880a;
-    --navbar-avatar-bg: #e8a020;
-    --navbar-avatar-text: #ffffff;
     --navbar-logout-border: #d4cfc6;
     --navbar-logout-text: #6b6b6b;
     --navbar-logout-hover: #e8573a;
     --navbar-logout-bg-hover: rgba(232, 87, 58, 0.06);
-    --navbar-login-bg: #e8a020;
-    --navbar-login-text: #ffffff;
-    --navbar-login-hover: #c8880a;
-    --navbar-login-shadow: rgba(232, 160, 32, 0.35);
-    --navbar-search-inner-shadow: rgba(0, 0, 0, 0.04);
 }
 
 .navbar {
@@ -37,6 +22,7 @@
     justify-content: center;
     padding: 20px 64px;
     background-color: #F0EBE1;
+    z-index: 9999;
 }
 
 .navbar__content {
@@ -53,6 +39,7 @@
     box-shadow: 0 4px 15px var(--navbar-panel-shadow);
     backdrop-filter: blur(10px);
     animation: fadeInDown 0.5s ease both;
+    z-index: 9999;
 }
 
 /* Logo Styling */
@@ -142,58 +129,6 @@
     color: var(--navbar-text);
 }
 
-.navbar__search {
-    position: absolute;
-    right: 120px;
-}
-
-/* Search Box Styling */
-.navbar__search-box {
-    display: flex;
-    align-items: center;
-    background: var(--navbar-search-bg);
-    padding: 8px 15px;
-    border-radius: 20px;
-    width: 250px;
-    animation: expand 0.32s ease-out;
-    box-shadow: inset 0 0 0 1px var(--navbar-search-inner-shadow);
-}
-
-.navbar__search-icon {
-    color: var(--navbar-search-icon);
-    margin-right: 8px;
-    animation: pulse 1.8s ease-in-out infinite;
-}
-
-.navbar__search-input {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 100%;
-    color: var(--navbar-input-text);
-}
-
-.navbar__search-input::placeholder {
-    color: var(--navbar-input-placeholder);
-}
-
-.navbar__search-btn {
-    background: var(--navbar-btn-bg);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.25s ease, transform 0.2s ease;
-}
-
-.navbar__search-btn:hover {
-    background: var(--navbar-btn-hover-bg);
-    transform: scale(1.05);
-}
-
 /* =========================================================
    KEYFRAMES 
    ========================================================= */
@@ -218,32 +153,6 @@
     100% {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    50% {
-        transform: scale(1.03);
-        opacity: 0.85;
-    }
-}
-
-@keyframes expand {
-    0% {
-        transform: scaleX(0.96);
-        opacity: 0.5;
-    }
-
-    100% {
-        transform: scaleX(1);
-        opacity: 1;
     }
 }
 
@@ -275,16 +184,15 @@
         padding: 10px 16px;
         border-radius: 50px;
     }
-
-    /* Hide desktop nav links and search on mobile */
-    .navbar__links,
-    .navbar__search {
-        display: none;
-    }
-
     /* Show hamburger on mobile */
     .navbar__hamburger {
         display: flex;
+    }
+
+    .navbar__search-bar,
+    .navbar__links,
+    .navbar__actions {
+        display: none;
     }
 }
 
@@ -302,40 +210,6 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-}
-
-/* ── Avatar image ────────────────────────────────────────────────────────── */
-.navbar__avatar {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    /* prevent flex from squishing it */
-    border-radius: 50%;
-    object-fit: cover;
-    /* crop to circle without distortion */
-    border: 2px solid var(--navbar-avatar-border);
-    transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.navbar__profile-link:hover .navbar__avatar {
-    border-color: var(--navbar-avatar-border-hover);
-    transform: scale(1.06);
-}
-
-/* ── Avatar initials fallback ────────────────────────────────────────────── */
-.navbar__avatar-fallback {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    border-radius: 50%;
-    background: var(--navbar-avatar-bg);
-    color: var(--navbar-avatar-text);
-    font-size: 0.75rem;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--navbar-avatar-border);
 }
 
 /* ── Logout button ───────────────────────────────────────────────────────── */
@@ -361,27 +235,6 @@
     transform: translateY(-1px);
 }
 
-/* ── Login button (pill) ─────────────────────────────────────────────────── */
-.navbar__login-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    background: var(--navbar-login-bg);
-    color: var(--navbar-login-text);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-.navbar__login-btn:hover {
-    background: var(--navbar-login-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px var(--navbar-login-shadow);
-}
 
 /* =========================================================
    Tablet & Mobile Layout (From Your Original Code)
@@ -396,26 +249,362 @@
     }
 
     .navbar__content {
-        justify-content: start;
+        justify-content: space-around;
         gap: 20px;
-    }
-
-    .navbar__search {
-        right: 16px;
-    }
-
-    .navbar__search-box {
-        width: 200px;
     }
 }
 
-/* ── Hide actions on mobile (hamburger takes over) ───────────────────────── */
-@media (max-width: 768px) {
-    .navbar__content{
-        justify-content: space-between;
+
+
+/* =============================================================================
+   navbar.css — Cooks Delight
+   Only the sections relevant to Task 2 & 3 are shown here.
+   Paste these rules in place of / after your existing navbar.css content.
+   ============================================================================= */
+
+/* ── Base navbar shell ───────────────────────────────────────────────────────
+   Keep your existing .navbar, .navbar__content, .navbar__logo,
+   .navbar__links, .navbar__link, .navbar__hamburger rules unchanged.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SEARCH BAR  (replaces the old icon-toggle approach)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.navbar__search-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    /* Pill shape matching the reference image */
+    height: 40px;
+    padding: 0 10px 0 14px;
+    border-radius: 10px;
+    border: 1.5px solid #e8e3db;
+    background: #faf7f2;
+
+    /* Sizing: stretches between nav links and auth actions */
+    flex: 1 1 0;
+    min-width: 180px;
+    max-width: 380px;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar__search-bar:focus-within {
+    border-color: #e08c2e;
+    box-shadow: 0 0 0 3px rgba(224, 140, 46, 0.12);
+}
+
+/* Listening pulse ring */
+.navbar__search-bar--listening {
+    border-color: #e08c2e;
+    box-shadow: 0 0 0 3px rgba(224, 140, 46, 0.18);
+    animation: navbar-search-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes navbar-search-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px rgba(224, 140, 46, 0.18);
     }
 
-    .navbar__actions {
-        display: none;
+    50% {
+        box-shadow: 0 0 0 6px rgba(224, 140, 46, 0.08);
     }
+}
+
+.navbar__search-bar-icon {
+    flex-shrink: 0;
+    color: #9e9890;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.navbar__search-bar-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    color: #1a1a1a;
+    font-weight: 400;
+}
+
+.navbar__search-bar-input::placeholder {
+    color: #b0aa9f;
+}
+
+/* ── Mic button inside the search bar ── */
+.navbar__search-mic {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: #9e9890;
+    font-size: 15px;
+
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.navbar__search-mic:hover {
+    background: rgba(224, 140, 46, 0.1);
+    color: #e08c2e;
+}
+
+/* Active listening state: filled orange circle */
+.navbar__search-mic--listening {
+    background: #e08c2e;
+    color: #fff;
+    animation: mic-breathe 1s ease-in-out infinite;
+}
+
+@keyframes mic-breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LOGIN BUTTON  (unauthenticated state)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.navbar__login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 0 25px;
+    height: 45px;
+    border-radius: 10px;
+
+    /* Filled orange pill — matches the reference image exactly */
+    background: #e08c2e;
+    color: #262522;
+    border: none;
+    text-decoration: none;
+
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.navbar__login-btn:hover {
+    background: #c97b22;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(224, 140, 46, 0.3);
+}
+
+.navbar__login-btn svg {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PROFILE TRIGGER + DROPDOWN  (authenticated state)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.navbar__profile {
+    position: relative;
+}
+
+.navbar__profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50px;
+    transition: background 0.18s ease;
+}
+
+.navbar__profile-trigger:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Avatar */
+.navbar__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e8e3db;
+    display: block;
+}
+
+/* Initials fallback */
+.navbar__avatar-fallback {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e08c2e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Chevron — rotates when open */
+.navbar__profile-chevron {
+    color: #6b6a66;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.navbar__profile-chevron--open {
+    transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+.navbar__dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid #e8e3db;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+
+    /* Subtle appear animation */
+    animation: dropdown-enter 0.18s ease-out both;
+    z-index: 10000;
+}
+
+@keyframes dropdown-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Each item — works for both <Link> and <button> */
+.navbar__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 13px 18px;
+    background: transparent;
+    border: none;
+    text-decoration: none;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1a1a1a;
+    letter-spacing: 0.01em;
+
+    transition: background 0.14s ease, color 0.14s ease;
+}
+
+.navbar__dropdown-item svg {
+    font-size: 16px;
+    flex-shrink: 0;
+    color: #9e9890;
+    transition: color 0.14s ease;
+}
+
+.navbar__dropdown-item:hover {
+    background: #faf7f2;
+    color: #e08c2e;
+}
+
+.navbar__dropdown-item:hover svg {
+    color: #e08c2e;
+}
+
+/* Divider before the last item */
+.navbar__dropdown-item:last-child {
+    border-top: 1px solid #f0ebe3;
+}
+
+/* Logout — red accent on hover */
+.navbar__dropdown-item--danger:hover {
+    background: #fff5f5;
+    color: #d94f3d;
+}
+
+.navbar__dropdown-item--danger:hover svg {
+    color: #d94f3d;
+}
+
+@media (max-width: 768px) {
+    .navbar__content {
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .navbar__search-bar{
+            display: none;
+        }
+    
+}
+
+/* =============================================================================
+   ADDITIVE MOBILE RULES — append to the bottom of navbar.css
+   Desktop styles above are 100% untouched.
+   ============================================================================= */
+
+/* ── Mobile search icon button (hidden on desktop) ───────────────────────── */
+.navbar__mobile-search-icon {
+  display: none; /* hidden on desktop — shown only via the media query below */
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--navbar-text);
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  margin-left: auto;
+}
+
+.navbar__mobile-search-icon:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ── Show mobile search icon on mobile, keep hamburger behavior intact ────── */
+@media (max-width: 768px) {
+  .navbar__mobile-search-icon {
+    display: flex;
+  }
 }

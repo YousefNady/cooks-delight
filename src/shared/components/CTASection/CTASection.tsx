@@ -2,8 +2,14 @@
 
 import { Link } from 'react-router-dom';
 import './CTASection.css';
+import { useAuth } from '../../../features/auth/context/useAuth';
+
 
 const CTASection = () => {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) return null;
+
   return (
     <section className="cta-section" aria-labelledby="cta-heading">
       <div className="cta-section__content">
