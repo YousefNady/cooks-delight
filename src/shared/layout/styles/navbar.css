@@ -189,7 +189,7 @@
         display: flex;
     }
 
-        .navbar__search-bar,
+    .navbar__search-bar,
     .navbar__links,
     .navbar__actions {
         display: none;
@@ -381,6 +381,7 @@
 }
 
 
+
 /* ═══════════════════════════════════════════════════════════════════════════
    LOGIN BUTTON  (unauthenticated state)
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -562,4 +563,48 @@
 
 .navbar__dropdown-item--danger:hover svg {
     color: #d94f3d;
+}
+
+@media (max-width: 768px) {
+    .navbar__content {
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .navbar__search-bar{
+            display: none;
+        }
+    
+}
+
+/* =============================================================================
+   ADDITIVE MOBILE RULES — append to the bottom of navbar.css
+   Desktop styles above are 100% untouched.
+   ============================================================================= */
+
+/* ── Mobile search icon button (hidden on desktop) ───────────────────────── */
+.navbar__mobile-search-icon {
+  display: none; /* hidden on desktop — shown only via the media query below */
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--navbar-text);
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  margin-left: auto;
+}
+
+.navbar__mobile-search-icon:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ── Show mobile search icon on mobile, keep hamburger behavior intact ────── */
+@media (max-width: 768px) {
+  .navbar__mobile-search-icon {
+    display: flex;
+  }
 }
