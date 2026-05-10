@@ -9,10 +9,15 @@ import MobileMenu from './Mobilemenu';
 import { useAuth } from '../../features/auth/context/useAuth';
 import { useRecipeSearch } from '../../shared/hooks/useRecipeSearch';
 import { useSpeechRecognition } from '../../shared/hooks/useSpeechRecognition';
+// new 
+import MobileSearchModal from '../../features/search/components/Mobilesearchmodal'; // new 
+import { FiSearch as FiSearchMobile } from 'react-icons/fi'; // new 
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen]   = useState(false);
   const [isDropdownOpen,   setIsDropdownOpen]     = useState(false);
+  // ADD — one new state variable for mobile search modal
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const dropdownRef                               = useRef<HTMLDivElement>(null);
   const navigate                                  = useNavigate();
 
@@ -197,6 +202,17 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* ── Mobile search icon (mobile only) ── */}
+            <button
+              className="navbar__mobile-search-icon"
+              type="button"
+              aria-label="Open search"
+              onClick={() => setIsMobileSearchOpen(true)}
+            >
+              <FiSearchMobile />
+            </button>
+
+
           {/* ── Hamburger (mobile only) ── */}
           <button
             className="navbar__hamburger"
@@ -214,6 +230,11 @@ const Navbar = () => {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+      />
+
+      <MobileSearchModal
+        isOpen={isMobileSearchOpen}
+        onClose={() => setIsMobileSearchOpen(false)}
       />
     </>
   );

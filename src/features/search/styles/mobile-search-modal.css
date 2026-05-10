@@ -1,0 +1,353 @@
+/* =============================================================================
+   mobile-search-modal.css — Cooks Delight
+   Scoped entirely to .mobile-search-* BEM block.
+   Only rendered on mobile; desktop never sees these elements.
+   ============================================================================= */
+
+/* ── Overlay backdrop ──────────────────────────────────────────────────────── */
+.mobile-search {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    color: rgb(196, 199, 197);
+
+    /* Slide-in from top */
+    animation: msearch-enter 0.28s cubic-bezier(0.22, 0.9, 0.36, 1) both;
+}
+
+@keyframes msearch-enter {
+    from {
+        opacity: 0;
+        transform: translateY(-24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Top bar (close + input + mic) ────────────────────────────────────────── */
+.mobile-search__bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.mobile-search__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #f0ebe1;
+    font-size: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s ease;
+}
+
+.mobile-search__close:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.mobile-search__input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    height: 42px;
+    padding: 0 10px 0 14px;
+    border-radius: 10px;
+    background: #2c2820;
+    border: 1.5px solid #3a342c;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-search__input-wrap:focus-within {
+    border-color: #e08c2e;
+    box-shadow: 0 0 0 3px rgba(224, 140, 46, 0.14);
+}
+
+.mobile-search__input-icon {
+    color: #7a7060;
+    font-size: 16px;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.mobile-search__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: #f0ebe1;
+    font-weight: 400;
+}
+
+.mobile-search__input::placeholder {
+    color: #5c5448;
+}
+
+.mobile-search__mic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #7a7060;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.mobile-search__mic:hover {
+    background: rgba(224, 140, 46, 0.12);
+    color: #e08c2e;
+}
+
+.mobile-search__mic--listening {
+    background: #e08c2e;
+    color: #fff;
+    animation: msearch-mic-breathe 1s ease-in-out infinite;
+}
+
+@keyframes msearch-mic-breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+}
+
+/* ── Scrollable body ───────────────────────────────────────────────────────── */
+.mobile-search__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* ── Section wrapper ───────────────────────────────────────────────────────── */
+.mobile-search__section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: msearch-fade-up 0.3s ease both;
+}
+
+.mobile-search__section:nth-child(2) {
+    animation-delay: 0.04s;
+}
+
+.mobile-search__section:nth-child(3) {
+    animation-delay: 0.08s;
+}
+
+.mobile-search__section:nth-child(4) {
+    animation-delay: 0.12s;
+}
+
+@keyframes msearch-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Section heading row (title + optional action) ────────────────────────── */
+.mobile-search__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-search__section-title {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+    color: rgb(196, 199, 197);
+}
+
+.mobile-search__clear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e08c2e;
+    padding: 0;
+    transition: color 0.18s ease;
+}
+
+.mobile-search__clear-btn:hover {
+    color: #c97b22;
+}
+
+/* ── Trending pill tags ────────────────────────────────────────────────────── */
+.mobile-search__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mobile-search__tag {
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: transparent;
+    border: 1px solid #444746;
+    font-size: 13px;
+    font-weight: 500;
+    color: #d4cfc6;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    white-space: nowrap;
+}
+
+.mobile-search__tag:hover {
+    background: rgba(224, 140, 46, 0.12);
+    border-color: #e08c2e;
+    color: #e08c2e;
+}
+
+/* ── "Try saying…" rows ────────────────────────────────────────────────────── */
+.mobile-search__try-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-search__try-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #282a2c;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.mobile-search__try-item:hover {
+    background: #34302a;
+}
+
+.mobile-search__try-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #d4cfc6;
+}
+
+.mobile-search__try-mic {
+    color: #e08c2e;
+    font-size: 16px;
+}
+
+/* ── Recent searches list ──────────────────────────────────────────────────── */
+.mobile-search__recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-search__recent-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.mobile-search__recent-item:hover {
+    background: #2c2820;
+}
+
+.mobile-search__recent-icon {
+    color: #5c5448;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+
+.mobile-search__recent-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(196, 199, 197);
+}
+
+.mobile-search__recent-list li:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Loading & error states ────────────────────────────────────────────────── */
+.mobile-search__loading,
+.mobile-search__error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 0;
+    font-size: 14px;
+    color: #7a7060;
+}
+
+.mobile-search__error {
+    color: #d94f3d;
+}
+
+/* ── Skeleton shimmer (optional progressive enhancement) ───────────────────── */
+.mobile-search__skeleton {
+    height: 36px;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #2c2820 25%, #343028 50%, #2c2820 75%);
+    background-size: 200% 100%;
+    animation: msearch-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes msearch-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
