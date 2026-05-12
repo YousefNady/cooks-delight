@@ -1,0 +1,100 @@
+.dashboard-page {
+    padding: 2rem;
+    background-color: #fcfcfc;
+}
+
+.dashboard-page__header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-page__greeting {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.dashboard-page__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.dashboard-page__main-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    /* Main content + Sidebar */
+    gap: 2rem;
+}
+
+.dashboard-page__section {
+    margin-bottom: 3rem;
+}
+
+.dashboard-page__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-page__section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.dashboard-page__link {
+    color: #ff6b00;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dashboard-page__recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Sidebar Styles */
+.dashboard-page__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-page__user-brief {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-page__user-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.dashboard-page__quote-card {
+    margin-top: auto;
+    padding: 1.5rem;
+    background: #fff5ed;
+    border-radius: 12px;
+    font-style: italic;
+    color: #888;
+}
+
+/* Responsive Handling */
+@media (max-width: 1024px) {
+    .dashboard-page__main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-page__sidebar {
+        order: -1;
+        /* Move profile to top on mobile */
+    }
+}

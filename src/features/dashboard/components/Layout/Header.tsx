@@ -1,0 +1,258 @@
+import React, { useState, useEffect } from "react";
+import type { DummyJSONUser } from "../../../../shared/types/dashboard.types";
+import "./Header.css";
+
+// ---------------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------------
+
+const IconSearch: React.FC = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="7" />
+    <line x1="16.5" y1="16.5" x2="22" y2="22" />
+  </svg>
+);
+
+const IconBell: React.FC = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+  </svg>
+);
+
+const IconChevronDown: React.FC = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="14" height="14">
+    <path d="M7 10l5 5 5-5z" />
+  </svg>
+);
+
+// ---------------------------------------------------------------------------
+// Internal hook — fetch a single DummyJSON user by id
+// Kept here so the Header stays self-contained when used in "auto-fetch" mode.
+// Your team can extract this to a shared hooks/ folder later.
+// ---------------------------------------------------------------------------
+
+interface UseFetchUserResult {
+  user: DummyJSONUser | null;
+  loading: boolean;
+  error: string | null;
+}
+
+interface FetchUserState {
+  user: DummyJSONUser | null;
+  resolvedUserId: number | null;
+  error: string | null;
+}
+
+function useFetchUser(userId: number): UseFetchUserResult {
+  const [state, setState] = useState<FetchUserState>({
+    user: null,
+    resolvedUserId: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`https://dummyjson.com/users/${userId}`)
+      .then<DummyJSONUser>((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        if (!cancelled) {
+          setState({ user: data, resolvedUserId: userId, error: null });
+        }
+      })
+      .catch((err: Error) => {
+        if (!cancelled) {
+          setState((prevState) => ({
+            ...prevState,
+            resolvedUserId: userId,
+            error: err.message,
+          }));
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  const loading = state.resolvedUserId !== userId;
+  const error = loading ? null : state.error;
+
+  return { user: state.user, loading, error };
+}
+
+// ---------------------------------------------------------------------------
+// Props interface
+// ---------------------------------------------------------------------------
+
+/**
+ * Two usage modes — mutually exclusive:
+ *
+ * Mode A — Pass a ready-made user object (from your auth/API service):
+ *   <Header user={myUser} ... />
+ *
+ * Mode B — Let Header fetch the user itself (good for quick prototyping):
+ *   <Header fetchUserId={1} ... />
+ *
+ * If both are supplied, `user` takes precedence.
+ */
+export interface HeaderProps {
+  /**
+   * A fully-typed DummyJSONUser object.
+   * Provide this when user data is managed by a parent (auth store, React Query, etc.).
+   */
+  user?: DummyJSONUser;
+
+  /**
+   * If no `user` prop is provided, the Header will fetch `/users/:fetchUserId`
+   * from DummyJSON directly. Useful for isolated development / Storybook.
+   * @default 1
+   */
+  fetchUserId?: number;
+
+  /** Number shown on the notification bell badge. 0 hides the badge. */
+  notificationCount?: number;
+
+  /** Placeholder text for the search input */
+  searchPlaceholder?: string;
+
+  /** Called on every keystroke in the search input */
+  onSearchChange?: (value: string) => void;
+
+  /** Called when the user presses Enter in the search input */
+  onSearchSubmit?: (value: string) => void;
+
+  /** Called when the bell icon is clicked */
+  onNotificationsClick?: () => void;
+
+  /** Called when the avatar / profile button is clicked */
+  onProfileClick?: () => void;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+const Header: React.FC<HeaderProps> = ({
+  user: userProp,
+  fetchUserId = 1,
+  notificationCount = 0,
+  searchPlaceholder = "Search recipes, ingredients…",
+  onSearchChange = () => {},
+  onSearchSubmit = () => {},
+  onNotificationsClick = () => {},
+  onProfileClick = () => {},
+}) => {
+  // Only run the fetch hook when no user prop is provided
+  const { user: fetchedUser, loading } = useFetchUser(
+    userProp ? -1 : fetchUserId // pass -1 as a sentinel so the hook skips the fetch
+  );
+
+  // Resolved user — prop wins; fallback to fetched; fallback to null
+  const user: DummyJSONUser | null = userProp ?? fetchedUser;
+
+  // Derived display values — graceful fallbacks while loading or on error
+  const displayName: string = user ? user.firstName : loading ? "…" : "Guest";
+  const avatarUrl: string =
+    user?.image ?? `https://ui-avatars.com/api/?name=Guest&background=f97316&color=fff&size=80`;
+  const avatarAlt: string = user
+    ? `${user.firstName} ${user.lastName}`
+    : "User avatar";
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter") onSearchSubmit(e.currentTarget.value);
+  };
+
+  return (
+    <header className="header">
+
+      {/* ── Greeting ── */}
+      <div className="header__greeting">
+        <h1 className="header__greeting-title">
+          Welcome back, {displayName}!{" "}
+          <span role="img" aria-label="waving hand">👋</span>
+        </h1>
+        <p className="header__greeting-subtitle">
+          Let's continue your culinary journey.
+        </p>
+      </div>
+
+      {/* ── Right cluster ── */}
+      <div className="header__controls">
+
+        {/* Search */}
+        <div className="header__search">
+          <span className="header__search-icon" aria-hidden="true">
+            <IconSearch />
+          </span>
+          <input
+            className="header__search-input"
+            type="search"
+            placeholder={searchPlaceholder}
+            aria-label="Search recipes and ingredients"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onSearchChange(e.target.value)
+            }
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        {/* Notification bell */}
+        <button
+          className="header__icon-btn"
+          type="button"
+          onClick={onNotificationsClick}
+          aria-label={
+            notificationCount > 0
+              ? `Notifications, ${notificationCount} unread`
+              : "Notifications"
+          }
+        >
+          <IconBell />
+          {notificationCount > 0 && (
+            <span className="header__badge" aria-hidden="true">
+              {notificationCount > 9 ? "9+" : notificationCount}
+            </span>
+          )}
+        </button>
+
+        {/* User profile */}
+        <button
+          className={[
+            "header__profile",
+            loading && !userProp ? "header__profile--loading" : "",
+          ].filter(Boolean).join(" ")}
+          type="button"
+          onClick={onProfileClick}
+          aria-label="Open user menu"
+        >
+          <img
+            className="header__profile-avatar"
+            src={avatarUrl}
+            alt={avatarAlt}
+            width={36}
+            height={36}
+            loading="eager"
+          />
+          <span className="header__profile-chevron">
+            <IconChevronDown />
+          </span>
+        </button>
+
+      </div>
+    </header>
+  );
+};
+
+export default Header;

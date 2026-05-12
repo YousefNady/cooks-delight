@@ -1,0 +1,221 @@
+/* =============================================================================
+   PromotionalCard — BEM component
+   Block   : .promo-card
+   Elements: __icon-bubble  __body  __title-row  __title  __badge
+             __description  __notify-btn  __notify-btn-icon  __action
+   Modifiers (block): --orange  --blue  --green
+   ============================================================================= */
+
+.promo-card {
+    --promo-card-bg: #ffffff;
+    --promo-card-radius: 16px;
+    --promo-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --promo-card-padding: 18px 18px 16px;
+
+    --bubble-size: 44px;
+    --bubble-radius: 12px;
+
+    --badge-bg: #f3f4f6;
+    --badge-color: #9ca3af;
+
+    --title-color: #1a1714;
+    --desc-color: #9a9088;
+
+    --notify-btn-bg: #ffffff;
+    --notify-btn-border: #e8e2dd;
+    --notify-btn-color: #6b6560;
+    --notify-btn-hover-bg: #faf7f5;
+    --notify-btn-hover-border: #d4ceca;
+
+    --font-sans: "Lato", "Helvetica Neue", sans-serif;
+}
+
+/* ── Block ── */
+.promo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--promo-card-bg);
+    border-radius: var(--promo-card-radius);
+    padding: var(--promo-card-padding);
+    box-shadow: var(--promo-card-shadow);
+    font-family: var(--font-sans);
+    width: 100%;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease;
+    /* Subtle watermark pattern — adds depth without heavy imagery */
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Decorative watermark circle (pure CSS, no image assets needed) */
+.promo-card::after {
+    content: "";
+    position: absolute;
+    bottom: -28px;
+    right: -28px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    /* Color injected per variant via CSS variable */
+    background: var(--promo-watermark-color, transparent);
+    opacity: 0.07;
+    pointer-events: none;
+}
+
+/* ── Icon bubble ── */
+.promo-card__icon-bubble {
+    width: var(--bubble-size);
+    height: var(--bubble-size);
+    border-radius: var(--bubble-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* Color set per variant */
+}
+
+.promo-card__icon-bubble svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* ── Body ── */
+.promo-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* ── Title row ── */
+.promo-card__title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.promo-card__title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--title-color);
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+}
+
+/* "Coming Soon" badge — inline next to the title */
+.promo-card__badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--badge-bg);
+    color: var(--badge-color);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ── Description ── */
+.promo-card__description {
+    font-size: 12.5px;
+    color: var(--desc-color);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ── Notify Me button ── */
+.promo-card__notify-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 9px;
+    border: 1.5px solid var(--notify-btn-border);
+    background: var(--notify-btn-bg);
+    color: var(--notify-btn-color);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease, transform 0.12s ease;
+    margin-top: 2px;
+}
+
+.promo-card__notify-btn:hover {
+    background: var(--notify-btn-hover-bg);
+    border-color: var(--notify-btn-hover-border);
+    color: #3d3630;
+    transform: translateY(-1px);
+}
+
+.promo-card__notify-btn:active {
+    transform: translateY(0);
+}
+
+.promo-card__notify-btn-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.promo-card__notify-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Custom action slot ── */
+.promo-card__action {
+    margin-top: 2px;
+}
+
+/* =============================================================================
+   Variant tints
+   ============================================================================= */
+
+/* ── Orange — "Try Premium" ── */
+.promo-card--orange {
+    --promo-watermark-color: #f97316;
+}
+
+.promo-card--orange .promo-card__icon-bubble {
+    background-color: #fff4e6;
+    color: #f59e0b;
+}
+
+/* ── Blue — "Leave Reviews" ── */
+.promo-card--blue {
+    --promo-watermark-color: #3b82f6;
+}
+
+.promo-card--blue .promo-card__icon-bubble {
+    background-color: #eff6ff;
+    color: #3b82f6;
+}
+
+/* ── Green — "Shopping List" ── */
+.promo-card--green {
+    --promo-watermark-color: #22c55e;
+}
+
+.promo-card--green .promo-card__icon-bubble {
+    background-color: #f0fdf4;
+    color: #22c55e;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .promo-card {
+        padding: 14px 14px 12px;
+    }
+}

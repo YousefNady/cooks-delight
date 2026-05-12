@@ -14,6 +14,8 @@ import ProfilePage from './features/profile/pages/Profilepage';
 import { FavoritesProvider } from './features/profile';
 import { AuthProvider } from './features/auth/context/AuthContext';
 import PageTitle from './shared/components/PageTitle/PageTitle';
+import DashboardPageExample from "./features/dashboard/pages/DashboardPage.example";
+import ComponentShowcase from "./features/dashboard/components/ComponentShowcase.example";
 
 
 function App() {
@@ -85,6 +87,19 @@ function App() {
                 <Signup />
               </PageTitle>
             } />
+
+            <Route path="dashboard" element={
+              <PageTitle title="Dashboard | Cooks Delight">
+                <DashboardPageExample />
+              </PageTitle>
+            } />
+
+                        <Route path="ComponentShowcase" element={
+              <PageTitle title="Dashboard | Cooks Delight">
+                <ComponentShowcase />
+              </PageTitle>
+            } />
+
           </Routes>
 
         </BrowserRouter>
