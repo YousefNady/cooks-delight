@@ -172,7 +172,7 @@ const Navbar = () => {
                     </Link>
 
                     <Link
-                      to="/profile"
+                      to="/profile#favorites-section"
                       className="navbar__dropdown-item"
                       role="menuitem"
                       onClick={() => setIsDropdownOpen(false)}

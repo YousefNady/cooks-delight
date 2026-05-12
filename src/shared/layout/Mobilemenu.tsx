@@ -12,7 +12,7 @@ import {
   FiInfo,
   FiMail,
   FiUser,
-  FiHeart,
+  // FiHeart,
   FiSettings,
   FiChevronRight,
 } from 'react-icons/fi';
@@ -35,7 +35,7 @@ const NAV_ITEMS = [
 
 const ACCOUNT_ITEMS = [
   { to: '/profile',   label: 'My Profile', icon: <FiUser aria-hidden="true" /> },
-  { to: '/favorites', label: 'Favorites',  icon: <FiHeart aria-hidden="true" /> },
+  // { to: '/profile#favorites-section', label: 'Favorites',  icon: <FiHeart aria-hidden="true" /> },
   { to: '/settings',  label: 'Settings',   icon: <FiSettings aria-hidden="true" /> },
 ];
 

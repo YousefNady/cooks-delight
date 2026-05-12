@@ -22,23 +22,22 @@
 }
 
 .intro__heading {
-  font-size: clamp(32px, 4vw, 69px);
+font-size: clamp(40px, 5.5vw, 80px);
   font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
   color: #262522;
   margin: 0;
-  font-family: 'Montserrat', 'Lato', Arial, sans-serif;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  padding: 24px 24px 0;
-  animation: introFadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  font-family: 'Montserrat', 'Lato', 'Helvetica Neue', Arial, sans-serif;
+  animation: about-slide-up 0.6s ease both;
 }
 
 .intro__body {
-  font-size: 21px;
-  color: #26252299;
-  line-height: 1.7;
-  margin: 0;
-  padding-top: 8px;
+    font-size: 21px;
+      line-height: 1.40;
+      color: #26252299;
+      margin: 0 0 28px;
+      max-width: 648px;
   animation: introFadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
 }
 
@@ -152,7 +151,7 @@
 }
 
 /* Mobile */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .intro {
     padding: 40px 0 24px;
   }
@@ -164,6 +163,11 @@
 
   .intro__top {
     margin-bottom: 32px;
+  }
+
+  .intro__body{
+            max-width: 100%;
+              font-size: 14px;
   }
 }
 
