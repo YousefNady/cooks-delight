@@ -181,6 +181,10 @@
 
 /* ===== 2. MOBILE VIEW (768px and down) ===== */
 @media (max-width: 768px) {
+  .about-us-section {
+      padding: 0 0 64px 0;
+  }
+
   .about-us-card {
     border-radius: 24px;
   }

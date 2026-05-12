@@ -65,7 +65,7 @@
 
 @media (max-width: 768px) {
   .recipes-results {
-    padding: 40px 16px 0;
+    padding: 40px 0 0;
   }
 
   .load-more-container {
@@ -78,7 +78,7 @@
   }
 
   .recipes-results .recipes-heading {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .recipes-count {

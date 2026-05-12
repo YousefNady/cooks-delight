@@ -347,9 +347,6 @@
 }
 
 @media (max-width: 768px) {
-  .home {
-    padding: 0 14px;
-  }
 
   .home-mobile-search {
     position: relative;
