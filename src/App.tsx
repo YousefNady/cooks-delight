@@ -14,6 +14,7 @@ import ProfilePage from './features/profile/pages/Profilepage';
 import { FavoritesProvider } from './features/profile';
 import { AuthProvider } from './features/auth/context/AuthContext';
 import PageTitle from './shared/components/PageTitle/PageTitle';
+import  ComingSoon  from './features/coming-soon/ComingSoon';
 
 
 function App() {
@@ -66,6 +67,15 @@ function App() {
                   <ContactPage />
                 </PageTitle>
               } />
+
+              <Route
+              path="/coming-soon"
+              element={
+                <PageTitle title="Coming Soon | Cooks Delight">
+                  <ComingSoon />
+                </PageTitle>
+              }
+            />
               
               <Route path="*" element={
                 <PageTitle title="Page Not Found | Cooks Delight">

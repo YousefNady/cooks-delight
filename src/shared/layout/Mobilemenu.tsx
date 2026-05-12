@@ -36,7 +36,7 @@ const NAV_ITEMS = [
 const ACCOUNT_ITEMS = [
   { to: '/profile',   label: 'My Profile', icon: <FiUser aria-hidden="true" /> },
   // { to: '/profile#favorites-section', label: 'Favorites',  icon: <FiHeart aria-hidden="true" /> },
-  { to: '/settings',  label: 'Settings',   icon: <FiSettings aria-hidden="true" /> },
+  { to: '/coming-soon',  label: 'Settings',   icon: <FiSettings aria-hidden="true" /> },
 ];
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
