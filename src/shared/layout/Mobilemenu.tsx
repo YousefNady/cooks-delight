@@ -12,7 +12,7 @@ import {
   FiInfo,
   FiMail,
   FiUser,
-  FiHeart,
+  // FiHeart,
   FiSettings,
   FiChevronRight,
 } from 'react-icons/fi';
