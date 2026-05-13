@@ -15,6 +15,8 @@ import { FavoritesProvider } from './features/profile';
 import { AuthProvider } from './features/auth/context/AuthContext';
 import PageTitle from './shared/components/PageTitle/PageTitle';
 import  ComingSoon  from './features/coming-soon/ComingSoon';
+import AIChef from './features/chatbot/components/chatbot';
+import SmartChefPage from './features/chatbot/components/SmartChefPage';
 
 
 function App() {
@@ -23,7 +25,7 @@ function App() {
       <FavoritesProvider>
         <BrowserRouter>
           <ScrollRestoration />
-
+            <AIChef />
             <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={
@@ -76,7 +78,10 @@ function App() {
                 </PageTitle>
               }
             />
-              
+                            <Route
+                path="smart-chef"
+                element={<SmartChefPage />}
+              />
               <Route path="*" element={
                 <PageTitle title="Page Not Found | Cooks Delight">
                   <NotFound />

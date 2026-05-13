@@ -1,0 +1,816 @@
+/* ==============================================
+   SMART CHEF CHATBOT — Complete UI
+   Theme: Warm culinary, refined & functional
+   ============================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --chef-bg:          #fffdf9;
+  --chef-surface:     #ffffff;
+  --chef-surface-2:   #faf7f2;
+  --chef-border:      #ede8df;
+
+  --chef-orange:      rgba(232, 160, 32, 0.95);
+  --chef-orange-dark: rgba(214, 140, 18, 0.95);
+  --chef-orange-soft: rgba(232, 160, 32, 0.12);
+
+  --chef-text:        #1e1a14;
+  --chef-text-mid:    #5a5040;
+  --chef-text-soft:   #9c8f7e;
+
+  --chef-shadow-sm:   0 2px 8px  rgba(0,0,0,0.06);
+  --chef-shadow-md:   0 8px 32px rgba(0,0,0,0.12);
+  --chef-shadow-lg:   0 24px 64px rgba(0,0,0,0.18);
+
+  --chef-radius:      20px;
+  --chef-radius-sm:   12px;
+}
+
+/* ==============================================
+   WIDGET CONTAINER
+============================================== */
+.aic-widget-container {
+  position: fixed;
+  bottom: 28px;
+  right:  28px;
+  z-index: 10000;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* ==============================================
+   FLOAT BUTTON — pill animation
+============================================== */
+.aic-float-btn {
+  /* base: circle */
+  height: 62px;
+  min-width: 62px;
+  max-width: 62px;
+  border-radius: 31px;
+
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(
+    135deg,
+    rgba(232, 160, 32, 1),
+    rgba(214, 140, 18, 0.95)
+  );
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  overflow: hidden;
+  padding: 0;
+
+  box-shadow:
+    0 4px 16px rgba(232, 160, 32, 0.35),
+    0 2px 4px  rgba(0,0,0,0.10);
+
+  /* FIX 1: slower, smoother pill expand */
+  transition:
+    max-width     0.6s  cubic-bezier(0.34, 1.1, 0.64, 1),
+    min-width     0.6s  cubic-bezier(0.34, 1.1, 0.64, 1),
+    border-radius 0.6s  ease,
+    padding       0.6s  ease,
+    gap           0.6s  ease,
+    box-shadow    0.3s  ease,
+    transform     0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  position: relative;
+  z-index: 10;
+}
+
+/* expanded pill */
+.aic-float-btn.expanded {
+  max-width: 230px;
+  min-width: 180px;
+  border-radius: 31px;
+  padding: 0 20px 0 14px;
+  gap: 8px;
+  box-shadow:
+    0 8px 28px rgba(232, 160, 32, 0.45),
+    0 4px 8px  rgba(0,0,0,0.12);
+}
+
+.aic-float-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 8px 24px rgba(232, 160, 32, 0.45),
+    0 4px 8px  rgba(0,0,0,0.12);
+}
+
+.aic-float-btn:active {
+  transform: scale(0.96);
+}
+
+/* FIX 2: icon stays perfectly centered at all times */
+.aic-float-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* no transition — snaps in place, never drifts */
+}
+
+/* text — fades in AFTER pill finishes expanding */
+.aic-float-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+
+  opacity: 0;
+  transform: translateX(-6px);
+
+  /* pill takes 0.6s → text starts at 0.55s */
+  transition:
+    max-width 0.6s  cubic-bezier(0.34, 1.1, 0.64, 1) 0s,
+    opacity   0.22s ease                              0.55s,
+    transform 0.22s ease                              0.55s;
+
+  pointer-events: none;
+}
+
+.aic-float-text.visible {
+  max-width: 180px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* collapsing: text disappears instantly, then pill shrinks */
+.aic-float-text:not(.visible) {
+  transition:
+    max-width 0.6s  cubic-bezier(0.34, 1.1, 0.64, 1) 0s,
+    opacity   0.12s ease                              0s,
+    transform 0.12s ease                              0s;
+}
+
+/* pulse ring on float btn (idle) */
+.aic-float-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid rgba(232, 160, 32, 0.5);
+  animation: pulseRing 3s ease-out infinite;
+  pointer-events: none;
+}
+
+.aic-float-btn.expanded::after {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes pulseRing {
+  0%   { transform: scale(1);    opacity: 0.7; }
+  70%  { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* ==============================================
+   CHAT WINDOW
+============================================== */
+.aic-chat-window {
+  position: absolute;
+  bottom: 76px;
+  right: 0;
+  width:  400px;
+  height: 580px;
+
+  background: var(--chef-bg);
+  border-radius: var(--chef-radius);
+  box-shadow: var(--chef-shadow-lg);
+  border: 1px solid var(--chef-border);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  pointer-events: none;
+
+  transition:
+    opacity   0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  transform-origin: bottom right;
+}
+
+.aic-chat-window.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* ==============================================
+   HEADER
+============================================== */
+.aic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(232,160,32,1), rgba(214,140,18,0.95));
+  position: relative;
+  overflow: hidden;
+}
+
+.aic-header::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+
+.aic-header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; left: 40px;
+  width: 60px; height: 60px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+
+.aic-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+
+.aic-header-avatar { font-size: 26px; line-height: 1; }
+
+.aic-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aic-header-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+
+.aic-header-subtitle {
+  font-size: 11px;
+  color: rgba(255,255,255,0.78);
+  font-weight: 400;
+}
+
+.aic-close-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 1;
+  line-height: 1;
+}
+
+.aic-close-btn:hover {
+  background: rgba(255,255,255,0.28);
+  transform: rotate(90deg);
+}
+
+/* ==============================================
+   QUICK PROMPTS
+============================================== */
+.aic-quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px 0;
+}
+
+.aic-quick-prompt-btn {
+  background: var(--chef-orange-soft);
+  border: 1px solid rgba(232,160,32,0.2);
+  color: var(--chef-orange-dark);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.aic-quick-prompt-btn:hover {
+  background: rgba(232,160,32,0.15);
+  transform: translateY(-1px);
+}
+
+/* ==============================================
+   MESSAGES AREA
+============================================== */
+.aic-messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.aic-messages-area::-webkit-scrollbar { width: 4px; }
+.aic-messages-area::-webkit-scrollbar-track { background: transparent; }
+.aic-messages-area::-webkit-scrollbar-thumb {
+  background: var(--chef-border);
+  border-radius: 10px;
+}
+
+/* ==============================================
+   EMPTY STATE
+============================================== */
+.aic-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 24px 20px 8px;
+  text-align: center;
+  gap: 8px;
+}
+
+.aic-empty-icon {
+  font-size: 40px;
+  margin-bottom: 4px;
+  animation: floatBob 3s ease-in-out infinite;
+}
+
+@keyframes floatBob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.aic-empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--chef-text);
+  margin: 0;
+}
+
+.aic-empty-subtitle {
+  font-size: 13px;
+  color: var(--chef-text-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ==============================================
+   MESSAGES
+============================================== */
+.aic-message {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  animation: msgIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.aic-message.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.aic-message.bot {
+  align-self: flex-start;
+  align-items: flex-start;
+  max-width: 96%;
+}
+
+/* ==============================================
+   MESSAGE BUBBLES
+============================================== */
+.aic-message.user > div {
+  padding: 10px 14px;
+  border-radius: 16px;
+  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, rgba(232,160,32,1), rgba(214,140,18,0.95));
+  color: white;
+  font-size: 13.5px;
+  line-height: 1.55;
+  box-shadow: 0 2px 8px rgba(232,160,32,0.3);
+  max-width: 100%;
+}
+
+.aic-message.bot > div {
+  padding: 12px 16px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  background: var(--chef-surface);
+  color: var(--chef-text);
+  border: 1px solid var(--chef-border);
+  font-size: 13px;
+  line-height: 1.65;
+  box-shadow: var(--chef-shadow-sm);
+  max-width: 100%;
+  width: 100%;
+}
+
+/* ==============================================
+   RECIPE CARDS
+============================================== */
+.aic-recipe-card {
+  background: var(--chef-surface);
+  border: 1px solid var(--chef-border);
+  border-radius: 14px;
+  padding: 12px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  user-select: none;
+  transition:
+    border-color 0.2s ease,
+    transform    0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow   0.2s ease;
+}
+
+.aic-recipe-card:hover {
+  border-color: rgba(232,160,32,0.65);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(232,160,32,0.15);
+}
+
+.aic-recipe-card:active { transform: scale(0.97); }
+
+.aic-recipe-card-emoji { font-size: 20px; line-height: 1; }
+
+.aic-recipe-card-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--chef-text);
+  line-height: 1.35;
+}
+
+.aic-recipe-card-meta {
+  font-size: 11px;
+  color: var(--chef-text-soft);
+  line-height: 1.4;
+}
+
+.aic-cards-hint {
+  font-size: 11px;
+  color: var(--chef-text-soft);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ==============================================
+   TYPING
+============================================== */
+.aic-typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 16px;
+  background: var(--chef-surface);
+  border: 1px solid var(--chef-border);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  width: fit-content;
+  box-shadow: var(--chef-shadow-sm);
+}
+
+.aic-typing-dot {
+  width: 7px; height: 7px;
+  background: var(--chef-orange);
+  border-radius: 50%;
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+
+.aic-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.aic-typing-dot:nth-child(3) { animation-delay: 0.30s; }
+
+@keyframes typingBounce {
+  0%,60%,100% { transform: translateY(0);    opacity: 0.4; }
+  30%          { transform: translateY(-5px); opacity: 1;   }
+}
+
+/* ==============================================
+   INPUT AREA
+============================================== */
+.aic-input-area {
+  padding: 12px 16px 16px;
+  background: var(--chef-bg);
+  border-top: 1px solid var(--chef-border);
+  position: relative;
+}
+
+.aic-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--chef-surface);
+  border: 1.5px solid var(--chef-border);
+  border-radius: 50px;
+  padding: 6px 6px 6px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.aic-input-wrapper:focus-within {
+  border-color: var(--chef-orange);
+  box-shadow: 0 0 0 3px rgba(232,160,32,0.10);
+}
+
+.aic-input {
+  flex: 1;
+  border: none; outline: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--chef-text);
+  padding: 4px 0;
+  min-width: 0;
+}
+
+.aic-input::placeholder { color: var(--chef-text-soft); }
+
+.aic-send-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  background: linear-gradient(135deg, rgba(232,160,32,1), rgba(214,140,18,0.95));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition:
+    transform  0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity    0.2s ease;
+}
+
+.aic-send-btn:hover:not(:disabled) { transform: scale(1.1); }
+.aic-send-btn:active:not(:disabled) { transform: scale(0.95); }
+.aic-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ==============================================
+   SUGGESTIONS
+============================================== */
+.aic-suggestions {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 16px; right: 16px;
+  background: var(--chef-surface);
+  border: 1px solid var(--chef-border);
+  border-radius: var(--chef-radius-sm);
+  box-shadow: var(--chef-shadow-md);
+  overflow: hidden;
+  animation: suggestionIn 0.2s ease;
+  z-index: 20;
+}
+
+@keyframes suggestionIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.aic-suggestion-item {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--chef-text-mid);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--chef-border);
+  transition: background 0.15s;
+}
+
+.aic-suggestion-item:last-child { border-bottom: none; }
+
+.aic-suggestion-item:hover {
+  background: var(--chef-orange-soft);
+  color: var(--chef-orange-dark);
+}
+
+/* ==============================================
+   RESPONSIVE
+============================================== */
+@media (max-width: 480px) {
+  .aic-chat-window {
+    width: calc(100vw - 32px);
+    height: 70vh;
+    bottom: 72px;
+    right: 0;
+  }
+
+  .aic-widget-container {
+    bottom: 20px;
+    right: 16px;
+  }
+
+  .aic-message     { max-width: 92%; }
+  .aic-message.bot { max-width: 98%; }
+
+  .aic-float-btn.expanded {
+    max-width: 200px;
+    min-width: 160px;
+  }
+}
+
+/* ==============================================
+   WELCOME MESSAGE ROW
+============================================== */
+.aic-welcome-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: msgIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.aic-welcome-avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(232,160,32,1), rgba(214,140,18,0.95));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(232,160,32,0.3);
+}
+
+.aic-welcome-bubble {
+  background: var(--chef-surface);
+  border: 1px solid var(--chef-border);
+  border-radius: 16px;
+  border-top-left-radius: 4px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--chef-text);
+  box-shadow: var(--chef-shadow-sm);
+}
+
+.aic-msg-time {
+  font-size: 10.5px;
+  color: var(--chef-text-soft);
+  margin-top: 4px;
+  display: block;
+  padding-left: 2px;
+}
+
+.aic-msg-time-user {
+  text-align: right;
+  padding-right: 2px;
+}
+
+/* ==============================================
+   ONLINE DOT
+============================================== */
+.aic-online-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* ==============================================
+   HEADER ACTIONS
+============================================== */
+.aic-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.aic-header-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.aic-header-action-btn:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+/* ==============================================
+   RECIPE CARDS — image style
+============================================== */
+.aic-recipe-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 10px 0 4px;
+}
+
+.aic-recipe-card {
+  background: var(--chef-surface);
+  border: 1px solid var(--chef-border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  transition:
+    transform    0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow   0.2s ease;
+}
+
+.aic-recipe-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+}
+
+.aic-recipe-card:active { transform: scale(0.97); }
+
+.aic-recipe-card-img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+}
+
+.aic-recipe-card-img-placeholder {
+  width: 100%;
+  height: 80px;
+  background: var(--chef-orange-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.aic-recipe-card-body {
+  padding: 9px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aic-recipe-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--chef-text);
+  line-height: 1.35;
+}
+
+.aic-recipe-card-meta-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.aic-recipe-card-meta {
+  font-size: 11px;
+  color: var(--chef-text-soft);
+  line-height: 1.4;
+}
+
+.aic-cards-hint {
+  font-size: 11px;
+  color: var(--chef-text-soft);
+  margin-top: 6px;
+  font-style: italic;
+}

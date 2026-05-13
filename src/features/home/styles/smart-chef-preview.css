@@ -1,0 +1,528 @@
+
+
+.smart-chef-home-container {
+
+    padding: 40px 20px 8px;
+height: auto;
+  max-width: 1450px;
+
+  margin:  24px 0px;
+
+  background: linear-gradient(
+    135deg,
+    #fbf8f4 0%,
+    #fffdfb 100%
+  );
+
+  border-radius: 40px;
+
+  padding: 50px 80px 20px 80px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 80px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.05);
+
+}
+
+/* ───────────────── LEFT ───────────────── */
+
+.smart-chef-home-left {
+
+  flex: 1;
+
+  max-width: 620px;
+
+}
+
+.smart-chef-home-badge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 10px 18px;
+
+  border-radius: 999px;
+
+  background: rgba(232,160,32,0.12);
+
+  color: rgba(232,160,32,1);
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  margin-bottom: 28px;
+
+}
+
+.smart-chef-home-title {
+
+  font-size: 48px;
+
+  line-height: 1.05;
+
+  font-weight: 800;
+
+  color: #161616;
+
+  margin-bottom: 28px;
+
+}
+
+.smart-chef-home-description {
+
+  font-size: 22px;
+
+  line-height: 1.8;
+
+  color: #6a6a6a;
+
+  margin-bottom: 38px;
+
+}
+
+/* FEATURES */
+
+.smart-chef-home-features {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 14px;
+
+  margin-bottom: 38px;
+
+}
+
+.smart-chef-feature-card {
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 18px 16px;
+
+  border: 1px solid rgba(0,0,0,0.06);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  transition: 0.3s;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.04);
+
+}
+
+.smart-chef-feature-card:hover {
+
+  transform: translateY(-5px);
+
+}
+
+.smart-chef-feature-card span {
+
+  font-size: 22px;
+
+}
+
+.smart-chef-feature-card p {
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  color: #222;
+
+  line-height: 1.5;
+
+}
+
+/* BUTTONS */
+
+.smart-chef-home-actions {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  margin-bottom: 34px;
+
+}
+
+.smart-chef-home-primary {
+
+  height: 62px;
+
+  padding: 0 34px;
+
+  border: none;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(232,160,32,1),
+    rgba(214,140,18,1)
+  );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+  box-shadow:
+    0 14px 30px rgba(232,160,32,0.28);
+
+}
+
+.smart-chef-home-primary:hover {
+
+  transform: translateY(-3px);
+
+}
+
+.smart-chef-home-secondary {
+
+  height: 62px;
+
+  padding: 0 32px;
+
+  border-radius: 999px;
+
+  background: white;
+
+  border: 1px solid rgba(0,0,0,0.08);
+
+  color: #222;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+}
+
+.smart-chef-home-secondary:hover {
+
+  transform: translateY(-3px);
+
+}
+
+/* USERS */
+
+.smart-chef-home-users {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+}
+
+.smart-chef-avatars {
+
+  display: flex;
+
+}
+
+.smart-chef-avatars img {
+
+  width: 34px;
+
+  height: 34px;
+
+  border-radius: 50%;
+
+  border: 3px solid white;
+
+  margin-left: -10px;
+
+}
+
+.smart-chef-avatars img:first-child {
+
+  margin-left: 0;
+
+}
+
+.smart-chef-home-users p {
+
+  color: #777;
+
+  font-size: 14px;
+
+}
+
+.smart-chef-stars {
+
+  color: #ffb400;
+
+  font-size: 14px;
+
+}
+
+/* ───────────────── RIGHT ───────────────── */
+
+.smart-chef-home-right {
+
+  flex: 1;
+
+  min-height: 700px;
+
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+.smart-chef-plate-wrapper {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+
+.smart-chef-circle {
+
+  width: 580px;
+
+  height: 580px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(245,229,201,0.7),
+      rgba(255,255,255,0)
+    );
+
+  position: absolute;
+
+  top: 50%;
+
+  left: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+}
+
+.smart-chef-plate-image {
+
+  width: 500px;
+
+  height: 500px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  position: relative;
+
+  z-index: 3;
+
+  box-shadow:
+    0 30px 70px rgba(0,0,0,0.15);
+
+}
+
+/* FLOATING CARDS */
+
+.smart-chef-card {
+
+  position: absolute;
+
+  background: white;
+
+  border-radius: 26px;
+
+  padding: 10px 10px 10px 10px;
+
+  min-width: 90px;
+
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.08);
+
+  z-index: 5;
+
+}
+
+.smart-chef-card span {
+
+  font-size: 14px;
+
+  color: #666;
+
+}
+
+.smart-chef-card h3 {
+
+  font-size: 30px;
+
+ 
+
+  color: #181818;
+
+}
+
+.smart-chef-card p {
+
+  color: #888;
+
+  font-size: 15px;
+
+}
+
+.smart-chef-card-top-left {
+
+  top: 80px;
+
+  left: 20px;
+
+}
+
+.smart-chef-card-top-right {
+
+  top: 60px;
+
+  right: 0;
+
+}
+
+.smart-chef-card-bottom-left {
+
+  bottom: 80px;
+
+  left: 20px;
+
+}
+
+.smart-chef-card-bottom-right {
+
+  bottom: 70px;
+
+  right: 0;
+
+}
+
+/* ───────────────── RESPONSIVE ───────────────── */
+
+@media (max-width: 1200px) {
+
+  .smart-chef-home-container {
+
+    flex-direction: column;
+
+    padding: 60px 40px;
+
+  }
+
+  .smart-chef-home-right {
+
+    min-height: 600px;
+
+  }
+
+  .smart-chef-home-features {
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .smart-chef-home-title {
+
+    font-size: 48px;
+
+  }
+
+  .smart-chef-home-description {
+
+    font-size: 17px;
+
+  }
+
+  .smart-chef-home-features {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .smart-chef-home-actions {
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+  }
+
+  .smart-chef-plate-image {
+
+    width: 320px;
+
+    height: 320px;
+
+  }
+
+  .smart-chef-circle {
+
+    width: 380px;
+
+    height: 380px;
+
+  }
+
+  .smart-chef-card {
+
+    min-width: 120px;
+
+    padding: 18px;
+
+  }
+
+  .smart-chef-card h3 {
+
+    font-size: 30px;
+
+  }
+
+}

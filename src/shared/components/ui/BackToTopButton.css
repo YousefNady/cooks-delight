@@ -17,7 +17,7 @@
     /* Position — fixed to viewport, bottom-right */
     position: fixed;
     bottom: 32px;
-    right: 32px;
+    left: 32px;
     z-index: 100;
 
     /* Size & shape */
