@@ -10,6 +10,7 @@ import { useAuth } from "../../auth/context/useAuth";
 // ── All Speech types + mic logic now live here ────────────────────────────────
 import { useSpeechRecognition } from "../../../shared/hooks/useSpeechRecognition";
 import { useRecipeSearch } from "../../../shared/hooks/useRecipeSearch";
+import SmartChefPreview from "../components/SmartChefPreview";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -136,7 +137,7 @@ export default function Home() {
 
         </div>
       </section>
-
+      <SmartChefPreview/>
       <DiversePalette />
       <FeaturedRecipesSection />
       <HomeShowcase />

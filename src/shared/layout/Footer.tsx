@@ -39,7 +39,9 @@ const Footer = () => {
         <hr className="footer__divider" />
 
         <div className="footer__bottom">
-          <p>COPYRIGHT: © 2024 COOKS DELIGHT.</p>
+          <p>
+  COPYRIGHT: © {new Date().getFullYear()} COOKS DELIGHT.
+</p>
         </div>
       </div>
     </footer>

@@ -7,7 +7,9 @@ import type { SignupFormErrors } from '../types/auth';
 
 interface SignupFormState {
   fullName: string;
+   username: string;
   email: string;
+
   password: string;
   confirmPassword: string;
 }
@@ -22,11 +24,13 @@ interface UseSignupFormReturn extends SignupFormState {
   setPassword: (val: string) => void;
   setConfirmPassword: (val: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  setUsername: (val: string) => void;
 }
 
 // ── Pure validation ───────────────────────────────────────
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const USERNAME_REGEX = /^[a-zA-Z][a-zA-Z0-9_]{3,19}$/;
 
 const validate = (fields: SignupFormState): SignupFormErrors => {
   const errors: SignupFormErrors = {};
@@ -36,6 +40,12 @@ const validate = (fields: SignupFormState): SignupFormErrors => {
   } else if (fields.fullName.trim().split(' ').length < 2) {
     errors.fullName = 'Please enter your first and last name.';
   }
+  if (!fields.username.trim()) {
+  errors.username = 'Username is required.';
+} else if (!USERNAME_REGEX.test(fields.username)) {
+  errors.username =
+    'Username must start with a letter and contain only letters, numbers, or _.';
+}
 
   if (!fields.email.trim()) {
     errors.email = 'Email address is required.';
@@ -61,8 +71,9 @@ const validate = (fields: SignupFormState): SignupFormErrors => {
 // ── Hook ──────────────────────────────────────────────────
 
 export const useSignupForm = (): UseSignupFormReturn => {
-  const [fullName, setFullNameState] = useState('');
-  const [email, setEmailState] = useState('');
+const [fullName, setFullNameState] = useState('');
+const [username, setUsernameState] = useState('');
+const [email, setEmailState] = useState('');
   const [password, setPasswordState] = useState('');
   const [confirmPassword, setConfirmPasswordState] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -75,6 +86,10 @@ export const useSignupForm = (): UseSignupFormReturn => {
     setErrors((prev) => ({ ...prev, [field]: undefined }));
 
   const setFullName = (val: string) => { setFullNameState(val); clearError('fullName'); };
+  const setUsername = (val: string) => {
+  setUsernameState(val);
+  clearError('username');
+};
   const setEmail = (val: string) => { setEmailState(val); clearError('email'); };
   const setPassword = (val: string) => { setPasswordState(val); clearError('password'); };
   const setConfirmPassword = (val: string) => { setConfirmPasswordState(val); clearError('confirmPassword'); };
@@ -84,7 +99,13 @@ export const useSignupForm = (): UseSignupFormReturn => {
     setApiError('');
     setSuccessMessage('');
 
-    const fields = { fullName, email, password, confirmPassword };
+ const fields = {
+  fullName,
+  username,
+  email,
+  password,
+  confirmPassword,
+};
     const validationErrors = validate(fields);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -116,19 +137,23 @@ export const useSignupForm = (): UseSignupFormReturn => {
     }
   };
 
-  return {
-    fullName,
-    email,
-    password,
-    confirmPassword,
-    isLoading,
-    apiError,
-    successMessage,
-    errors,
-    setFullName,
-    setEmail,
-    setPassword,
-    setConfirmPassword,
-    handleSubmit,
-  };
+return {
+  fullName,
+  username,
+  email,
+  password,
+  confirmPassword,
+
+  isLoading,
+  apiError,
+  successMessage,
+  errors,
+
+  setFullName,
+  setUsername,
+  setEmail,
+  setPassword,
+  setConfirmPassword,
+  handleSubmit,
+};
 };

@@ -4,7 +4,7 @@
    ========================================================= */
 
 :root {
-    --backto-top-bg: #e08c2e;
+    --backto-top-bg: #064420;
     --backto-top-text: #ffffff;
     --backto-top-hover-bg: #c97c20;
     --backto-top-shadow: rgba(224, 140, 46, 0.40);
@@ -16,13 +16,13 @@
 .scroll-to-top {
     /* Position — fixed to viewport, bottom-right */
     position: fixed;
-    bottom: 32px;
-    right: 32px;
+    bottom: 25px;
+    right: 20px;
     z-index: 100;
 
     /* Size & shape */
-    width: 48px;
-    height: 48px;
+    width: 62px;
+    height: 62px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -31,7 +31,7 @@
     /* Brand colors */
     background-color: var(--backto-top-bg);
     color: var(--backto-top-text);
-
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     /* Center the icon */
     display: flex;
     align-items: center;
@@ -93,8 +93,8 @@
 
 /* Icon size */
 .scroll-to-top__icon {
-    width: 20px;
-    height: 20px;
+    width: 35px;
+    height: 35px;
     stroke-width: 2.5px;
     transition: transform 0.18s ease;
 }
