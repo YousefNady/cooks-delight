@@ -2,6 +2,7 @@
 
 export interface AuthUser {
   username: string;
+  
   email: string;
   userId: string;
   image: string;

@@ -32,8 +32,8 @@
 ============================================== */
 .aic-widget-container {
   position: fixed;
-  bottom: 28px;
-  right:  28px;
+  bottom: 100px;
+  right:  20px;
   z-index: 10000;
   font-family: 'DM Sans', sans-serif;
   display: flex;
