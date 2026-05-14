@@ -9,12 +9,12 @@ import type { Recipe } from '../../recipes/types/Recipe';
    API KEYS
 ========================= */
 const API_KEYS: string[] = [
-       'AIzaSyBDaqPSGtAdgUchnGqwcndptBVi0UIyDsE',
-  'AIzaSyDMj5TgdYbogr3v5x0k0Y3sQiNG5G83Xdo',
-  'AIzaSyB1FCaV6jjj1HnRWKguFQ3k6XkRV9HGQHc',
-  'AIzaSyDxTLKQyLPk0a5QyJvxJYlXiR4HtkBWEks',
-  'AIzaSyD1xfhxIlso5-iIxXu2QJjPFuOCJVmCR74',
-  'AIzaSyBi8g2yISt0HAduBKSgBUB9CGtkeFb4boY',
+  import.meta.env.VITE_API_KEY_1,
+  import.meta.env.VITE_API_KEY_2,
+  import.meta.env.VITE_API_KEY_3,
+  import.meta.env.VITE_API_KEY_4,
+  import.meta.env.VITE_API_KEY_5,
+  import.meta.env.VITE_API_KEY_6,
 ];
 
 /* =========================
