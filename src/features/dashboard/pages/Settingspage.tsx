@@ -1,8 +1,25 @@
-import React, { useState } from "react";
+// src/features/dashboard/pages/SettingsPage.tsx
+//
+// All static MOCK_USER data has been removed.
+// The page now follows the exact same pattern as ProfilePage.tsx:
+//
+//   1. useAuth()              → gives us authUser (from AuthContext / localStorage)
+//   2. fetch /users/:userId   → enriches the profile with DummyJSON fields
+//   3. useNavigate()          → drives the sidebar nav
+//
+// AccountSection pre-fills its fields from the live user object and falls back
+// gracefully to authUser values while the DummyJSON fetch is in flight.
+// =============================================================================
+
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { DashboardLayout } from "../components/Layout";
 import type { NavId } from "../components/Layout";
 import type { DummyJSONUser } from "../../../shared/types/dashboard.types";
+
+import { useAuth } from "../../auth/context";
+
 import "./SettingsPage.css";
 
 // =============================================================================
@@ -62,14 +79,14 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { id: "account",       label: "Account",           icon: <IconUser />    },
-  { id: "preferences",   label: "Preferences",       icon: <IconSliders /> },
+  { id: "account",       label: "Account",            icon: <IconUser />    },
+  { id: "preferences",   label: "Preferences",        icon: <IconSliders /> },
   { id: "security",      label: "Privacy & Security", icon: <IconShield />  },
-  { id: "notifications", label: "Notifications",     icon: <IconBell />    },
+  { id: "notifications", label: "Notifications",      icon: <IconBell />    },
 ];
 
 // =============================================================================
-// Toggle switch component — reused across Preferences and Notifications tabs
+// ToggleSwitch — reused across Preferences and Notifications tabs
 // =============================================================================
 
 interface ToggleSwitchProps {
@@ -87,15 +104,13 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   <div className="settings-toggle">
     <div className="settings-toggle__text">
       <label className="settings-toggle__label" htmlFor={id}>{label}</label>
-      {description && (
-        <p className="settings-toggle__desc">{description}</p>
-      )}
+      {description && <p className="settings-toggle__desc">{description}</p>}
     </div>
     <button
       id={id}
       className={[
         "settings-toggle__track",
-        checked ? "settings-toggle__track--on" : "",
+        checked  ? "settings-toggle__track--on"       : "",
         disabled ? "settings-toggle__track--disabled" : "",
       ].filter(Boolean).join(" ")}
       type="button"
@@ -111,56 +126,43 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 );
 
 // =============================================================================
-// Mock data
+// AccountSection — pre-filled from real user data
 // =============================================================================
-
-const MOCK_USER: DummyJSONUser = {
-  id: 1, firstName: "Sarah", lastName: "Johnson", maidenName: "Williams",
-  age: 29, gender: "female", email: "sarah.johnson@x.dummyjson.com",
-  phone: "+1 555-123-4567", username: "sarahjohnson", password: "",
-  birthDate: "1995-04-12",
-  image: "https://dummyjson.com/icon/sarahjohnson/128",
-  bloodGroup: "A+", height: 167, weight: 58, eyeColor: "Brown",
-  hair: { color: "Black", type: "Straight" }, ip: "192.168.1.1",
-  address: {
-    address: "42 Culinary Lane", city: "New York", state: "New York",
-    stateCode: "NY", postalCode: "10001",
-    coordinates: { lat: 40.712776, lng: -74.005974 }, country: "United States",
-  },
-  macAddress: "00:1B:44:11:3A:B7", university: "Culinary Institute of America",
-  bank: { cardExpire: "06/30", cardNumber: "4111111111111111", cardType: "Visa", currency: "USD", iban: "GB29NWBK60161331926819" },
-  company: {
-    department: "Engineering", name: "FoodTech Co.", title: "Software Engineer",
-    address: { address: "1 Tech Plaza", city: "San Francisco", state: "California", stateCode: "CA", postalCode: "94105", coordinates: { lat: 37.7749, lng: -122.4194 }, country: "United States" },
-  },
-  ein: "12-3456789", ssn: "123-45-6789",
-  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-  crypto: { coin: "Bitcoin", wallet: "0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a", network: "Ethereum (ERC20)" },
-  role: "user",
-};
-
-// =============================================================================
-// Section components — isolated so each tab's JSX stays readable
-// =============================================================================
-
-// ── Account section ───────────────────────────────────────────────────────────
 
 interface AccountSectionProps {
-  user: DummyJSONUser;
+  /** Fully resolved user from DummyJSON (may be null while loading). */
+  dummyUser: DummyJSONUser | null;
+  /** Fallback values straight from AuthContext / localStorage. */
+  authUsername: string;
+  authEmail: string;
 }
 
-const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
-  const [firstName, setFirstName]   = useState(user.firstName);
-  const [lastName,  setLastName]    = useState(user.lastName);
-  const [email,     setEmail]       = useState(user.email);
-  const [saved,     setSaved]       = useState(false);
+const AccountSection: React.FC<AccountSectionProps> = ({
+  dummyUser, authUsername, authEmail,
+}) => {
+  // Pre-fill from DummyJSON when available; fall back to AuthContext values.
+  // Each field is independent so partial data (e.g. only authUsername known)
+  // still renders something meaningful rather than empty inputs.
+  const [firstName, setFirstName] = useState(dummyUser?.firstName ?? authUsername);
+  const [lastName,  setLastName]  = useState(dummyUser?.lastName  ?? "");
+  const [email,     setEmail]     = useState(dummyUser?.email     ?? authEmail);
+  const [saved,     setSaved]     = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Re-sync if the parent resolves dummyUser after the first render
+  // (i.e. the DummyJSON fetch completes while this tab is already mounted).
+  useEffect(() => {
+    if (!dummyUser) return;
+    setFirstName(dummyUser.firstName);
+    setLastName(dummyUser.lastName);
+    setEmail(dummyUser.email);
+  }, [dummyUser]);
 
   const handleSave = (): void => {
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
     console.log("[Settings/Account] save:", { firstName, lastName, email });
-    // TODO: PATCH /users/1
+    // TODO: PATCH /users/:id
   };
 
   return (
@@ -211,6 +213,27 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
             placeholder="Email address"
           />
         </div>
+
+        {/* Read-only username chip — useful context, not editable here */}
+        {authUsername && (
+          <div className="settings-section__field">
+            <label className="settings-section__label" htmlFor="s-username">
+              Username
+            </label>
+            <input
+              id="s-username"
+              className="settings-section__input settings-section__input--readonly"
+              type="text"
+              value={authUsername}
+              readOnly
+              aria-readonly="true"
+              title="Username cannot be changed here"
+            />
+            <p className="settings-section__field-hint">
+              Username is managed by your authentication provider.
+            </p>
+          </div>
+        )}
 
         <button
           className={[
@@ -269,14 +292,16 @@ const AccountSection: React.FC<AccountSectionProps> = ({ user }) => {
   );
 };
 
-// ── Preferences section ────────────────────────────────────────────────────────
+// =============================================================================
+// PreferencesSection — stateful toggles (no user data needed)
+// =============================================================================
 
 const PreferencesSection: React.FC = () => {
-  const [darkMode,     setDarkMode]     = useState(false);
-  const [emailNotifs,  setEmailNotifs]  = useState(true);
-  const [recipeRecs,   setRecipeRecs]   = useState(true);
-  const [marketing,    setMarketing]    = useState(false);
-  const [language,     setLanguage]     = useState("English");
+  const [darkMode,    setDarkMode]    = useState(false);
+  const [emailNotifs, setEmailNotifs] = useState(true);
+  const [recipeRecs,  setRecipeRecs]  = useState(true);
+  const [marketing,   setMarketing]   = useState(false);
+  const [language,    setLanguage]    = useState("English");
 
   const FUTURE_FEATURES = [
     { icon: "💳", label: "Payment Methods" },
@@ -290,39 +315,30 @@ const PreferencesSection: React.FC = () => {
         <h3 className="settings-section__group-title">Preferences</h3>
 
         <ToggleSwitch
-          id="pref-dark-mode"
-          label="Dark Mode"
+          id="pref-dark-mode" label="Dark Mode"
           description="Switch to a darker colour scheme"
-          checked={darkMode}
-          onChange={setDarkMode}
+          checked={darkMode} onChange={setDarkMode}
         />
         <div className="settings-section__divider" />
         <ToggleSwitch
-          id="pref-email-notifs"
-          label="Email Notifications"
+          id="pref-email-notifs" label="Email Notifications"
           description="Receive recipe updates and news by email"
-          checked={emailNotifs}
-          onChange={setEmailNotifs}
+          checked={emailNotifs} onChange={setEmailNotifs}
         />
         <div className="settings-section__divider" />
         <ToggleSwitch
-          id="pref-recipe-recs"
-          label="Recipe Recommendations"
+          id="pref-recipe-recs" label="Recipe Recommendations"
           description="Let us suggest recipes based on your activity"
-          checked={recipeRecs}
-          onChange={setRecipeRecs}
+          checked={recipeRecs} onChange={setRecipeRecs}
         />
         <div className="settings-section__divider" />
         <ToggleSwitch
-          id="pref-marketing"
-          label="Marketing Emails"
+          id="pref-marketing" label="Marketing Emails"
           description="Promotions, tips, and offers from Cooks Delight"
-          checked={marketing}
-          onChange={setMarketing}
+          checked={marketing} onChange={setMarketing}
         />
         <div className="settings-section__divider" />
 
-        {/* Language select */}
         <div className="settings-section__field settings-section__field--inline">
           <div>
             <label className="settings-section__label" htmlFor="pref-language">
@@ -344,7 +360,6 @@ const PreferencesSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Future Features */}
       <div className="settings-section__group">
         <h3 className="settings-section__group-title">Future Features</h3>
         <ul className="settings-section__future-list" role="list">
@@ -361,16 +376,18 @@ const PreferencesSection: React.FC = () => {
   );
 };
 
-// ── Security section ──────────────────────────────────────────────────────────
+// =============================================================================
+// SecuritySection — stateful forms, no user data needed beyond what's local
+// =============================================================================
 
 const SecuritySection: React.FC = () => {
-  const [currentPwd,  setCurrentPwd]  = useState("");
-  const [newPwd,      setNewPwd]      = useState("");
-  const [confirmPwd,  setConfirmPwd]  = useState("");
+  const [currentPwd,    setCurrentPwd]    = useState("");
+  const [newPwd,        setNewPwd]        = useState("");
+  const [confirmPwd,    setConfirmPwd]    = useState("");
   const [publicProfile, setPublicProfile] = useState(true);
   const [twoFactor,     setTwoFactor]     = useState(false);
-  const [pwdSaved,    setPwdSaved]    = useState(false);
-  const [pwdError,    setPwdError]    = useState("");
+  const [pwdSaved,      setPwdSaved]      = useState(false);
+  const [pwdError,      setPwdError]      = useState("");
 
   const handlePasswordUpdate = (): void => {
     if (newPwd.length < 8) {
@@ -386,7 +403,7 @@ const SecuritySection: React.FC = () => {
     setCurrentPwd(""); setNewPwd(""); setConfirmPwd("");
     setTimeout(() => setPwdSaved(false), 2500);
     console.log("[Settings/Security] password updated");
-    // TODO: PATCH /users/1/password
+    // TODO: PATCH /users/:id/password
   };
 
   return (
@@ -395,35 +412,25 @@ const SecuritySection: React.FC = () => {
         <h3 className="settings-section__group-title">Change Password</h3>
 
         <div className="settings-section__field">
-          <label className="settings-section__label" htmlFor="s-cur-pwd">
-            Current Password
-          </label>
+          <label className="settings-section__label" htmlFor="s-cur-pwd">Current Password</label>
           <input
-            id="s-cur-pwd"
-            className="settings-section__input"
-            type="password"
+            id="s-cur-pwd" className="settings-section__input" type="password"
             value={currentPwd}
             onChange={(e) => { setCurrentPwd(e.target.value); setPwdError(""); }}
             placeholder="Enter current password"
           />
         </div>
         <div className="settings-section__field">
-          <label className="settings-section__label" htmlFor="s-new-pwd">
-            New Password
-          </label>
+          <label className="settings-section__label" htmlFor="s-new-pwd">New Password</label>
           <input
-            id="s-new-pwd"
-            className="settings-section__input"
-            type="password"
+            id="s-new-pwd" className="settings-section__input" type="password"
             value={newPwd}
             onChange={(e) => { setNewPwd(e.target.value); setPwdError(""); }}
             placeholder="At least 8 characters"
           />
         </div>
         <div className="settings-section__field">
-          <label className="settings-section__label" htmlFor="s-confirm-pwd">
-            Confirm New Password
-          </label>
+          <label className="settings-section__label" htmlFor="s-confirm-pwd">Confirm New Password</label>
           <input
             id="s-confirm-pwd"
             className={[
@@ -455,50 +462,68 @@ const SecuritySection: React.FC = () => {
       <div className="settings-section__group">
         <h3 className="settings-section__group-title">Privacy</h3>
         <ToggleSwitch
-          id="sec-public-profile"
-          label="Public Profile"
+          id="sec-public-profile" label="Public Profile"
           description="Allow other users to view your profile and recipes"
-          checked={publicProfile}
-          onChange={setPublicProfile}
+          checked={publicProfile} onChange={setPublicProfile}
         />
         <div className="settings-section__divider" />
         <ToggleSwitch
-          id="sec-two-factor"
-          label="Two-Factor Authentication"
+          id="sec-two-factor" label="Two-Factor Authentication"
           description="Add an extra layer of security to your account"
-          checked={twoFactor}
-          onChange={setTwoFactor}
+          checked={twoFactor} onChange={setTwoFactor}
         />
       </div>
     </div>
   );
 };
 
-// ── Notifications section ─────────────────────────────────────────────────────
+// =============================================================================
+// NotificationsSection — pure toggle state, no user data required
+// =============================================================================
 
 const NotificationsSection: React.FC = () => {
-  const [newRecipes,  setNewRecipes]  = useState(true);
-  const [savedAlerts, setSavedAlerts] = useState(true);
+  const [newRecipes,    setNewRecipes]    = useState(true);
+  const [savedAlerts,   setSavedAlerts]   = useState(true);
   const [weeklySummary, setWeeklySummary] = useState(false);
-  const [comments,    setComments]    = useState(true);
-  const [systemAlerts, setSystemAlerts] = useState(true);
+  const [comments,      setComments]      = useState(true);
+  const [systemAlerts,  setSystemAlerts]  = useState(true);
 
   return (
     <div className="settings-section">
       <div className="settings-section__group">
         <h3 className="settings-section__group-title">Recipe Notifications</h3>
-        <ToggleSwitch id="notif-new" label="New Recipes" description="Notify me when new recipes matching my preferences are added" checked={newRecipes} onChange={setNewRecipes} />
+        <ToggleSwitch
+          id="notif-new" label="New Recipes"
+          description="Notify me when new recipes matching my preferences are added"
+          checked={newRecipes} onChange={setNewRecipes}
+        />
         <div className="settings-section__divider" />
-        <ToggleSwitch id="notif-saved" label="Saved Recipe Updates" description="Notify me when a recipe I've saved is updated" checked={savedAlerts} onChange={setSavedAlerts} />
+        <ToggleSwitch
+          id="notif-saved" label="Saved Recipe Updates"
+          description="Notify me when a recipe I've saved is updated"
+          checked={savedAlerts} onChange={setSavedAlerts}
+        />
         <div className="settings-section__divider" />
-        <ToggleSwitch id="notif-weekly" label="Weekly Digest" description="A weekly email summary of trending recipes" checked={weeklySummary} onChange={setWeeklySummary} />
+        <ToggleSwitch
+          id="notif-weekly" label="Weekly Digest"
+          description="A weekly email summary of trending recipes"
+          checked={weeklySummary} onChange={setWeeklySummary}
+        />
       </div>
 
       <div className="settings-section__group">
         <h3 className="settings-section__group-title">Activity Notifications</h3>
-        <ToggleSwitch id="notif-comments" label="Comments & Reviews" description="Notify me when someone comments on my recipes" checked={comments} onChange={setComments} />
+        <ToggleSwitch
+          id="notif-comments" label="Comments & Reviews"
+          description="Notify me when someone comments on my recipes"
+          checked={comments} onChange={setComments}
+        />
         <div className="settings-section__divider" />
-        <ToggleSwitch id="notif-system" label="System Alerts" description="Important updates about your account" checked={systemAlerts} onChange={setSystemAlerts} />
+        <ToggleSwitch
+          id="notif-system" label="System Alerts"
+          description="Important updates about your account"
+          checked={systemAlerts} onChange={setSystemAlerts}
+        />
       </div>
     </div>
   );
@@ -509,22 +534,91 @@ const NotificationsSection: React.FC = () => {
 // =============================================================================
 
 const SettingsPage: React.FC = () => {
-  const [activeNavId,  setActiveNavId]  = useState<NavId>("settings");
-  const [activeTab,    setActiveTab]    = useState<SettingsTab>("account");
+  const navigate = useNavigate();
+  // Same auth hook used by ProfilePage — reads from AuthContext / localStorage.
+  const { user: authUser, logout } = useAuth();
+
+  const [activeNavId, setActiveNavId] = useState<NavId>("settings");
+  const [activeTab,   setActiveTab]   = useState<SettingsTab>("account");
+
+  // ── Fetch full DummyJSON user profile ─────────────────────────────────────
+  // Mirrors the pattern in DashboardPage / ProfilePage exactly.
+  // We only kick off the fetch when we have a valid numeric userId.
+  const [dummyUser,        setDummyUser]        = useState<DummyJSONUser | null>(null);
+  const [profileLoading,   setProfileLoading]   = useState<boolean>(false);
+  const [profileLoadError, setProfileLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const userId = Number(authUser?.userId);
+    if (!userId || !Number.isFinite(userId) || userId <= 0) return;
+
+    const controller = new AbortController();
+    setProfileLoading(true);
+    setProfileLoadError(null);
+
+    fetch(`https://dummyjson.com/users/${userId}`, { signal: controller.signal })
+      .then<DummyJSONUser>((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setDummyUser(data);
+        setProfileLoading(false);
+      })
+      .catch((err: Error) => {
+        if (err.name !== "AbortError") {
+          setProfileLoadError("Could not load full profile. Showing available data.");
+          setProfileLoading(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [authUser?.userId]);
+
+  // ── Sidebar nav ────────────────────────────────────────────────────────────
+  const handleNavChange = (id: NavId): void => {
+    setActiveNavId(id);
+    const routes: Partial<Record<NavId, string>> = {
+      dashboard:         "/dashboard",
+      favorites:         "/favorites",
+      explore:           "/explore",
+      "recently-viewed": "/recently-viewed",
+      profile:           "/profile-dashboard",
+      settings:          "/settings",
+    };
+    const route = routes[id];
+    if (route) navigate(route);
+  };
+
+  // ── Resolved display values (DummyJSON → AuthContext → sensible defaults) ─
+  // These mirror the profileUser object in DashboardPage so the header always
+  // shows the correct avatar / name regardless of fetch state.
+  const resolvedUser: DummyJSONUser | undefined = dummyUser ?? undefined;
+  const authUsername = authUser?.username ?? "Guest";
+  const authEmail    = authUser?.email    ?? "";
+  const avatarUrl =
+    dummyUser?.image ??
+    authUser?.image ??
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(authUsername)}&background=f97316&color=fff&size=128`;
 
   const activeTabLabel = TABS.find((t) => t.id === activeTab)?.label ?? "Settings";
 
+  // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <DashboardLayout
       activeNavId={activeNavId}
-      onNavChange={(id) => setActiveNavId(id)}
-      onLogout={() => console.log("[SettingsPage] logout")}
+      onNavChange={handleNavChange}
+      onLogout={logout}
       onUpgrade={() => console.log("[SettingsPage] upgrade")}
-      user={MOCK_USER}
+      // Pass the live DummyJSON user to the layout header (avatar, name chip).
+      // Falls back to undefined while the fetch is in flight — the layout
+      // should handle that gracefully with authUser data the same way it does
+      // on DashboardPage.
+      user={resolvedUser}
       notificationCount={2}
-      onSearchSubmit={(q) => console.log("[SettingsPage] search:", q)}
+      onSearchSubmit={(q: string) => console.log("[SettingsPage] search:", q)}
       onNotificationsClick={() => console.log("[SettingsPage] notifications")}
-      onProfileClick={() => console.log("[SettingsPage] profile menu")}
+      onProfileClick={() => navigate("/profile-dashboard")}
     >
       <div className="settings-page">
 
@@ -532,10 +626,30 @@ const SettingsPage: React.FC = () => {
             PAGE HEADER
             ================================================================ */}
         <header className="settings-page__header">
-          <h1 className="settings-page__title">Settings</h1>
-          <p className="settings-page__subtitle">
-            Manage your account and preferences
-          </p>
+          {/* Show a small avatar + name in the page header for context */}
+          <div className="settings-page__header-identity">
+            <img
+              className="settings-page__header-avatar"
+              src={avatarUrl}
+              alt={authUsername}
+              width={40}
+              height={40}
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(authUsername)}&background=f97316&color=fff&size=128`;
+              }}
+            />
+            <div>
+              <h1 className="settings-page__title">Settings</h1>
+              <p className="settings-page__subtitle">
+                {profileLoading
+                  ? "Loading your profile…"
+                  : profileLoadError
+                  ? profileLoadError
+                  : `Managing account for ${dummyUser?.firstName ?? authUsername}`}
+              </p>
+            </div>
+          </div>
         </header>
 
         {/* ================================================================
@@ -544,10 +658,7 @@ const SettingsPage: React.FC = () => {
         <div className="settings-page__body">
 
           {/* ── Tab navigation ── */}
-          <nav
-            className="settings-page__tab-nav"
-            aria-label="Settings sections"
-          >
+          <nav className="settings-page__tab-nav" aria-label="Settings sections">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -578,7 +689,13 @@ const SettingsPage: React.FC = () => {
           >
             <h2 className="settings-page__panel-title">{activeTabLabel}</h2>
 
-            {activeTab === "account"       && <AccountSection user={MOCK_USER} />}
+            {activeTab === "account" && (
+              <AccountSection
+                dummyUser={dummyUser}
+                authUsername={authUsername}
+                authEmail={authEmail}
+              />
+            )}
             {activeTab === "preferences"   && <PreferencesSection />}
             {activeTab === "security"      && <SecuritySection />}
             {activeTab === "notifications" && <NotificationsSection />}

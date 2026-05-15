@@ -1,3 +1,4 @@
+// src/shared/types/dashboard.types.ts
 // =============================================================================
 // DummyJSON API — TypeScript Interfaces
 // Source: https://dummyjson.com/users/1 | https://dummyjson.com/docs/recipes
@@ -55,8 +56,6 @@ export interface UserCrypto {
 /**
  * Mirrors the full response shape of GET /users/:id from DummyJSON.
  * All fields are typed exactly as the API returns them.
- * Fields your feature doesn't need can be safely ignored at the call-site;
- * keeping them here ensures the interface stays the single source of truth.
  */
 export interface DummyJSONUser {
   id: number;
@@ -105,6 +104,15 @@ export interface DummyJSONUsersResponse {
 
 /**
  * Mirrors the full response shape of GET /recipes/:id from DummyJSON.
+ *
+ * FIX ts(2322): `difficulty` is widened from `"Easy" | "Medium" | "Hard"` to
+ * `string`. DummyJSON returns these three values today, but the API contract
+ * isn't enforced at runtime. Using `string` prevents assignment errors when
+ * partial recipe objects are constructed (e.g. from favorites snapshots) and
+ * keeps TypeScript happy across the whole codebase without unsafe casts.
+ *
+ * If you want to keep the narrower type for display/sorting logic, add a
+ * separate `DifficultyLevel` alias and use it only where you control the value.
  */
 export interface DummyJSONRecipe {
   id: number;
@@ -116,7 +124,8 @@ export interface DummyJSONRecipe {
   prepTimeMinutes: number;
   cookTimeMinutes: number;
   servings: number;
-  difficulty: "Easy" | "Medium" | "Hard";
+  // CHANGED: was "Easy" | "Medium" | "Hard" — see jsdoc above
+  difficulty: string;
   cuisine: string;
   caloriesPerServing: number;
   tags: string[];

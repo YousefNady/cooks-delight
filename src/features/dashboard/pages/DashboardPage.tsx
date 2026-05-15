@@ -1,3 +1,4 @@
+// src/features/dashboard/pages/DashboardPage.tsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,24 +18,17 @@ import { getDashboardRecipes } from "../../recipes/services/API";
 import { useAuth } from "../../auth/context";
 import { useFavoritesContext } from "../../profile";
 
+// ── Recently-viewed / explored hook ──────────────────────────────────────────
+// Provides TWO separate counters:
+//   recentlyViewedCount — capped list (last 10), drives "Recently Viewed" card
+//   totalExploredCount  — unbounded unique set,  drives "Recipes Explored" card
+import { useRecentlyViewed } from "../hooks/Userecentlyviewed";
+
 // ── Page-level styles ─────────────────────────────────────────────────────────
 import "./DashboardPage.css";
 
-const RECENTLY_VIEWED_KEY = "cd_recently_viewed";
-
-function readRecentlyViewedCount(): number {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) ?? "[]");
-    return Array.isArray(parsed) ? parsed.length : 0;
-  } catch {
-    return 0;
-  }
-}
-
 // =============================================================================
-// Inline SVG icon atoms
-// NOTE: Move to src/components/icons/index.tsx once the icon set grows beyond
-// a handful. Keeping them co-located here avoids a premature abstraction.
+// SVG icon atoms
 // =============================================================================
 
 const IconHeart: React.FC = () => (
@@ -95,21 +89,17 @@ const IconChevronRight: React.FC = () => (
 
 const IconChefHat: React.FC = () => (
   <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-    {/* Toque brim */}
     <rect x="8" y="28" width="24" height="4" rx="1.5"
       stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
     <rect x="10" y="32" width="20" height="3" rx="1"
       stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
-    {/* Hat dome */}
     <path d="M14 28c0-3.5 0-8 6-10a6 6 0 0 1 12 0c6 2 6 6.5 6 10"
       stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
-    {/* Small tuft */}
     <path d="M20 14v-3M17 15.5l-2-2M23 15.5l2-2"
       stroke="#f97316" strokeWidth="1.6" strokeLinecap="round" />
   </svg>
 );
 
-// =============================================================================
 // =============================================================================
 // DashboardPage
 // =============================================================================
@@ -119,44 +109,42 @@ const DashboardPage: React.FC = () => {
   const { user: authUser, isAuthenticated, logout } = useAuth();
   const { favorites, isFavorited, toggleFavorite } = useFavoritesContext();
 
+  // TWO separate counters from the hook:
+  //   recentlyViewedCount — max 10, ordered by recency
+  //   totalExploredCount  — all-time unique recipe IDs, no cap
+  const { recentlyViewedCount, totalExploredCount } = useRecentlyViewed();
+
   // ── Navigation ────────────────────────────────────────────────────────────
   const [activeNavId, setActiveNavId] = useState<NavId>("dashboard");
 
-  // ── Favourite IDs ─────────────────────────────────────────────────────────
+  // ── Recipe data ───────────────────────────────────────────────────────────
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
   const [recipesError, setRecipesError] = useState<string | null>(null);
   const [dashboardUser, setDashboardUser] = useState<DummyJSONUser | null>(null);
 
+  // Preview grid — 8 recipes for display, NOT used for any stat
   useEffect(() => {
     let cancelled = false;
-
     setRecipesLoading(true);
     setRecipesError(null);
 
     getDashboardRecipes(8)
-      .then((data) => {
-        if (!cancelled) setRecipes(data);
-      })
-      .catch(() => {
-        if (!cancelled) setRecipesError("Unable to load recipes right now.");
-      })
-      .finally(() => {
-        if (!cancelled) setRecipesLoading(false);
-      });
+      .then((data) => { if (!cancelled) setRecipes(data); })
+      .catch(() => { if (!cancelled) setRecipesError("Unable to load recipes right now."); })
+      .finally(() => { if (!cancelled) setRecipesLoading(false); });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
+  // Profile data from DummyJSON — keyed to the authenticated user's ID
   useEffect(() => {
-    const controller = new AbortController();
-    const userId = Number(authUser?.userId) || 1;
+    const userId = Number(authUser?.userId);
+    if (!userId || !Number.isFinite(userId) || userId <= 0) return;
 
-    fetch(`https://dummyjson.com/users/${userId}`, {
-      signal: controller.signal,
-    })
+    const controller = new AbortController();
+
+    fetch(`https://dummyjson.com/users/${userId}`, { signal: controller.signal })
       .then<DummyJSONUser>((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -169,13 +157,12 @@ const DashboardPage: React.FC = () => {
     return () => controller.abort();
   }, [authUser?.userId]);
 
+  // ── Derived recipe lists ──────────────────────────────────────────────────
   const favoriteRecipes = useMemo<Recipe[]>(() => {
-    const recipesById = new Map(recipes.map((recipe) => [recipe.id, recipe]));
-
+    const recipesById = new Map(recipes.map((r) => [r.id, r]));
     return favorites.map((favorite) => {
-      const matchedRecipe = recipesById.get(favorite.id);
-      if (matchedRecipe) return matchedRecipe;
-
+      const matched = recipesById.get(favorite.id);
+      if (matched) return matched;
       return {
         id: favorite.id,
         name: favorite.name,
@@ -198,93 +185,78 @@ const DashboardPage: React.FC = () => {
   }, [authUser?.userId, favorites, recipes]);
 
   const exploreRecipes = useMemo(
-    () => recipes.filter((recipe) => !isFavorited(recipe.id)).slice(0, 4),
+    () => recipes.filter((r) => !isFavorited(r.id)).slice(0, 4),
     [recipes, isFavorited, favorites],
   );
 
+  // ── Profile object (always dynamic — never hardcoded) ────────────────────
   const profileUser: User = {
-    id: dashboardUser?.id ?? Number(authUser?.userId) ?? 0,
-    firstName: dashboardUser?.firstName ?? authUser?.username ?? "Guest",
-    lastName: dashboardUser?.lastName ?? "",
-    email: dashboardUser?.email ?? authUser?.email ?? "Sign in to save favorites",
+    id:        dashboardUser?.id        ?? Number(authUser?.userId) ?? 0,
+    firstName: dashboardUser?.firstName ?? authUser?.username       ?? "Guest",
+    lastName:  dashboardUser?.lastName  ?? "",
+    email:     dashboardUser?.email     ?? authUser?.email          ?? "Sign in to save favorites",
     image:
       dashboardUser?.image ??
       authUser?.image ??
-      "https://ui-avatars.com/api/?name=Guest&background=f97316&color=fff&size=128",
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        authUser?.username ?? "Guest",
+      )}&background=f97316&color=fff&size=128`,
   };
 
+  // ── Stats — three genuinely independent values ────────────────────────────
+  //   savedRecipes    → favorites array length (from context)
+  //   recentlyViewed  → capped list count     (from cd_recently_viewed)
+  //   recipesExplored → all-time unique count  (from cd_total_explored)
   const dashboardStats = {
-    savedRecipes: favorites.length,
-    recentlyViewed: readRecentlyViewedCount(),
-    recipesExplored: recipes.length,
+    savedRecipes:    favorites.length,
+    recentlyViewed:  recentlyViewedCount,   // max 10
+    recipesExplored: totalExploredCount,    // unbounded unique set
   };
 
   // ── Handlers ─────────────────────────────────────────────────────────────
 
   const handleFavoriteToggle = (id: number): void => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
-    const recipe = recipes.find((item) => item.id === id);
+    if (!isAuthenticated) { navigate("/login"); return; }
+    const recipe = recipes.find((r) => r.id === id);
     if (recipe) toggleFavorite(recipe);
   };
 
   const handleNavChange = (id: NavId): void => {
     setActiveNavId(id);
     const routes: Partial<Record<NavId, string>> = {
-      dashboard: "/dashboard",
-      favorites: "/favorites",
-      explore: "/explore",
-      "recently-viewed": "/recently-viewed",
-      profile: "/profile-dashboard",
-      settings: "/settings",
+      dashboard:          "/dashboard",
+      favorites:          "/favorites",
+      explore:            "/explore",
+      "recently-viewed":  "/recently-viewed",
+      profile:            "/profile-dashboard",
+      settings:           "/settings",
     };
-
-    if (id === "favorites" && !isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
+    if (id === "favorites" && !isAuthenticated) { navigate("/login"); return; }
     const route = routes[id];
     if (route) navigate(route);
   };
 
   const handleNotify = (feature: string) => (): void => {
-    // TODO: POST /notifications/subscribe  { feature }
     console.log(`[DashboardPage] notify: ${feature}`);
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <DashboardLayout
-      // ── Sidebar props ──────────────────────────────────────────────────────
       activeNavId={activeNavId}
       onNavChange={handleNavChange}
       onLogout={logout}
       onUpgrade={() => console.log("[DashboardPage] upgrade")}
-      // ── Header props — Mode A: pre-resolved user object ───────────────────
       user={dashboardUser ?? undefined}
       notificationCount={2}
-      onSearchSubmit={(q) => console.log("[DashboardPage] search:", q)}
-      onSearchChange={(q) => console.log("[DashboardPage] search change:", q)}
+      onSearchSubmit={(q: string) => console.log("[DashboardPage] search:", q)}
+      onSearchChange={(q: string) => console.log("[DashboardPage] search change:", q)}
       onNotificationsClick={() => console.log("[DashboardPage] notifications")}
       onProfileClick={() => navigate("/profile-dashboard")}
     >
-
-      {/* ================================================================
-          PAGE ROOT
-          The page is split into two visual columns that run top-to-bottom:
-            Left / Main  → Stats row, Favorites, Explore  (fluid width)
-            Right / Aside → Profile card, 3× Promo cards  (fixed ~292 px)
-
-          Implementation: a single CSS Grid with named template areas keeps
-          both columns in perfect vertical sync without nested grids.
-          ================================================================ */}
       <div className="dp">
 
-        {/* ── STATS ROW — left column ── */}
+        {/* ── STATS ROW ── */}
         <div className="dp__stats-row">
           <StatsCard
             icon={<IconHeart />}
@@ -296,20 +268,24 @@ const DashboardPage: React.FC = () => {
           <StatsCard
             icon={<IconEye />}
             variant="green"
+            // Capped list: shows last 10 recipes seen, ordered by recency.
+            // Written by persistRecentlyViewed → cd_recently_viewed.
             value={dashboardStats.recentlyViewed}
             label="Recently Viewed"
-            helperText="Recipes you explored"
+            helperText={`Last ${recentlyViewedCount} recipes seen`}
           />
           <StatsCard
             icon={<IconBookOpen />}
             variant="purple"
+            // Unbounded unique set: every distinct recipe ever opened.
+            // Written by persistRecentlyViewed → cd_total_explored.
             value={dashboardStats.recipesExplored}
             label="Recipes Explored"
-            helperText="Keep exploring!"
+            helperText="Unique recipes opened"
           />
         </div>
 
-        {/* ── PROFILE CARD — right column, spans vertically as sticky sidebar ── */}
+        {/* ── PROFILE CARD ── */}
         <aside
           className="dp__profile-card"
           aria-label={`Signed in as ${profileUser.firstName} ${profileUser.lastName}`}
@@ -322,7 +298,9 @@ const DashboardPage: React.FC = () => {
             height={72}
             onError={(e) => {
               const el = e.currentTarget as HTMLImageElement;
-              el.src = `https://ui-avatars.com/api/?name=${profileUser.firstName}+${profileUser.lastName}&background=f97316&color=fff&size=128`;
+              el.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                `${profileUser.firstName} ${profileUser.lastName}`,
+              )}&background=f97316&color=fff&size=128`;
             }}
           />
           <div className="dp__profile-meta">
@@ -334,7 +312,7 @@ const DashboardPage: React.FC = () => {
           <button
             className="dp__profile-edit-btn"
             type="button"
-            onClick={() => console.log("[DashboardPage] edit profile")}
+            onClick={() => navigate("/profile-dashboard")}
             aria-label="Edit your profile"
           >
             <span className="dp__profile-edit-btn-icon" aria-hidden="true">
@@ -344,11 +322,8 @@ const DashboardPage: React.FC = () => {
           </button>
         </aside>
 
-        {/* ── FAVORITES SECTION — left column ── */}
-        <section
-          className="dp__section dp__favorites"
-          aria-labelledby="dp-favorites-title"
-        >
+        {/* ── FAVORITES SECTION ── */}
+        <section className="dp__section dp__favorites" aria-labelledby="dp-favorites-title">
           <header className="dp__section-header">
             <h2 className="dp__section-title" id="dp-favorites-title">
               Your Favorite Recipes
@@ -367,8 +342,8 @@ const DashboardPage: React.FC = () => {
           </header>
 
           <div className="dp__card-grid" role="list" aria-label="Favorite recipes">
-            {recipesLoading && <p role="status">Loading recipes...</p>}
-            {recipesError && <p role="alert">{recipesError}</p>}
+            {recipesLoading && <p role="status">Loading recipes…</p>}
+            {recipesError  && <p role="alert">{recipesError}</p>}
             {!recipesLoading && !recipesError && favoriteRecipes.length === 0 && (
               <p role="status">No favorite recipes yet.</p>
             )}
@@ -379,51 +354,37 @@ const DashboardPage: React.FC = () => {
                   mode="favorite"
                   isFavorite={isFavorited(recipe.id)}
                   onFavoriteToggle={handleFavoriteToggle}
-                  onMenuOpen={(id) =>
-                    console.log("[DashboardPage] menu opened for recipe", id)
-                  }
+                  onMenuOpen={(id) => console.log("[DashboardPage] menu for recipe", id)}
                 />
               </div>
             ))}
           </div>
         </section>
 
-        {/* ── PROMO COLUMN — right column, below profile card ── */}
-        <aside
-          className="dp__promo-column"
-          aria-label="Upcoming features"
-        >
+        {/* ── PROMO COLUMN ── */}
+        <aside className="dp__promo-column" aria-label="Upcoming features">
           <PromotionalCard
-            variant="orange"
-            icon={<IconCrown />}
+            variant="orange" icon={<IconCrown />}
             title="Try Premium"
             description="Get early access to exclusive recipes and powerful features."
-            hasNotificationBadge
-            onNotify={handleNotify("premium")}
+            hasNotificationBadge onNotify={handleNotify("premium")}
           />
           <PromotionalCard
-            variant="blue"
-            icon={<IconStarOutline />}
+            variant="blue" icon={<IconStarOutline />}
             title="Leave Reviews"
             description="Share your thoughts and help others discover great recipes."
-            hasNotificationBadge
-            onNotify={handleNotify("reviews")}
+            hasNotificationBadge onNotify={handleNotify("reviews")}
           />
           <PromotionalCard
-            variant="green"
-            icon={<IconCart />}
+            variant="green" icon={<IconCart />}
             title="Shopping List"
             description="Plan your meals and shop everything in one place."
-            hasNotificationBadge
-            onNotify={handleNotify("shopping")}
+            hasNotificationBadge onNotify={handleNotify("shopping")}
           />
         </aside>
 
-        {/* ── EXPLORE SECTION — left column ── */}
-        <section
-          className="dp__section dp__explore"
-          aria-labelledby="dp-explore-title"
-        >
+        {/* ── EXPLORE SECTION ── */}
+        <section className="dp__section dp__explore" aria-labelledby="dp-explore-title">
           <header className="dp__section-header">
             <h2 className="dp__section-title" id="dp-explore-title">
               Continue Exploring
@@ -442,8 +403,8 @@ const DashboardPage: React.FC = () => {
           </header>
 
           <div className="dp__card-grid" role="list" aria-label="Recipes to explore">
-            {recipesLoading && <p role="status">Loading recipes...</p>}
-            {recipesError && <p role="alert">{recipesError}</p>}
+            {recipesLoading && <p role="status">Loading recipes…</p>}
+            {recipesError  && <p role="alert">{recipesError}</p>}
             {!recipesLoading && !recipesError && exploreRecipes.length === 0 && (
               <p role="status">No recipes to explore yet.</p>
             )}
@@ -460,12 +421,8 @@ const DashboardPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ── QUOTE BANNER — full-width, spans both columns ── */}
-        <footer
-          className="dp__quote-banner"
-          aria-label="Culinary inspiration"
-        >
-          {/* Left: chef icon + blockquote */}
+        {/* ── QUOTE BANNER ── */}
+        <footer className="dp__quote-banner" aria-label="Culinary inspiration">
           <div className="dp__quote-body">
             <span className="dp__quote-chef-icon" aria-hidden="true">
               <IconChefHat />
@@ -478,8 +435,6 @@ const DashboardPage: React.FC = () => {
               <cite className="dp__quote-author">— Nathan Myhrvold</cite>
             </blockquote>
           </div>
-
-          {/* Right: decorative food photograph — fades into banner on left edge */}
           <div className="dp__quote-photo" aria-hidden="true">
             <img
               className="dp__quote-photo-img"
