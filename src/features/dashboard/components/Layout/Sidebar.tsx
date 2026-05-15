@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../auth/context";
 import "./Sidebar.css";
 
 // ---------------------------------------------------------------------------
@@ -72,6 +74,8 @@ const IconChef: React.FC = () => (
 export type NavId =
   | "dashboard"
   | "favorites"
+  | "explore"
+  | "recently-viewed"
   | "profile"
   | "settings"
   | "reviews"
@@ -87,6 +91,8 @@ interface NavItem {
 const PRIMARY_NAV: NavItem[] = [
   { id: "dashboard", label: "Dashboard",  icon: <IconHome /> },
   { id: "favorites", label: "Favorites",  icon: <IconHeart /> },
+  { id: "explore",   label: "Explore",    icon: <IconChef /> },
+  { id: "recently-viewed", label: "Recently Viewed", icon: <IconStar /> },
   { id: "profile",   label: "My Profile", icon: <IconUser /> },
   { id: "settings",  label: "Settings",   icon: <IconSettings /> },
 ];
@@ -122,6 +128,30 @@ const Sidebar: React.FC<SidebarProps> = ({
   onLogout = () => {},
   onUpgrade = () => {},
 }) => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleNavClick = (id: NavId): void => {
+    onNavChange(id);
+
+    const routes: Partial<Record<NavId, string>> = {
+      dashboard: "/dashboard",
+      favorites: "/favorites",
+      explore: "/explore",
+      "recently-viewed": "/recently-viewed",
+      profile: "/profile-dashboard",
+      settings: "/settings",
+    };
+
+    if (id === "favorites" && !isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    const route = routes[id];
+    if (route) navigate(route);
+  };
+
   return (
     <aside className="sidebar">
 
@@ -160,7 +190,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   "sidebar__nav-item",
                   activeNavId === id ? "sidebar__nav-item--active" : "",
                 ].filter(Boolean).join(" ")}
-                onClick={() => onNavChange(id)}
+                onClick={() => handleNavClick(id)}
                 aria-current={activeNavId === id ? "page" : undefined}
                 type="button"
               >

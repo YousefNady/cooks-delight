@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ── Layout shell ─────────────────────────────────────────────────────────────
 import { DashboardLayout } from "../components/Layout";
@@ -10,13 +11,25 @@ import { RecipeCard }      from "../components/RecipeCard";
 import { PromotionalCard } from "../components/PromotionalCard";
 
 // ── Domain types ─────────────────────────────────────────────────────────────
-import type {
-  DummyJSONUser,
-  DummyJSONRecipe,
-} from "../../../shared/types/dashboard.types";
+import type { DummyJSONUser } from "../../../shared/types/dashboard.types";
+import type { Recipe, User } from "../types";
+import { getDashboardRecipes } from "../../recipes/services/API";
+import { useAuth } from "../../auth/context";
+import { useFavoritesContext } from "../../profile";
 
 // ── Page-level styles ─────────────────────────────────────────────────────────
 import "./DashboardPage.css";
+
+const RECENTLY_VIEWED_KEY = "cd_recently_viewed";
+
+function readRecentlyViewedCount(): number {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(RECENTLY_VIEWED_KEY) ?? "[]");
+    return Array.isArray(parsed) ? parsed.length : 0;
+  } catch {
+    return 0;
+  }
+}
 
 // =============================================================================
 // Inline SVG icon atoms
@@ -97,337 +110,145 @@ const IconChefHat: React.FC = () => (
 );
 
 // =============================================================================
-// Mock data — field names mirror DummyJSON API 1-to-1.
-// Replace each constant with a real store selector / API call when wiring.
-// =============================================================================
-
-interface DashboardStats {
-  savedRecipes: number;
-  recentlyViewed: number;
-  recipesExplored: number;
-}
-
-// ── User — mirrors GET /users/1 ───────────────────────────────────────────────
-const MOCK_USER: DummyJSONUser = {
-  id: 1,
-  firstName: "Sarah",
-  lastName: "Johnson",
-  maidenName: "Williams",
-  age: 29,
-  gender: "female",
-  email: "sarah.johnson@x.dummyjson.com",
-  phone: "+1 555-123-4567",
-  username: "sarahjohnson",
-  password: "", // ← NEVER store real credentials in component state
-  birthDate: "1995-04-12",
-  image: "https://dummyjson.com/icon/sarahjohnson/128",
-  bloodGroup: "A+",
-  height: 167,
-  weight: 58,
-  eyeColor: "Brown",
-  hair: { color: "Black", type: "Straight" },
-  ip: "192.168.1.1",
-  address: {
-    address: "42 Culinary Lane",
-    city: "New York",
-    state: "New York",
-    stateCode: "NY",
-    postalCode: "10001",
-    coordinates: { lat: 40.712776, lng: -74.005974 },
-    country: "United States",
-  },
-  macAddress: "00:1B:44:11:3A:B7",
-  university: "Culinary Institute of America",
-  bank: {
-    cardExpire: "06/30",
-    cardNumber: "4111111111111111",
-    cardType: "Visa",
-    currency: "USD",
-    iban: "GB29NWBK60161331926819",
-  },
-  company: {
-    department: "Engineering",
-    name: "FoodTech Co.",
-    title: "Software Engineer",
-    address: {
-      address: "1 Tech Plaza",
-      city: "San Francisco",
-      state: "California",
-      stateCode: "CA",
-      postalCode: "94105",
-      coordinates: { lat: 37.7749, lng: -122.4194 },
-      country: "United States",
-    },
-  },
-  ein: "12-3456789",
-  ssn: "123-45-6789",
-  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-  crypto: {
-    coin: "Bitcoin",
-    wallet: "0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a",
-    network: "Ethereum (ERC20)",
-  },
-  role: "user",
-};
-
-// ── Stats — derive from your aggregation endpoint in production ───────────────
-const MOCK_STATS: DashboardStats = {
-  savedRecipes: 24,
-  recentlyViewed: 12,
-  recipesExplored: 36,
-};
-
-// ── Favorite Recipes — mirrors GET /recipes?userId=1&limit=4 ─────────────────
-const MOCK_FAVORITE_RECIPES: DummyJSONRecipe[] = [
-  {
-    id: 1,
-    name: "Creamy Garlic Pasta",
-    ingredients: [
-      "400g pasta", "6 garlic cloves", "200ml heavy cream",
-      "100g parmesan", "2 tbsp butter", "Salt", "Black pepper", "Fresh parsley",
-    ],
-    instructions: [
-      "Boil pasta in salted water until al dente.",
-      "Sauté minced garlic in butter over medium heat for 2 minutes.",
-      "Add cream and reduce for 3 minutes.",
-      "Toss with pasta, top with parmesan and parsley.",
-    ],
-    prepTimeMinutes: 10,
-    cookTimeMinutes: 20,
-    servings: 4,
-    difficulty: "Easy",
-    cuisine: "Italian",
-    caloriesPerServing: 480,
-    tags: ["Pasta", "Italian", "Comfort Food"],
-    userId: 1,
-    image: "https://cdn.dummyjson.com/recipe-images/1.webp",
-    rating: 4.6,
-    reviewCount: 128,
-    mealType: ["Dinner"],
-  },
-  {
-    id: 2,
-    name: "Honey Glazed Salmon",
-    ingredients: [
-      "2 salmon fillets", "3 tbsp honey", "2 tbsp soy sauce",
-      "1 tsp fresh ginger", "2 garlic cloves", "1 tbsp olive oil",
-      "Sesame seeds", "Spring onions",
-    ],
-    instructions: [
-      "Whisk together honey, soy sauce, ginger and garlic.",
-      "Brush glaze generously over salmon fillets.",
-      "Sear salmon 3 min each side in an oven-safe pan.",
-      "Transfer to 200 °C oven and bake 8 minutes.",
-    ],
-    prepTimeMinutes: 5,
-    cookTimeMinutes: 20,
-    servings: 2,
-    difficulty: "Medium",
-    cuisine: "Asian",
-    caloriesPerServing: 320,
-    tags: ["Seafood", "Healthy", "Asian"],
-    userId: 1,
-    image: "https://cdn.dummyjson.com/recipe-images/2.webp",
-    rating: 4.8,
-    reviewCount: 96,
-    mealType: ["Dinner"],
-  },
-  {
-    id: 3,
-    name: "Chocolate Lava Cake",
-    ingredients: [
-      "200g dark chocolate", "100g butter", "3 eggs", "3 egg yolks",
-      "60g caster sugar", "30g plain flour", "Cocoa powder for dusting",
-    ],
-    instructions: [
-      "Melt chocolate and butter over a bain-marie.",
-      "Whisk eggs, yolks and sugar until pale and thick.",
-      "Fold chocolate into eggs, sift in flour.",
-      "Pour into buttered ramekins and bake at 200 °C for 12 minutes.",
-    ],
-    prepTimeMinutes: 15,
-    cookTimeMinutes: 30,
-    servings: 4,
-    difficulty: "Hard",
-    cuisine: "French",
-    caloriesPerServing: 550,
-    tags: ["Desserts", "Chocolate", "French"],
-    userId: 1,
-    image: "https://cdn.dummyjson.com/recipe-images/3.webp",
-    rating: 4.9,
-    reviewCount: 211,
-    mealType: ["Dessert"],
-  },
-  {
-    id: 4,
-    name: "Avocado Quinoa Salad",
-    ingredients: [
-      "200g quinoa", "2 ripe avocados", "200g cherry tomatoes",
-      "1 cucumber", "Juice of 2 limes", "3 tbsp olive oil",
-      "Fresh coriander", "Salt & pepper",
-    ],
-    instructions: [
-      "Cook quinoa per packet instructions and let cool.",
-      "Dice avocados and halve cherry tomatoes.",
-      "Whisk lime juice and olive oil for dressing.",
-      "Toss everything together and season to taste.",
-    ],
-    prepTimeMinutes: 15,
-    cookTimeMinutes: 0,
-    servings: 2,
-    difficulty: "Easy",
-    cuisine: "Mexican",
-    caloriesPerServing: 290,
-    tags: ["Salads", "Healthy", "Vegan"],
-    userId: 1,
-    image: "https://cdn.dummyjson.com/recipe-images/4.webp",
-    rating: 4.5,
-    reviewCount: 74,
-    mealType: ["Lunch"],
-  },
-];
-
-// ── Explore Recipes — mirrors GET /recipes?limit=4&skip=4 ────────────────────
-const MOCK_EXPLORE_RECIPES: DummyJSONRecipe[] = [
-  {
-    id: 5,
-    name: "Roasted Tomato Soup",
-    ingredients: [
-      "800g vine tomatoes", "1 onion", "4 garlic cloves",
-      "500ml vegetable stock", "100ml double cream",
-      "2 tbsp olive oil", "Fresh basil", "Salt & pepper",
-    ],
-    instructions: [
-      "Halve tomatoes; roast with onion and garlic at 200 °C for 35 min.",
-      "Blend with stock until smooth, then stir in cream.",
-      "Season and serve with crusty bread.",
-    ],
-    prepTimeMinutes: 10,
-    cookTimeMinutes: 10,
-    servings: 4,
-    difficulty: "Easy",
-    cuisine: "Italian",
-    caloriesPerServing: 180,
-    tags: ["Soup", "Vegetarian"],
-    userId: 2,
-    image: "https://cdn.dummyjson.com/recipe-images/5.webp",
-    rating: 4.6,
-    reviewCount: 128,
-    mealType: ["Soup"],
-  },
-  {
-    id: 6,
-    name: "Margherita Pizza",
-    ingredients: [
-      "Pizza dough", "200ml tomato passata", "200g fresh mozzarella",
-      "Fresh basil", "2 tbsp olive oil", "Sea salt", "Dried oregano",
-    ],
-    instructions: [
-      "Preheat oven to max with a pizza stone inside.",
-      "Stretch dough and spread passata, leaving a 2 cm border.",
-      "Top with mozzarella and bake 10–12 minutes.",
-      "Finish with fresh basil and olive oil.",
-    ],
-    prepTimeMinutes: 20,
-    cookTimeMinutes: 15,
-    servings: 4,
-    difficulty: "Medium",
-    cuisine: "Italian",
-    caloriesPerServing: 300,
-    tags: ["Pizza", "Italian", "Vegetarian"],
-    userId: 3,
-    image: "https://cdn.dummyjson.com/recipe-images/6.webp",
-    rating: 4.7,
-    reviewCount: 96,
-    mealType: ["Dinner"],
-  },
-  {
-    id: 7,
-    name: "Quinoa Buddha Bowl",
-    ingredients: [
-      "200g quinoa", "400g tinned chickpeas", "100g kale",
-      "1 sweet potato", "3 tbsp tahini", "1 lemon",
-      "2 tbsp olive oil", "Smoked paprika",
-    ],
-    instructions: [
-      "Roast sweet potato and chickpeas at 200 °C for 25 min.",
-      "Cook quinoa; massage kale with lemon juice and salt.",
-      "Whisk tahini and lemon juice into a dressing.",
-      "Assemble and drizzle with tahini dressing.",
-    ],
-    prepTimeMinutes: 15,
-    cookTimeMinutes: 10,
-    servings: 2,
-    difficulty: "Easy",
-    cuisine: "Mediterranean",
-    caloriesPerServing: 420,
-    tags: ["Bowl", "Healthy", "Vegan"],
-    userId: 4,
-    image: "https://cdn.dummyjson.com/recipe-images/7.webp",
-    rating: 4.8,
-    reviewCount: 112,
-    mealType: ["Bowl"],
-  },
-  {
-    id: 8,
-    name: "Berry Pancakes",
-    ingredients: [
-      "200g plain flour", "2 tsp baking powder", "2 tbsp sugar",
-      "250ml milk", "2 eggs", "30g melted butter",
-      "150g mixed berries", "Maple syrup to serve",
-    ],
-    instructions: [
-      "Whisk dry ingredients in a large bowl.",
-      "Beat eggs with milk and butter; fold into dry mix.",
-      "Cook ladlefuls on a medium non-stick pan, 2–3 min each side.",
-      "Serve stacked with berries and maple syrup.",
-    ],
-    prepTimeMinutes: 10,
-    cookTimeMinutes: 10,
-    servings: 4,
-    difficulty: "Easy",
-    cuisine: "American",
-    caloriesPerServing: 310,
-    tags: ["Breakfast", "Pancakes"],
-    userId: 5,
-    image: "https://cdn.dummyjson.com/recipe-images/8.webp",
-    rating: 4.5,
-    reviewCount: 80,
-    mealType: ["Breakfast"],
-  },
-];
-
 // =============================================================================
 // DashboardPage
 // =============================================================================
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { user: authUser, isAuthenticated, logout } = useAuth();
+  const { favorites, isFavorited, toggleFavorite } = useFavoritesContext();
+
   // ── Navigation ────────────────────────────────────────────────────────────
   const [activeNavId, setActiveNavId] = useState<NavId>("dashboard");
 
   // ── Favourite IDs ─────────────────────────────────────────────────────────
-  // In production: replace with a selector from your user-preferences store.
-  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(
-    new Set([1, 2, 3, 4]),
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
+  const [recipesError, setRecipesError] = useState<string | null>(null);
+  const [dashboardUser, setDashboardUser] = useState<DummyJSONUser | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setRecipesLoading(true);
+    setRecipesError(null);
+
+    getDashboardRecipes(8)
+      .then((data) => {
+        if (!cancelled) setRecipes(data);
+      })
+      .catch(() => {
+        if (!cancelled) setRecipesError("Unable to load recipes right now.");
+      })
+      .finally(() => {
+        if (!cancelled) setRecipesLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const userId = Number(authUser?.userId) || 1;
+
+    fetch(`https://dummyjson.com/users/${userId}`, {
+      signal: controller.signal,
+    })
+      .then<DummyJSONUser>((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(setDashboardUser)
+      .catch((error: Error) => {
+        if (error.name !== "AbortError") setDashboardUser(null);
+      });
+
+    return () => controller.abort();
+  }, [authUser?.userId]);
+
+  const favoriteRecipes = useMemo<Recipe[]>(() => {
+    const recipesById = new Map(recipes.map((recipe) => [recipe.id, recipe]));
+
+    return favorites.map((favorite) => {
+      const matchedRecipe = recipesById.get(favorite.id);
+      if (matchedRecipe) return matchedRecipe;
+
+      return {
+        id: favorite.id,
+        name: favorite.name,
+        image: favorite.image,
+        ingredients: [],
+        instructions: [],
+        prepTimeMinutes: favorite.prepTimeMinutes ?? 0,
+        cookTimeMinutes: favorite.cookTimeMinutes ?? 0,
+        servings: favorite.servings ?? 0,
+        difficulty: favorite.difficulty ?? "Easy",
+        cuisine: favorite.cuisine ?? "Recipe",
+        caloriesPerServing: 0,
+        tags: [],
+        userId: Number(authUser?.userId) || 0,
+        rating: 0,
+        reviewCount: 0,
+        mealType: [favorite.cuisine ?? "Recipe"],
+      };
+    });
+  }, [authUser?.userId, favorites, recipes]);
+
+  const exploreRecipes = useMemo(
+    () => recipes.filter((recipe) => !isFavorited(recipe.id)).slice(0, 4),
+    [recipes, isFavorited, favorites],
   );
+
+  const profileUser: User = {
+    id: dashboardUser?.id ?? Number(authUser?.userId) ?? 0,
+    firstName: dashboardUser?.firstName ?? authUser?.username ?? "Guest",
+    lastName: dashboardUser?.lastName ?? "",
+    email: dashboardUser?.email ?? authUser?.email ?? "Sign in to save favorites",
+    image:
+      dashboardUser?.image ??
+      authUser?.image ??
+      "https://ui-avatars.com/api/?name=Guest&background=f97316&color=fff&size=128",
+  };
+
+  const dashboardStats = {
+    savedRecipes: favorites.length,
+    recentlyViewed: readRecentlyViewedCount(),
+    recipesExplored: recipes.length,
+  };
 
   // ── Handlers ─────────────────────────────────────────────────────────────
 
   const handleFavoriteToggle = (id: number): void => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
     }
-      return next;
-    });
+
+    const recipe = recipes.find((item) => item.id === id);
+    if (recipe) toggleFavorite(recipe);
   };
 
   const handleNavChange = (id: NavId): void => {
     setActiveNavId(id);
-    // TODO: router.push(`/${id}`) — wire once React Router / Next.js is added
+    const routes: Partial<Record<NavId, string>> = {
+      dashboard: "/dashboard",
+      favorites: "/favorites",
+      explore: "/explore",
+      "recently-viewed": "/recently-viewed",
+      profile: "/profile-dashboard",
+      settings: "/settings",
+    };
+
+    if (id === "favorites" && !isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    const route = routes[id];
+    if (route) navigate(route);
   };
 
   const handleNotify = (feature: string) => (): void => {
@@ -441,15 +262,15 @@ const DashboardPage: React.FC = () => {
       // ── Sidebar props ──────────────────────────────────────────────────────
       activeNavId={activeNavId}
       onNavChange={handleNavChange}
-      onLogout={() => console.log("[DashboardPage] logout")}
+      onLogout={logout}
       onUpgrade={() => console.log("[DashboardPage] upgrade")}
       // ── Header props — Mode A: pre-resolved user object ───────────────────
-      user={MOCK_USER}
+      user={dashboardUser ?? undefined}
       notificationCount={2}
       onSearchSubmit={(q) => console.log("[DashboardPage] search:", q)}
       onSearchChange={(q) => console.log("[DashboardPage] search change:", q)}
       onNotificationsClick={() => console.log("[DashboardPage] notifications")}
-      onProfileClick={() => console.log("[DashboardPage] profile menu")}
+      onProfileClick={() => navigate("/profile-dashboard")}
     >
 
       {/* ================================================================
@@ -468,21 +289,21 @@ const DashboardPage: React.FC = () => {
           <StatsCard
             icon={<IconHeart />}
             variant="orange"
-            value={MOCK_STATS.savedRecipes}
+            value={dashboardStats.savedRecipes}
             label="Saved Recipes"
             helperText="Your favorite recipes"
           />
           <StatsCard
             icon={<IconEye />}
             variant="green"
-            value={MOCK_STATS.recentlyViewed}
+            value={dashboardStats.recentlyViewed}
             label="Recently Viewed"
             helperText="Recipes you explored"
           />
           <StatsCard
             icon={<IconBookOpen />}
             variant="purple"
-            value={MOCK_STATS.recipesExplored}
+            value={dashboardStats.recipesExplored}
             label="Recipes Explored"
             helperText="Keep exploring!"
           />
@@ -491,24 +312,24 @@ const DashboardPage: React.FC = () => {
         {/* ── PROFILE CARD — right column, spans vertically as sticky sidebar ── */}
         <aside
           className="dp__profile-card"
-          aria-label={`Signed in as ${MOCK_USER.firstName} ${MOCK_USER.lastName}`}
+          aria-label={`Signed in as ${profileUser.firstName} ${profileUser.lastName}`}
         >
           <img
             className="dp__profile-avatar"
-            src={MOCK_USER.image}
-            alt={`${MOCK_USER.firstName} ${MOCK_USER.lastName}`}
+            src={profileUser.image}
+            alt={`${profileUser.firstName} ${profileUser.lastName}`}
             width={72}
             height={72}
             onError={(e) => {
               const el = e.currentTarget as HTMLImageElement;
-              el.src = `https://ui-avatars.com/api/?name=${MOCK_USER.firstName}+${MOCK_USER.lastName}&background=f97316&color=fff&size=128`;
+              el.src = `https://ui-avatars.com/api/?name=${profileUser.firstName}+${profileUser.lastName}&background=f97316&color=fff&size=128`;
             }}
           />
           <div className="dp__profile-meta">
             <p className="dp__profile-name">
-              {MOCK_USER.firstName} {MOCK_USER.lastName}
+              {profileUser.firstName} {profileUser.lastName}
             </p>
-            <p className="dp__profile-email">{MOCK_USER.email}</p>
+            <p className="dp__profile-email">{profileUser.email}</p>
           </div>
           <button
             className="dp__profile-edit-btn"
@@ -535,7 +356,7 @@ const DashboardPage: React.FC = () => {
             <button
               className="dp__view-all-btn"
               type="button"
-              onClick={() => console.log("[DashboardPage] → /favorites")}
+              onClick={() => isAuthenticated ? navigate("/favorites") : navigate("/login")}
               aria-label="View all favorite recipes"
             >
               View all
@@ -546,12 +367,17 @@ const DashboardPage: React.FC = () => {
           </header>
 
           <div className="dp__card-grid" role="list" aria-label="Favorite recipes">
-            {MOCK_FAVORITE_RECIPES.map((recipe) => (
+            {recipesLoading && <p role="status">Loading recipes...</p>}
+            {recipesError && <p role="alert">{recipesError}</p>}
+            {!recipesLoading && !recipesError && favoriteRecipes.length === 0 && (
+              <p role="status">No favorite recipes yet.</p>
+            )}
+            {!recipesLoading && !recipesError && favoriteRecipes.map((recipe) => (
               <div key={recipe.id} role="listitem">
                 <RecipeCard
                   recipe={recipe}
                   mode="favorite"
-                  isFavorite={favoriteIds.has(recipe.id)}
+                  isFavorite={isFavorited(recipe.id)}
                   onFavoriteToggle={handleFavoriteToggle}
                   onMenuOpen={(id) =>
                     console.log("[DashboardPage] menu opened for recipe", id)
@@ -605,7 +431,7 @@ const DashboardPage: React.FC = () => {
             <button
               className="dp__view-all-btn"
               type="button"
-              onClick={() => console.log("[DashboardPage] → /explore")}
+              onClick={() => navigate("/explore")}
               aria-label="View all recipes"
             >
               View all recipes
@@ -616,12 +442,17 @@ const DashboardPage: React.FC = () => {
           </header>
 
           <div className="dp__card-grid" role="list" aria-label="Recipes to explore">
-            {MOCK_EXPLORE_RECIPES.map((recipe) => (
+            {recipesLoading && <p role="status">Loading recipes...</p>}
+            {recipesError && <p role="alert">{recipesError}</p>}
+            {!recipesLoading && !recipesError && exploreRecipes.length === 0 && (
+              <p role="status">No recipes to explore yet.</p>
+            )}
+            {!recipesLoading && !recipesError && exploreRecipes.map((recipe) => (
               <div key={recipe.id} role="listitem">
                 <RecipeCard
                   recipe={recipe}
                   mode="explore"
-                  isFavorite={favoriteIds.has(recipe.id)}
+                  isFavorite={isFavorited(recipe.id)}
                   onFavoriteToggle={handleFavoriteToggle}
                 />
               </div>

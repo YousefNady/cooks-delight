@@ -12,6 +12,25 @@ import difficultyIcon from "../../../assets/recipe-details/temp-icon.svg";
 import SimilarRecipesSection from "../components/SimilarRecipes";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
+const RECENTLY_VIEWED_KEY = "cd_recently_viewed";
+const MAX_RECENTLY_VIEWED = 12;
+
+function rememberRecentlyViewed(id: number): void {
+  try {
+    const raw = localStorage.getItem(RECENTLY_VIEWED_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    const existingIds = Array.isArray(parsed)
+      ? parsed.map((item) => Number(typeof item === "object" && item !== null ? item.id : item))
+      : [];
+    const nextIds = [id, ...existingIds.filter((itemId) => itemId !== id && Number.isFinite(itemId))]
+      .slice(0, MAX_RECENTLY_VIEWED);
+
+    localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(nextIds));
+  } catch {
+    console.warn("[RecipeDetails] Could not write recently viewed recipe.");
+  }
+}
+
 export default function RecipeDetails() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -19,6 +38,7 @@ export default function RecipeDetails() {
 
   useEffect(() => {
     if (!id) return;
+    rememberRecentlyViewed(Number(id));
     getRecipeById(id).then((data) => setRecipe(data ?? null));
     getRecipes().then((data) => setAllRecipes(data.recipes));
   }, [id]);

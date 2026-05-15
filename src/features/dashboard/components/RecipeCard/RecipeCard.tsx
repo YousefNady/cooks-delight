@@ -1,5 +1,6 @@
 import React from "react";
-import type { DummyJSONRecipe } from "../../../../shared/types/dashboard.types";
+import { useNavigate } from "react-router-dom";
+import type { Recipe } from "../../types";
 import "./RecipeCard.css";
 
 // ---------------------------------------------------------------------------
@@ -71,10 +72,10 @@ export type RecipeCardMode = "favorite" | "explore";
 
 export interface RecipeCardProps {
   /**
-   * Fully-typed DummyJSON recipe object.
+   * Fully-typed dashboard recipe object.
    * Sourced from GET /recipes or GET /recipes/:id.
    */
-  recipe: DummyJSONRecipe;
+  recipe: Recipe;
 
   /**
    * Visual/layout variant matching the two recipe rows in the dashboard.
@@ -123,7 +124,7 @@ function formatTotalTime(prep: number, cook: number): string {
  * from `mealType[0]` (e.g. "Dinner") as it mirrors what the design shows.
  * Consumers can override by computing this upstream before passing the recipe.
  */
-function deriveCategory(recipe: DummyJSONRecipe): string {
+function deriveCategory(recipe: Recipe): string {
   return recipe.mealType?.[0] ?? recipe.cuisine ?? "Recipe";
 }
 
@@ -158,6 +159,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   onFavoriteToggle,
   onMenuOpen,
 }) => {
+  const navigate = useNavigate();
   const {
     id,
     name,
@@ -186,10 +188,25 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     onMenuOpen?.(id);
   };
 
+  const handleCardClick = (): void => {
+    navigate(`/recipes/${id}`);
+  };
+
+  const handleCardKeyDown = (e: React.KeyboardEvent<HTMLElement>): void => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      navigate(`/recipes/${id}`);
+    }
+  };
+
   return (
     <article
       className={`recipe-card recipe-card--${mode}`}
       aria-label={`${name}, ${totalTime}, ${category}`}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="button"
+      tabIndex={0}
     >
       {/* ── Image area ── */}
       <div className="recipe-card__image-wrapper">

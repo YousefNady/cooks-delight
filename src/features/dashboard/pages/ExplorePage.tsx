@@ -1,19 +1,20 @@
-import React, { useState, useMemo } from "react";
+﻿import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-// ── Layout shell ──────────────────────────────────────────────────────────────
+// -- Layout shell --------------------------------------------------------------
 import { DashboardLayout } from "../components/Layout";
 import type { NavId } from "../components/Layout";
 
-// ── Reusable UI components ────────────────────────────────────────────────────
+// -- Reusable UI components ----------------------------------------------------
 import { RecipeCard } from "../components/RecipeCard";
 
-// ── Domain types ──────────────────────────────────────────────────────────────
-import type {
-  DummyJSONUser,
-  DummyJSONRecipe,
-} from "../../../shared/types/dashboard.types";
+// -- Domain types --------------------------------------------------------------
+import type { Recipe } from "../types";
+import { getAllDashboardRecipes } from "../../recipes/services/API";
+import { useAuth } from "../../auth/context";
+import { useFavoritesContext } from "../../profile";
 
-// ── Page styles ───────────────────────────────────────────────────────────────
+// -- Page styles ---------------------------------------------------------------
 import "./ExplorePage.css";
 
 // =============================================================================
@@ -109,65 +110,10 @@ const SORT_OPTIONS: SortOption[] = [
 const CARDS_PER_PAGE = 12; // 4×3 grid (3 full rows)
 
 // =============================================================================
-// Mock data — mirrors GET /recipes?limit=20
-// IDs 1–12 are already used in other pages; using 13–20 for the unique set,
-// plus recycling 1–8 to fill out a realistic 16-recipe catalogue.
-// In production: replace with a paginated API call.
-// =============================================================================
-
-const MOCK_USER: DummyJSONUser = {
-  id: 1, firstName: "Sarah", lastName: "Johnson", maidenName: "Williams",
-  age: 29, gender: "female", email: "sarah.johnson@x.dummyjson.com",
-  phone: "+1 555-123-4567", username: "sarahjohnson", password: "",
-  birthDate: "1995-04-12", image: "https://dummyjson.com/icon/sarahjohnson/128",
-  bloodGroup: "A+", height: 167, weight: 58, eyeColor: "Brown",
-  hair: { color: "Black", type: "Straight" }, ip: "192.168.1.1",
-  address: {
-    address: "42 Culinary Lane", city: "New York", state: "New York",
-    stateCode: "NY", postalCode: "10001",
-    coordinates: { lat: 40.712776, lng: -74.005974 }, country: "United States",
-  },
-  macAddress: "00:1B:44:11:3A:B7", university: "Culinary Institute of America",
-  bank: { cardExpire: "06/30", cardNumber: "4111111111111111", cardType: "Visa", currency: "USD", iban: "GB29NWBK60161331926819" },
-  company: {
-    department: "Engineering", name: "FoodTech Co.", title: "Software Engineer",
-    address: { address: "1 Tech Plaza", city: "San Francisco", state: "California", stateCode: "CA", postalCode: "94105", coordinates: { lat: 37.7749, lng: -122.4194 }, country: "United States" },
-  },
-  ein: "12-3456789", ssn: "123-45-6789",
-  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-  crypto: { coin: "Bitcoin", wallet: "0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a", network: "Ethereum (ERC20)" },
-  role: "user",
-};
-
-// 16-recipe catalogue covering every category chip so filters produce results
-const MOCK_ALL_RECIPES: DummyJSONRecipe[] = [
-  // ── IDs 1–8 recycled from DashboardPage ──
-  { id: 1,  name: "Creamy Garlic Pasta",     ingredients: ["Pasta","Garlic","Cream","Parmesan"],          instructions: ["Boil pasta","Sauté garlic","Add cream","Toss"],         prepTimeMinutes: 10, cookTimeMinutes: 20, servings: 4, difficulty: "Easy",   cuisine: "Italian",       caloriesPerServing: 480, tags: ["Pasta","Italian"],           userId: 2, image: "https://cdn.dummyjson.com/recipe-images/1.webp",  rating: 4.6, reviewCount: 128, mealType: ["Dinner"]    },
-  { id: 2,  name: "Honey Glazed Salmon",     ingredients: ["Salmon","Honey","Soy sauce","Ginger"],        instructions: ["Mix glaze","Brush salmon","Sear","Bake"],                prepTimeMinutes: 5,  cookTimeMinutes: 20, servings: 2, difficulty: "Medium", cuisine: "Asian",          caloriesPerServing: 320, tags: ["Seafood","Healthy"],          userId: 2, image: "https://cdn.dummyjson.com/recipe-images/2.webp",  rating: 4.8, reviewCount: 96,  mealType: ["Dinner"]    },
-  { id: 3,  name: "Chocolate Lava Cake",     ingredients: ["Dark chocolate","Butter","Eggs","Flour"],     instructions: ["Melt chocolate","Whisk eggs","Fold","Bake"],             prepTimeMinutes: 15, cookTimeMinutes: 30, servings: 4, difficulty: "Hard",   cuisine: "French",        caloriesPerServing: 550, tags: ["Desserts","Chocolate"],       userId: 3, image: "https://cdn.dummyjson.com/recipe-images/3.webp",  rating: 4.9, reviewCount: 211, mealType: ["Dessert"]   },
-  { id: 4,  name: "Avocado Quinoa Salad",    ingredients: ["Quinoa","Avocado","Tomatoes","Lime"],         instructions: ["Cook quinoa","Dice avocado","Dress","Toss"],              prepTimeMinutes: 15, cookTimeMinutes: 0,  servings: 2, difficulty: "Easy",   cuisine: "Mexican",       caloriesPerServing: 290, tags: ["Salads","Vegan"],             userId: 4, image: "https://cdn.dummyjson.com/recipe-images/4.webp",  rating: 4.5, reviewCount: 74,  mealType: ["Lunch"]     },
-  { id: 5,  name: "Roasted Tomato Soup",     ingredients: ["Tomatoes","Onion","Stock","Cream"],           instructions: ["Roast tomatoes","Blend","Add cream","Season"],           prepTimeMinutes: 10, cookTimeMinutes: 10, servings: 4, difficulty: "Easy",   cuisine: "Italian",       caloriesPerServing: 180, tags: ["Soup","Vegetarian"],          userId: 5, image: "https://cdn.dummyjson.com/recipe-images/5.webp",  rating: 4.6, reviewCount: 128, mealType: ["Soup"]      },
-  { id: 6,  name: "Margherita Pizza",        ingredients: ["Dough","Passata","Mozzarella","Basil"],       instructions: ["Stretch dough","Add sauce","Top","Bake"],                prepTimeMinutes: 20, cookTimeMinutes: 15, servings: 4, difficulty: "Medium", cuisine: "Italian",       caloriesPerServing: 300, tags: ["Pizza","Vegetarian"],          userId: 6, image: "https://cdn.dummyjson.com/recipe-images/6.webp",  rating: 4.7, reviewCount: 96,  mealType: ["Dinner"]    },
-  { id: 7,  name: "Quinoa Buddha Bowl",      ingredients: ["Quinoa","Chickpeas","Kale","Tahini"],         instructions: ["Roast chickpeas","Cook quinoa","Assemble","Drizzle"],    prepTimeMinutes: 15, cookTimeMinutes: 10, servings: 2, difficulty: "Easy",   cuisine: "Mediterranean", caloriesPerServing: 420, tags: ["Bowl","Vegan"],               userId: 7, image: "https://cdn.dummyjson.com/recipe-images/7.webp",  rating: 4.8, reviewCount: 112, mealType: ["Bowl"]      },
-  { id: 8,  name: "Berry Pancakes",          ingredients: ["Flour","Milk","Eggs","Berries","Maple syrup"],instructions: ["Mix batter","Cook pancakes","Stack","Top with berries"], prepTimeMinutes: 10, cookTimeMinutes: 10, servings: 4, difficulty: "Easy",   cuisine: "American",      caloriesPerServing: 310, tags: ["Breakfast","Pancakes"],       userId: 8, image: "https://cdn.dummyjson.com/recipe-images/8.webp",  rating: 4.5, reviewCount: 80,  mealType: ["Breakfast"] },
-  // ── IDs 13–20 — new recipes unique to ExplorePage ──
-  { id: 13, name: "Classic Eggs Benedict",   ingredients: ["English muffins","Eggs","Ham","Hollandaise"], instructions: ["Poach eggs","Toast muffins","Layer","Sauce"],             prepTimeMinutes: 15, cookTimeMinutes: 15, servings: 2, difficulty: "Hard",   cuisine: "American",      caloriesPerServing: 490, tags: ["Breakfast","Eggs"],           userId: 2, image: "https://cdn.dummyjson.com/recipe-images/13.webp", rating: 4.7, reviewCount: 183, mealType: ["Breakfast"] },
-  { id: 14, name: "Thai Green Curry",        ingredients: ["Coconut milk","Green curry paste","Chicken","Bamboo shoots"], instructions: ["Fry paste","Add coconut milk","Simmer","Serve with rice"], prepTimeMinutes: 10, cookTimeMinutes: 25, servings: 4, difficulty: "Medium", cuisine: "Thai",          caloriesPerServing: 410, tags: ["Curry","Asian"],              userId: 3, image: "https://cdn.dummyjson.com/recipe-images/14.webp", rating: 4.8, reviewCount: 224, mealType: ["Dinner"]    },
-  { id: 15, name: "Caesar Salad",            ingredients: ["Romaine","Parmesan","Croutons","Caesar dressing"], instructions: ["Wash romaine","Make dressing","Toss","Top with croutons"], prepTimeMinutes: 15, cookTimeMinutes: 0, servings: 2, difficulty: "Easy",   cuisine: "American",      caloriesPerServing: 240, tags: ["Salads","Vegetarian"],        userId: 4, image: "https://cdn.dummyjson.com/recipe-images/15.webp", rating: 4.4, reviewCount: 97,  mealType: ["Lunch"]     },
-  { id: 16, name: "Beef Tacos",              ingredients: ["Beef mince","Taco shells","Salsa","Cheese","Sour cream"], instructions: ["Brown beef","Season","Fill shells","Top"],    prepTimeMinutes: 10, cookTimeMinutes: 15, servings: 4, difficulty: "Easy",   cuisine: "Mexican",       caloriesPerServing: 360, tags: ["Tacos","Beef"],               userId: 5, image: "https://cdn.dummyjson.com/recipe-images/16.webp", rating: 4.6, reviewCount: 142, mealType: ["Dinner"]    },
-  { id: 17, name: "Tiramisu",                ingredients: ["Mascarpone","Ladyfingers","Espresso","Cocoa","Eggs"], instructions: ["Brew espresso","Dip ladyfingers","Layer","Chill overnight"], prepTimeMinutes: 30, cookTimeMinutes: 0, servings: 8, difficulty: "Medium", cuisine: "Italian",       caloriesPerServing: 380, tags: ["Desserts","Italian","NoB ake"], userId: 6, image: "https://cdn.dummyjson.com/recipe-images/17.webp", rating: 4.9, reviewCount: 307, mealType: ["Dessert"]   },
-  { id: 18, name: "Miso Ramen",              ingredients: ["Ramen noodles","Miso paste","Pork broth","Soft-boiled egg","Nori"], instructions: ["Prepare broth","Cook noodles","Assemble bowl","Garnish"], prepTimeMinutes: 20, cookTimeMinutes: 40, servings: 2, difficulty: "Hard",   cuisine: "Japanese",      caloriesPerServing: 520, tags: ["Soup","Asian","Noodles"],     userId: 7, image: "https://cdn.dummyjson.com/recipe-images/18.webp", rating: 4.9, reviewCount: 389, mealType: ["Soup"]      },
-  { id: 19, name: "Greek Salad",             ingredients: ["Cucumber","Tomatoes","Olives","Feta","Red onion"], instructions: ["Chop veg","Crumble feta","Dress with olive oil","Season"], prepTimeMinutes: 10, cookTimeMinutes: 0, servings: 2, difficulty: "Easy",   cuisine: "Greek",         caloriesPerServing: 210, tags: ["Salads","Vegetarian","Mediterranean"], userId: 8, image: "https://cdn.dummyjson.com/recipe-images/19.webp", rating: 4.5, reviewCount: 118, mealType: ["Lunch"]     },
-  { id: 20, name: "Mushroom Risotto",        ingredients: ["Arborio rice","Porcini mushrooms","White wine","Parmesan","Stock"], instructions: ["Toast rice","Add wine","Ladle stock gradually","Stir in parmesan"], prepTimeMinutes: 10, cookTimeMinutes: 35, servings: 4, difficulty: "Medium", cuisine: "Italian",       caloriesPerServing: 450, tags: ["Risotto","Vegetarian","Italian"], userId: 2, image: "https://cdn.dummyjson.com/recipe-images/20.webp", rating: 4.7, reviewCount: 165, mealType: ["Dinner"]    },
-];
-
-const MOCK_TOTAL_COUNT = MOCK_ALL_RECIPES.length; // 16 — represents a full catalogue slice
-
-// =============================================================================
 // Sort comparator — pure function, easy to unit-test
 // =============================================================================
 
-function sortRecipes(recipes: DummyJSONRecipe[], key: SortKey): DummyJSONRecipe[] {
+function sortRecipes(recipes: Recipe[], key: SortKey): Recipe[] {
   const copy = [...recipes];
   switch (key) {
     case "rating":
@@ -193,29 +139,53 @@ function sortRecipes(recipes: DummyJSONRecipe[], key: SortKey): DummyJSONRecipe[
 // =============================================================================
 
 const ExplorePage: React.FC = () => {
-  // ── Navigation ─────────────────────────────────────────────────────────────
-  const [activeNavId, setActiveNavId] = useState<NavId>("dashboard");
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+  const { isFavorited, toggleFavorite } = useFavoritesContext();
 
-  // ── Filter state ───────────────────────────────────────────────────────────
+  // -- Navigation -------------------------------------------------------------
+  const [activeNavId, setActiveNavId] = useState<NavId>("explore");
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
+  const [recipesError, setRecipesError] = useState<string | null>(null);
+
+  // -- Filter state -----------------------------------------------------------
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
   const [searchQuery,    setSearchQuery]     = useState<string>("");
   const [sortKey,        setSortKey]         = useState<SortKey>("rating");
   const [isSortOpen,     setIsSortOpen]      = useState<boolean>(false);
 
-  // ── Favourites state ───────────────────────────────────────────────────────
-  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(
-    new Set([1, 2, 3, 7]),
-  );
-
-  // ── Pagination ─────────────────────────────────────────────────────────────
+  // -- Pagination -------------------------------------------------------------
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // ── Derived: filter → sort → paginate ─────────────────────────────────────
-  const filteredAndSorted = useMemo<DummyJSONRecipe[]>(() => {
+  useEffect(() => {
+    let cancelled = false;
+
+    setRecipesLoading(true);
+    setRecipesError(null);
+
+    getAllDashboardRecipes()
+      .then((data) => {
+        if (!cancelled) setRecipes(data);
+      })
+      .catch(() => {
+        if (!cancelled) setRecipesError("Unable to load recipes right now.");
+      })
+      .finally(() => {
+        if (!cancelled) setRecipesLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // -- Derived: filter ? sort ? paginate -------------------------------------
+  const filteredAndSorted = useMemo<Recipe[]>(() => {
     const q = searchQuery.trim().toLowerCase();
 
     // 1 — category filter
-    let result = MOCK_ALL_RECIPES.filter((r) => {
+    let result = recipes.filter((r) => {
       if (activeCategory === "all") return true;
       // Match against mealType, cuisine, or tags
       return (
@@ -238,7 +208,7 @@ const ExplorePage: React.FC = () => {
 
     // 3 — sort
     return sortRecipes(result, sortKey);
-  }, [activeCategory, searchQuery, sortKey]);
+  }, [activeCategory, searchQuery, sortKey, recipes]);
 
   // Paginated slice
   const totalFiltered = filteredAndSorted.length;
@@ -249,7 +219,7 @@ const ExplorePage: React.FC = () => {
     safePage * CARDS_PER_PAGE,
   );
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
+  // -- Handlers ---------------------------------------------------------------
 
   const handleCategoryChange = (id: CategoryId): void => {
     setActiveCategory(id);
@@ -278,37 +248,49 @@ const ExplorePage: React.FC = () => {
   };
 
   const handleFavoriteToggle = (id: number): void => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
     }
-      return next;
-    });
+
+    const recipe = recipes.find((item) => item.id === id);
+    if (recipe) toggleFavorite(recipe);
   };
 
   const handleNavChange = (id: NavId): void => {
     setActiveNavId(id);
-    // TODO: router.push(`/${id}`)
+    const routes: Partial<Record<NavId, string>> = {
+      dashboard: "/dashboard",
+      favorites: "/favorites",
+      explore: "/explore",
+      profile: "/profile-dashboard",
+      settings: "/settings",
+    };
+
+    if (id === "favorites" && !isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    const route = routes[id];
+    if (route) navigate(route);
   };
 
   const activeSortLabel =
     SORT_OPTIONS.find((o) => o.value === sortKey)?.label ?? "Sort by";
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // -- Render -----------------------------------------------------------------
   return (
     <DashboardLayout
       activeNavId={activeNavId}
       onNavChange={handleNavChange}
-      onLogout={() => console.log("[ExplorePage] logout")}
+      onLogout={logout}
       onUpgrade={() => console.log("[ExplorePage] upgrade")}
-      user={MOCK_USER}
+      fetchUserId={Number(user?.userId) || 1}
       notificationCount={2}
       onSearchSubmit={(q) => console.log("[ExplorePage] global search:", q)}
       onNotificationsClick={() => console.log("[ExplorePage] notifications")}
-      onProfileClick={() => console.log("[ExplorePage] profile menu")}
+      onProfileClick={() => navigate("/profile-dashboard")}
     >
       {/* Close sort dropdown when clicking outside */}
       <div
@@ -323,11 +305,11 @@ const ExplorePage: React.FC = () => {
           <div className="exp-page__header-titles">
             <h1 className="exp-page__title">
               Explore All Recipes
-              <span className="exp-page__title-emoji" aria-hidden="true"> 🍳</span>
+              <span className="exp-page__title-emoji" aria-hidden="true"> ??</span>
             </h1>
             <p className="exp-page__subtitle">
-              {totalFiltered === MOCK_TOTAL_COUNT
-                ? `${MOCK_TOTAL_COUNT} recipes to discover`
+              {totalFiltered === recipes.length
+                ? `${recipes.length} recipes to discover`
                 : `${totalFiltered} recipe${totalFiltered !== 1 ? "s" : ""} found`}
             </p>
           </div>
@@ -432,7 +414,7 @@ const ExplorePage: React.FC = () => {
                   >
                     {opt.label}
                     {opt.value === sortKey && (
-                      <span className="exp-page__sort-option-check" aria-hidden="true">✓</span>
+                      <span className="exp-page__sort-option-check" aria-hidden="true">?</span>
                     )}
                   </li>
                 ))}
@@ -444,7 +426,15 @@ const ExplorePage: React.FC = () => {
         {/* ================================================================
             RECIPE GRID — explore mode cards
             ================================================================ */}
-        {pageRecipes.length > 0 ? (
+        {recipesLoading ? (
+          <div className="exp-page__empty" role="status" aria-live="polite">
+            <p className="exp-page__empty-title">Loading...</p>
+          </div>
+        ) : recipesError ? (
+          <div className="exp-page__empty" role="alert" aria-live="polite">
+            <p className="exp-page__empty-title">{recipesError}</p>
+          </div>
+        ) : pageRecipes.length > 0 ? (
           <div
             className="exp-page__grid"
             role="list"
@@ -455,7 +445,7 @@ const ExplorePage: React.FC = () => {
                 <RecipeCard
                   recipe={recipe}
                   mode="explore"
-                  isFavorite={favoriteIds.has(recipe.id)}
+                  isFavorite={isFavorited(recipe.id)}
                   onFavoriteToggle={handleFavoriteToggle}
                   onMenuOpen={(id) =>
                     console.log("[ExplorePage] menu for recipe", id)
@@ -465,9 +455,9 @@ const ExplorePage: React.FC = () => {
             ))}
           </div>
         ) : (
-          /* ── Empty state ── */
+          /* -- Empty state -- */
           <div className="exp-page__empty" role="status" aria-live="polite">
-            <span className="exp-page__empty-icon" aria-hidden="true">🔍</span>
+            <span className="exp-page__empty-icon" aria-hidden="true">??</span>
             <p className="exp-page__empty-title">No recipes found</p>
             <p className="exp-page__empty-body">
               Try a different search term or select another category.
@@ -547,3 +537,7 @@ const ExplorePage: React.FC = () => {
 };
 
 export default ExplorePage;
+
+
+
+

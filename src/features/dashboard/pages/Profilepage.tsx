@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { DashboardLayout } from "../components/Layout";
 import type { NavId } from "../components/Layout";
-import type { DummyJSONUser } from "../../../shared/types/dashboard.types";
+import { useAuth } from "../../auth/context";
+import { useFavoritesContext } from "../../profile";
 import "./ProfilePage.css";
 
 // =============================================================================
@@ -53,11 +55,6 @@ const IconPlus: React.FC = () => (
 // Local types
 // =============================================================================
 
-interface ProfileStats {
-  recipesPosted: number;
-  totalFavorites: number;
-  followers: number;
-}
 
 interface ActivityItem {
   id: number;
@@ -73,48 +70,6 @@ type FavoriteCategory =
   | "Seafood" | "Breakfast" | "Dinner";
 
 // =============================================================================
-// Mock data — all fields mirror DummyJSONUser exactly
-// =============================================================================
-
-const MOCK_USER: DummyJSONUser = {
-  id: 1, firstName: "Sarah", lastName: "Johnson", maidenName: "Williams",
-  age: 29, gender: "female", email: "sarah.johnson@x.dummyjson.com",
-  phone: "+1 555-123-4567", username: "sarahjohnson", password: "",
-  birthDate: "1995-04-12",
-  image: "https://dummyjson.com/icon/sarahjohnson/128",
-  bloodGroup: "A+", height: 167, weight: 58, eyeColor: "Brown",
-  hair: { color: "Black", type: "Straight" }, ip: "192.168.1.1",
-  address: {
-    address: "42 Culinary Lane", city: "New York", state: "New York",
-    stateCode: "NY", postalCode: "10001",
-    coordinates: { lat: 40.712776, lng: -74.005974 }, country: "United States",
-  },
-  macAddress: "00:1B:44:11:3A:B7", university: "Culinary Institute of America",
-  bank: { cardExpire: "06/30", cardNumber: "4111111111111111", cardType: "Visa", currency: "USD", iban: "GB29NWBK60161331926819" },
-  company: {
-    department: "Engineering", name: "FoodTech Co.", title: "Software Engineer",
-    address: { address: "1 Tech Plaza", city: "San Francisco", state: "California", stateCode: "CA", postalCode: "94105", coordinates: { lat: 37.7749, lng: -122.4194 }, country: "United States" },
-  },
-  ein: "12-3456789", ssn: "123-45-6789",
-  userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-  crypto: { coin: "Bitcoin", wallet: "0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a", network: "Ethereum (ERC20)" },
-  role: "user",
-};
-
-const MOCK_STATS: ProfileStats = {
-  recipesPosted: 12,
-  totalFavorites: 24,
-  followers: 138,
-};
-
-const MOCK_ACTIVITY: ActivityItem[] = [
-  { id: 1, emoji: "❤️", text: "You saved \"Creamy Garlic Pasta\"",   timeAgo: "2 hours ago"  },
-  { id: 2, emoji: "👀", text: "You viewed \"Honey Glazed Salmon\"",  timeAgo: "5 hours ago"  },
-  { id: 3, emoji: "❤️", text: "You saved \"Quinoa Buddha Bowl\"",    timeAgo: "Yesterday"    },
-  { id: 4, emoji: "🍳", text: "You tried \"Chocolate Lava Cake\"",   timeAgo: "2 days ago"   },
-  { id: 5, emoji: "👀", text: "You viewed \"Margherita Pizza\"",     timeAgo: "3 days ago"   },
-];
-
 const ALL_FOOD_PREFS: FoodPref[] = [
   "Vegetarian", "Vegan", "Gluten Free", "Keto", "Halal", "Pescatarian",
 ];
@@ -135,9 +90,12 @@ const SKILL_OPTIONS = ["Beginner", "Home Cook", "Intermediate", "Advanced", "Che
 // =============================================================================
 
 const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const { favorites } = useFavoritesContext();
   const [activeNavId, setActiveNavId] = useState<NavId>("profile");
 
-  // ── Editable profile state — derived from MOCK_USER ─────────────────────
+  // â”€â”€ Editable profile state â€” derived from authenticated user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [bio, setBio] = useState<string>(
     "I love cooking healthy meals for my family and trying new recipes from different cuisines.",
   );
@@ -151,13 +109,26 @@ const ProfilePage: React.FC = () => {
   );
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  // ── Derived ───────────────────────────────────────────────────────────────
-  const memberSince = new Date(MOCK_USER.birthDate)
-    .toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  // â”€â”€ Derived â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const firstName = user?.username?.split(/[._\s-]/)[0] || user?.username || "Guest";
+  const displayName = user?.username || "Guest";
+  const displayEmail = user?.email || "Sign in to manage your profile";
+  const avatarUrl = user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff&size=128`;
+  const memberSince = "your first sign in";
+  const activityItems = useMemo<ActivityItem[]>(
+    () =>
+      favorites.slice(0, 5).map((recipe, index) => ({
+        id: recipe.id,
+        emoji: "",
+        text: `You saved "${recipe.name}"`,
+        timeAgo: index === 0 ? "Recently" : "Earlier",
+      })),
+    [favorites],
+  );
   const bioLength = bio.length;
   const BIO_MAX = 200;
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
+  // â”€â”€ Handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const toggleFoodPref = (pref: FoodPref): void => {
     setFoodPrefs((prev) => {
@@ -191,33 +162,45 @@ const ProfilePage: React.FC = () => {
     // TODO: PATCH /users/1
   };
 
-  const avatarFallback = `https://ui-avatars.com/api/?name=${MOCK_USER.firstName}+${MOCK_USER.lastName}&background=f97316&color=fff&size=128`;
+  const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff&size=128`;
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return (
     <DashboardLayout
       activeNavId={activeNavId}
-      onNavChange={(id) => setActiveNavId(id)}
-      onLogout={() => console.log("[ProfilePage] logout")}
+      onNavChange={(id) => {
+        setActiveNavId(id);
+        const routes: Partial<Record<NavId, string>> = {
+          dashboard: "/dashboard",
+          favorites: "/favorites",
+          explore: "/explore",
+          "recently-viewed": "/recently-viewed",
+          profile: "/profile-dashboard",
+          settings: "/settings",
+        };
+        const route = routes[id];
+        if (route) navigate(route);
+      }}
+      onLogout={logout}
       onUpgrade={() => console.log("[ProfilePage] upgrade")}
-      user={MOCK_USER}
+      fetchUserId={Number(user?.userId) || 1}
       notificationCount={2}
       onSearchSubmit={(q) => console.log("[ProfilePage] search:", q)}
       onNotificationsClick={() => console.log("[ProfilePage] notifications")}
-      onProfileClick={() => console.log("[ProfilePage] profile menu")}
+      onProfileClick={() => navigate("/profile-dashboard")}
     >
       <div className="prof-page">
 
         {/* ================================================================
-            PROFILE HERO — avatar · name · email · Edit Profile · stats row
+            PROFILE HERO â€” avatar Â· name Â· email Â· Edit Profile Â· stats row
             ================================================================ */}
         <section className="prof-page__hero" aria-label="Profile overview">
           {/* Avatar */}
           <div className="prof-page__avatar-wrap">
             <img
               className="prof-page__avatar"
-              src={MOCK_USER.image}
-              alt={`${MOCK_USER.firstName} ${MOCK_USER.lastName}`}
+              src={avatarUrl}
+              alt={displayName}
               width={96}
               height={96}
               onError={(e) => {
@@ -236,9 +219,9 @@ const ProfilePage: React.FC = () => {
           {/* Identity */}
           <div className="prof-page__identity">
             <h1 className="prof-page__name">
-              {MOCK_USER.firstName} {MOCK_USER.lastName}
+              {firstName}
             </h1>
-            <p className="prof-page__email">{MOCK_USER.email}</p>
+            <p className="prof-page__email">{displayEmail}</p>
             <p className="prof-page__since">Member since {memberSince}</p>
           </div>
 
@@ -259,9 +242,9 @@ const ProfilePage: React.FC = () => {
           <div className="prof-page__stats" aria-label="Profile statistics">
             {(
               [
-                { icon: <IconBook />,  value: MOCK_STATS.recipesPosted,  label: "Recipes Posted"   },
-                { icon: <IconHeart />, value: MOCK_STATS.totalFavorites, label: "Total Favorites"  },
-                { icon: <IconUsers />, value: MOCK_STATS.followers,      label: "Followers"        },
+                { icon: <IconBook />,  value: 0,                label: "Recipes Posted"   },
+                { icon: <IconHeart />, value: favorites.length, label: "Total Favorites"  },
+                { icon: <IconUsers />, value: 0,                label: "Followers"        },
               ] as const
             ).map(({ icon, value, label }) => (
               <div key={label} className="prof-page__stat-card" aria-label={`${label}: ${value}`}>
@@ -280,7 +263,7 @@ const ProfilePage: React.FC = () => {
             ================================================================ */}
         <div className="prof-page__content">
 
-          {/* ── LEFT — About Me form ── */}
+          {/* â”€â”€ LEFT â€” About Me form â”€â”€ */}
           <section className="prof-page__about" aria-labelledby="prof-about-title">
             <div className="prof-page__card">
               <h2 className="prof-page__card-title" id="prof-about-title">
@@ -300,7 +283,7 @@ const ProfilePage: React.FC = () => {
                     value={bio}
                     maxLength={BIO_MAX}
                     rows={4}
-                    placeholder="Write a short bio…"
+                    placeholder="Write a short bioâ€¦"
                     onChange={(e) => { setBio(e.target.value); setIsSaved(false); }}
                     aria-describedby="prof-bio-count"
                   />
@@ -411,13 +394,13 @@ const ProfilePage: React.FC = () => {
                   type="button"
                   onClick={handleSave}
                 >
-                  {isSaved ? "✓ Saved" : "Save Changes"}
+                  {isSaved ? "âœ“ Saved" : "Save Changes"}
                 </button>
               </div>
             </div>
           </section>
 
-          {/* ── RIGHT — Recent Activity ── */}
+          {/* â”€â”€ RIGHT â€” Recent Activity â”€â”€ */}
           <aside className="prof-page__activity" aria-labelledby="prof-activity-title">
             <div className="prof-page__card">
               <h2 className="prof-page__card-title" id="prof-activity-title">
@@ -425,7 +408,7 @@ const ProfilePage: React.FC = () => {
               </h2>
 
               <ul className="prof-page__activity-list" role="list">
-                {MOCK_ACTIVITY.map((item, index) => (
+                {activityItems.map((item, index) => (
                   <React.Fragment key={item.id}>
                     <li className="prof-page__activity-item" role="listitem">
                       <span className="prof-page__activity-emoji" aria-hidden="true">
@@ -441,7 +424,7 @@ const ProfilePage: React.FC = () => {
                         </div>
                       </div>
                     </li>
-                    {index < MOCK_ACTIVITY.length - 1 && (
+                    {index < activityItems.length - 1 && (
                       <li className="prof-page__activity-divider" role="separator" aria-hidden="true" />
                     )}
                   </React.Fragment>

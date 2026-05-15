@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { DummyJSONUser } from "../../../../shared/types/dashboard.types";
 import "./Header.css";
 
@@ -60,8 +61,7 @@ function useFetchUser(userId: number): UseFetchUserResult {
 
   useEffect(() => {
     let cancelled = false;
-
-    fetch(`https://dummyjson.com/users/${userId}`)
+    fetch(`https://dummyjson.com/icon/${userId || 'default'}/128`)
       .then<DummyJSONUser>((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -154,6 +154,7 @@ const Header: React.FC<HeaderProps> = ({
   onNotificationsClick = () => {},
   onProfileClick = () => {},
 }) => {
+  const navigate = useNavigate();
   // Only run the fetch hook when no user prop is provided
   const { user: fetchedUser, loading } = useFetchUser(
     userProp ? -1 : fetchUserId // pass -1 as a sentinel so the hook skips the fetch
@@ -234,7 +235,10 @@ const Header: React.FC<HeaderProps> = ({
             loading && !userProp ? "header__profile--loading" : "",
           ].filter(Boolean).join(" ")}
           type="button"
-          onClick={onProfileClick}
+          onClick={() => {
+            onProfileClick();
+            navigate("/profile-dashboard");
+          }}
           aria-label="Open user menu"
         >
           <img
