@@ -1,0 +1,591 @@
+/* =============================================================================
+   RecentlyViewedPage — BEM component
+   Block     : .rv-page
+   Elements  : __header  __header-titles  __title  __title-emoji  __subtitle
+               __clear-all-btn  __clear-all-btn-icon
+               __toolbar  __search-wrap  __search-icon  __search-input
+               __filter-btn  __filter-btn-icon
+               __list-card  __list  __divider
+               __empty  __empty-icon  __empty-title  __empty-body  __empty-clear-btn
+
+   Sub-block : .rv-row  (RecentlyViewedRow — scoped inside this file)
+   Elements  : __thumb-wrap  __thumb  __body  __title  __meta
+               __meta-time  __meta-clock  __meta-sep  __meta-tag
+               __timestamp  __timestamp-label
+               __remove-btn  __chevron-btn
+   Modifiers : .rv-page__filter-btn--active
+   ============================================================================= */
+
+/* ── Design tokens — identical values to FavoritesPage for visual consistency ── */
+.rv-page {
+    --gap-section: 24px;
+    --toolbar-height: 40px;
+
+    --font-sans: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #1a1714;
+    --color-ink-muted: #9a9088;
+    --color-ink-faint: #b5ada6;
+    --color-brand: #f97316;
+    --color-brand-hover: #ea6a0d;
+    --color-surface: #ffffff;
+    --color-bg-subtle: #f8f5f2;
+    --color-border: #e8e2dd;
+    --color-border-focus: #f97316;
+
+    --search-bg: #f8f5f2;
+    --search-radius: 10px;
+
+    /* Row-specific */
+    --row-thumb-size: 80px;
+    --row-thumb-radius: 10px;
+    --row-min-height: 88px;
+    --row-padding: 16px 20px;
+    --row-gap: 16px;
+
+    /* List card */
+    --list-card-radius: 16px;
+    --list-card-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+}
+
+/* ── Block ───────────────────────────────────────────────────────────────────── */
+.rv-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+    font-family: var(--font-sans);
+    min-height: 100%;
+}
+
+/* =============================================================================
+   PAGE HEADER
+   Left: "Recently Viewed 🕒" title + subtitle
+   Right: "Clear All" button (only when items exist)
+   ============================================================================= */
+
+.rv-page__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.rv-page__header-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.rv-page__title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.rv-page__title-emoji {
+    display: inline-block;
+    transform: translateY(1px);
+    font-size: 20px;
+}
+
+.rv-page__subtitle {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ── Clear All button — top-right of header ── */
+.rv-page__clear-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 9px;
+    border: 1.5px solid #fde8d8;
+    background: #fff8f4;
+    color: var(--color-brand);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* Align with the first line of the title */
+    margin-top: 3px;
+}
+
+.rv-page__clear-all-btn:hover {
+    background: #fff0e6;
+    border-color: var(--color-brand);
+}
+
+.rv-page__clear-all-btn-icon {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.rv-page__clear-all-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* =============================================================================
+   TOOLBAR — identical structure to FavoritesPage for full visual consistency
+   ============================================================================= */
+
+.rv-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rv-page__search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+}
+
+.rv-page__search-icon {
+    position: absolute;
+    left: 12px;
+    width: 15px;
+    height: 15px;
+    color: var(--color-ink-faint);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.rv-page__search-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.rv-page__search-input {
+    width: 100%;
+    height: var(--toolbar-height);
+    padding: 0 14px 0 36px;
+    border-radius: var(--search-radius);
+    border: 1.5px solid transparent;
+    background: var(--search-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.18s ease, background-color 0.18s ease,
+        box-shadow 0.18s ease;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.rv-page__search-input::placeholder {
+    color: var(--color-ink-faint);
+}
+
+.rv-page__search-input:focus {
+    border-color: var(--color-border-focus);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.rv-page__search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+.rv-page__filter-btn {
+    height: var(--toolbar-height);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    border-radius: var(--search-radius);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+        color 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rv-page__filter-btn:hover {
+    border-color: #d4ceca;
+    background: var(--color-bg-subtle);
+    color: var(--color-ink);
+}
+
+.rv-page__filter-btn--active {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+    background: #fff4ed;
+}
+
+.rv-page__filter-btn-icon {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.rv-page__filter-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* =============================================================================
+   LIST CARD — the white rounded surface wrapping all rows
+   ============================================================================= */
+
+.rv-page__list-card {
+    background: var(--color-surface);
+    border-radius: var(--list-card-radius);
+    box-shadow: var(--list-card-shadow);
+    overflow: hidden;
+    /* clips the first/last row's thumb border-radius */
+}
+
+.rv-page__list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Thin divider between rows */
+.rv-page__divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 0 20px;
+    /* indented to align with the text, not the thumbnail */
+}
+
+/* =============================================================================
+   RECENTLY VIEWED ROW (.rv-row)
+   Layout: [thumb] [body: title + meta] [timestamp] [remove] [chevron]
+   ============================================================================= */
+
+.rv-row {
+    display: flex;
+    align-items: center;
+    gap: var(--row-gap);
+    padding: var(--row-padding);
+    min-height: var(--row-min-height);
+    box-sizing: border-box;
+    transition: background-color 0.15s ease;
+}
+
+.rv-row:hover {
+    background-color: #fdfaf8;
+}
+
+/* ── Thumbnail ── */
+.rv-row__thumb-wrap {
+    width: var(--row-thumb-size);
+    height: var(--row-thumb-size);
+    border-radius: var(--row-thumb-radius);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f0ebe7;
+    /* placeholder while loading */
+}
+
+.rv-row__thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.rv-row:hover .rv-row__thumb {
+    transform: scale(1.05);
+}
+
+/* ── Body: title + meta ── */
+.rv-row__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-sans);
+}
+
+.rv-row__title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+}
+
+.rv-row__body:hover .rv-row__title {
+    color: var(--color-brand);
+}
+
+.rv-row__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.rv-row__meta-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+    font-weight: 500;
+}
+
+.rv-row__meta-clock {
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--color-ink-faint);
+}
+
+.rv-row__meta-clock svg {
+    width: 100%;
+    height: 100%;
+}
+
+.rv-row__meta-sep {
+    font-size: 11px;
+    color: #d4ceca;
+    line-height: 1;
+}
+
+.rv-row__meta-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+}
+
+/* ── Timestamp — "Viewed 2 hours ago" ── */
+.rv-row__timestamp {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.rv-row__timestamp-label {
+    font-size: 12.5px;
+    color: var(--color-ink-faint);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* ── Remove button ── */
+.rv-row__remove-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #c4bbb5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    /* Hidden by default — fade in on row hover to keep the UI clean */
+    opacity: 0;
+    transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.rv-row__remove-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.rv-row:hover .rv-row__remove-btn {
+    opacity: 1;
+}
+
+.rv-row__remove-btn:hover {
+    background: #fff1f2;
+    color: #e53e3e;
+}
+
+/* ── Navigate chevron ── */
+.rv-row__chevron-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #c4bbb5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.rv-row__chevron-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.rv-row:hover .rv-row__chevron-btn {
+    background: #f5f0ed;
+    color: var(--color-ink-muted);
+}
+
+/* =============================================================================
+   EMPTY STATE
+   ============================================================================= */
+
+.rv-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 72px 20px;
+    text-align: center;
+}
+
+.rv-page__empty-icon {
+    font-size: 44px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.rv-page__empty-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.rv-page__empty-body {
+    font-size: 13.5px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.55;
+}
+
+.rv-page__empty-clear-btn {
+    margin-top: 6px;
+    padding: 9px 22px;
+    border-radius: 9px;
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.rv-page__empty-clear-btn:hover {
+    border-color: var(--color-brand);
+    background: #fff4ed;
+    color: var(--color-brand);
+}
+
+/* =============================================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================================= */
+
+/* ── 768 px–959 px — search bar expands, clear btn shrinks ── */
+@media (max-width: 959px) {
+    .rv-page {
+        --gap-section: 20px;
+    }
+
+    .rv-page__toolbar {
+        flex-wrap: wrap;
+    }
+
+    .rv-page__search-wrap {
+        max-width: 100%;
+        flex: 1 1 auto;
+        min-width: 180px;
+    }
+
+    .rv-page__title {
+        font-size: 21px;
+    }
+
+    /* Stack header vertically on narrower screens */
+    .rv-page__header {
+        flex-wrap: wrap;
+    }
+}
+
+/* ── 640 px–767 px — compact row layout ── */
+@media (max-width: 767px) {
+    .rv-page {
+        --gap-section: 16px;
+        --row-thumb-size: 66px;
+        --row-padding: 14px 16px;
+        --row-gap: 12px;
+    }
+
+    /* Always show the remove button on touch devices (no hover) */
+    .rv-row__remove-btn {
+        opacity: 1;
+    }
+
+    /* Timestamp wraps to a new line in very narrow layouts */
+    .rv-row__timestamp {
+        display: none;
+    }
+
+    .rv-page__divider {
+        margin: 0 16px;
+    }
+}
+
+/* ── < 480 px — mobile ── */
+@media (max-width: 479px) {
+    .rv-page {
+        --row-thumb-size: 58px;
+        --row-padding: 12px 14px;
+        --row-gap: 10px;
+    }
+
+    .rv-page__title {
+        font-size: 19px;
+    }
+
+    .rv-row__chevron-btn {
+        display: none;
+        /* Body button already handles navigation tap */
+    }
+}

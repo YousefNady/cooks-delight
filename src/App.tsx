@@ -14,8 +14,14 @@ import ProfilePage from './features/profile/pages/Profilepage';
 import { FavoritesProvider } from './features/profile';
 import { AuthProvider } from './features/auth/context/AuthContext';
 import PageTitle from './shared/components/PageTitle/PageTitle';
-import DashboardPageExample from "./features/dashboard/pages/DashboardPage.example";
+import DashboardPageExample from "./features/dashboard/pages/DashboardPage";
 import ComponentShowcase from "./features/dashboard/components/ComponentShowcase.example";
+import Favorites from "./features/dashboard/pages/FavoritesPage";
+import Recentlyviewed from "./features/dashboard/pages/Recentlyviewedpage";
+import Explore from "./features/dashboard/pages/ExplorePage";
+import ProfileDashboard from "./features/dashboard/pages/Profilepage";
+import SettingsPage from './features/dashboard/pages/Settingspage';
+
 
 
 function App() {
@@ -97,6 +103,36 @@ function App() {
                         <Route path="ComponentShowcase" element={
               <PageTitle title="Dashboard | Cooks Delight">
                 <ComponentShowcase />
+              </PageTitle>
+            } />
+
+            <Route path="favorites" element={
+              <PageTitle title="My Favorites | Cooks Delight">
+                <Favorites />
+              </PageTitle>
+            } />
+
+            <Route path="recently-viewed" element={
+              <PageTitle title="Recently Viewed | Cooks Delight">
+                <Recentlyviewed />
+              </PageTitle>
+            } />
+
+            <Route path="explore" element={
+              <PageTitle title="Explore | Cooks Delight">
+                <Explore />
+              </PageTitle>
+            } />
+
+            <Route path="settings" element={
+              <PageTitle title="Settings | Cooks Delight">
+                <SettingsPage />
+              </PageTitle>
+            } />
+
+            <Route path="profile-dashboard" element={
+              <PageTitle title="Profile | Cooks Delight">
+                <ProfileDashboard />
               </PageTitle>
             } />
 

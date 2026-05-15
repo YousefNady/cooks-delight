@@ -1,0 +1,611 @@
+/* =============================================================================
+   ExplorePage — BEM component
+   Block     : .exp-page
+   Elements  : __header  __header-titles  __title  __title-emoji  __subtitle
+               __chips-wrap  __chips  __chip  __chip-emoji
+               __toolbar  __search-wrap  __search-icon  __search-input
+               __sort-wrap  __sort-btn  __sort-btn-label  __sort-btn-prefix
+               __sort-btn-icon  __sort-dropdown  __sort-option  __sort-option-check
+               __grid
+               __empty  __empty-icon  __empty-title  __empty-body  __empty-reset-btn
+               __pagination  __pagination-label  __pagination-label-range
+               __page-controls  __page-btn
+   Modifiers : __chip--active
+               __sort-btn--open  __sort-btn-icon--flipped
+               __sort-option--selected
+               __page-btn--active  __page-btn--arrow
+   ============================================================================= */
+
+/* ── Design tokens — identical to FavoritesPage and RecentlyViewedPage ───────── */
+.exp-page {
+    --gap-section: 24px;
+    --gap-card: 14px;
+    --toolbar-height: 40px;
+
+    --font-sans: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #1a1714;
+    --color-ink-muted: #9a9088;
+    --color-ink-faint: #b5ada6;
+    --color-brand: #f97316;
+    --color-brand-hover: #ea6a0d;
+    --color-surface: #ffffff;
+    --color-bg-subtle: #f8f5f2;
+    --color-border: #e8e2dd;
+    --color-border-focus: #f97316;
+
+    --search-bg: #f8f5f2;
+    --search-radius: 10px;
+
+    /* Category chips */
+    --chip-height: 36px;
+    --chip-radius: 20px;
+    --chip-bg: #ffffff;
+    --chip-border: #e8e2dd;
+    --chip-color: #6b6560;
+    --chip-active-bg: #f97316;
+    --chip-active-border: #f97316;
+    --chip-active-color: #ffffff;
+
+    /* Sort dropdown */
+    --sort-dropdown-radius: 12px;
+    --sort-dropdown-shadow: 0 8px 24px rgba(0, 0, 0, .10), 0 2px 6px rgba(0, 0, 0, .06);
+
+    /* Grid */
+    --grid-cols: 4;
+
+    /* Pagination — matches FavoritesPage exactly */
+    --page-btn-size: 34px;
+    --page-btn-radius: 8px;
+    --page-btn-active-bg: #f97316;
+    --page-btn-active-color: #ffffff;
+    --page-btn-hover-bg: #faf7f5;
+}
+
+/* ── Block ───────────────────────────────────────────────────────────────────── */
+.exp-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+    font-family: var(--font-sans);
+    min-height: 100%;
+    /* Needed for sort dropdown's absolute positioning to stay in flow */
+    position: relative;
+}
+
+/* =============================================================================
+   PAGE HEADER
+   ============================================================================= */
+
+.exp-page__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.exp-page__header-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.exp-page__title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.exp-page__title-emoji {
+    display: inline-block;
+    transform: translateY(1px);
+    font-size: 20px;
+}
+
+.exp-page__subtitle {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    font-weight: 400;
+}
+
+/* =============================================================================
+   CATEGORY CHIPS — horizontal scroll row
+   Outer wrapper hides the scrollbar; inner row lets chips overflow naturally.
+   ============================================================================= */
+
+.exp-page__chips-wrap {
+    /* Negative margin trick: extend chips to bleed past page padding on mobile */
+    overflow: hidden;
+    /* Fade out at the right edge to hint at scrollability */
+    -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, black 90%, transparent 100%);
+}
+
+.exp-page__chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    /* room for scroll shadow */
+    /* Hide scrollbar across all browsers */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.exp-page__chips::-webkit-scrollbar {
+    display: none;
+}
+
+/* ── Individual chip ── */
+.exp-page__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--chip-height);
+    padding: 0 14px;
+    border-radius: var(--chip-radius);
+    border: 1.5px solid var(--chip-border);
+    background: var(--chip-bg);
+    color: var(--chip-color);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    /* never wrap or compress — scroll instead */
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.exp-page__chip:hover:not(.exp-page__chip--active) {
+    border-color: #d4ceca;
+    background: var(--color-bg-subtle);
+    color: var(--color-ink);
+}
+
+/* Modifier: active / selected chip */
+.exp-page__chip--active {
+    background: var(--chip-active-bg);
+    border-color: var(--chip-active-border);
+    color: var(--chip-active-color);
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28);
+    cursor: default;
+}
+
+.exp-page__chip:active:not(.exp-page__chip--active) {
+    transform: scale(0.96);
+}
+
+.exp-page__chip-emoji {
+    font-size: 14px;
+    line-height: 1;
+    /* Remove emoji from accessibility tree — label already includes category name */
+}
+
+/* =============================================================================
+   TOOLBAR — search (left) + sort dropdown (right)
+   ============================================================================= */
+
+.exp-page__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Search ── */
+.exp-page__search-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+}
+
+.exp-page__search-icon {
+    position: absolute;
+    left: 12px;
+    width: 15px;
+    height: 15px;
+    color: var(--color-ink-faint);
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.exp-page__search-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.exp-page__search-input {
+    width: 100%;
+    height: var(--toolbar-height);
+    padding: 0 14px 0 36px;
+    border-radius: var(--search-radius);
+    border: 1.5px solid transparent;
+    background: var(--search-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.18s ease, background-color 0.18s ease,
+        box-shadow 0.18s ease;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.exp-page__search-input::placeholder {
+    color: var(--color-ink-faint);
+}
+
+.exp-page__search-input:focus {
+    border-color: var(--color-border-focus);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+.exp-page__search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+/* ── Sort dropdown wrapper — relative for absolute panel ── */
+.exp-page__sort-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Sort trigger button */
+.exp-page__sort-btn {
+    height: var(--toolbar-height);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-radius: var(--search-radius);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+        color 0.15s ease;
+    user-select: none;
+}
+
+.exp-page__sort-btn:hover,
+.exp-page__sort-btn--open {
+    border-color: var(--color-border-focus);
+    color: var(--color-ink);
+    background: var(--color-surface);
+}
+
+.exp-page__sort-btn-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.exp-page__sort-btn-prefix {
+    color: var(--color-ink-faint);
+    font-weight: 500;
+}
+
+.exp-page__sort-btn-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.exp-page__sort-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Modifier: rotate chevron when open */
+.exp-page__sort-btn-icon--flipped {
+    transform: rotate(180deg);
+}
+
+/* Sort options panel */
+.exp-page__sort-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 20;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--sort-dropdown-radius);
+    box-shadow: var(--sort-dropdown-shadow);
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    min-width: 168px;
+    /* Animate open */
+    animation: exp-page-dropdown-open 0.15s ease;
+}
+
+@keyframes exp-page-dropdown-open {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.exp-page__sort-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    transition: background-color 0.12s ease, color 0.12s ease;
+    gap: 8px;
+    outline: none;
+}
+
+.exp-page__sort-option:hover {
+    background: var(--color-bg-subtle);
+    color: var(--color-ink);
+}
+
+/* Modifier: currently selected sort option */
+.exp-page__sort-option--selected {
+    color: var(--color-brand);
+    font-weight: 700;
+    background: #fff4ed;
+}
+
+.exp-page__sort-option-check {
+    font-size: 12px;
+    color: var(--color-brand);
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   RECIPE GRID — 4 columns, explore mode
+   ============================================================================= */
+
+.exp-page__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    gap: var(--gap-card);
+}
+
+/* =============================================================================
+   EMPTY STATE
+   ============================================================================= */
+
+.exp-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 72px 20px;
+    text-align: center;
+}
+
+.exp-page__empty-icon {
+    font-size: 44px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.exp-page__empty-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.exp-page__empty-body {
+    font-size: 13.5px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.55;
+}
+
+.exp-page__empty-reset-btn {
+    margin-top: 6px;
+    padding: 9px 22px;
+    border-radius: 9px;
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.exp-page__empty-reset-btn:hover {
+    border-color: var(--color-brand);
+    background: #fff4ed;
+    color: var(--color-brand);
+}
+
+/* =============================================================================
+   PAGINATION — identical structure to FavoritesPage
+   ============================================================================= */
+
+.exp-page__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.exp-page__pagination-label {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    font-weight: 400;
+}
+
+.exp-page__pagination-label-range {
+    font-weight: 700;
+    color: var(--color-ink);
+}
+
+.exp-page__page-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.exp-page__page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--page-btn-size);
+    height: var(--page-btn-size);
+    padding: 0 10px;
+    border-radius: var(--page-btn-radius);
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease;
+    line-height: 1;
+}
+
+.exp-page__page-btn:hover:not(:disabled):not(.exp-page__page-btn--active) {
+    background: var(--page-btn-hover-bg);
+    border-color: #d4ceca;
+    color: var(--color-ink);
+}
+
+.exp-page__page-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.exp-page__page-btn--active {
+    background: var(--page-btn-active-bg);
+    border-color: var(--page-btn-active-bg);
+    color: var(--page-btn-active-color);
+    cursor: default;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28);
+}
+
+.exp-page__page-btn--arrow {
+    min-width: var(--page-btn-size);
+    padding: 0;
+}
+
+.exp-page__page-btn--arrow svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* =============================================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================================= */
+
+/* ── 1100 px–1279 px ── */
+@media (max-width: 1279px) {
+    .exp-page {
+        --gap-section: 22px;
+    }
+}
+
+/* ── 960 px–1099 px — 3-column grid ── */
+@media (max-width: 1099px) {
+    .exp-page {
+        --grid-cols: 3;
+    }
+
+    .exp-page__search-wrap {
+        max-width: 340px;
+    }
+}
+
+/* ── 768 px–959 px — 2-column grid, chips always visible ── */
+@media (max-width: 959px) {
+    .exp-page {
+        --grid-cols: 2;
+        --gap-section: 20px;
+    }
+
+    .exp-page__chips-wrap {
+        /* Full bleed on tablet so mask isn't needed */
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    .exp-page__toolbar {
+        flex-wrap: wrap;
+    }
+
+    .exp-page__search-wrap {
+        max-width: 100%;
+        flex: 1 1 auto;
+        min-width: 180px;
+    }
+
+    .exp-page__sort-dropdown {
+        /* On narrower screens pin to left so it doesn't clip */
+        right: auto;
+        left: 0;
+    }
+
+    .exp-page__title {
+        font-size: 21px;
+    }
+}
+
+/* ── 600 px–767 px ── */
+@media (max-width: 767px) {
+    .exp-page {
+        --gap-section: 16px;
+        --gap-card: 10px;
+    }
+
+    .exp-page__pagination {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+/* ── < 540 px — single column ── */
+@media (max-width: 539px) {
+    .exp-page {
+        --grid-cols: 1;
+    }
+
+    .exp-page__title {
+        font-size: 19px;
+    }
+}

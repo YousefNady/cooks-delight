@@ -1,100 +1,528 @@
-.dashboard-page {
-    padding: 2rem;
-    background-color: #fcfcfc;
+/* =============================================================================
+   DashboardPage — BEM component
+   Block     : .dp   (short alias avoids verbosity on deeply-nested elements)
+   ─────────────────────────────────────────────────────────────────────────────
+
+   GRID ARCHITECTURE — matches image_1.png exactly
+   ─────────────────────────────────────────────────
+   The entire page content is a single CSS Grid with two named columns:
+     [main]   — fluid, holds the left-side content
+     [sidebar] — fixed 292 px, holds profile card + promo cards
+
+   Template areas (desktop):
+     ┌──────────────────────────┬────────────┐
+     │ stats-row                │ profile    │  ← Row 1
+     ├──────────────────────────┤            │
+     │ favorites                │ promo      │  ← Rows 2–3
+     ├──────────────────────────┤            │
+     │ explore                  │            │  ← Row 4
+     ├──────────────────────────┴────────────┤
+     │ quote (full width)                    │  ← Row 5
+     └───────────────────────────────────────┘
+
+   The profile card and promo column are placed in the same CSS Grid column
+   so they form one uninterrupted right sidebar with natural height stacking.
+   ============================================================================= */
+
+/* ─── Design tokens ─────────────────────────────────────────────────────────── */
+.dp {
+    /* Spacing — derived by pixel-counting image_1.png at 1× */
+    --gap-section: 28px;
+    /* vertical gap between major sections */
+    --gap-col: 16px;
+    /* horizontal gap between left & right columns */
+    --gap-card: 14px;
+    /* gutter between cards in a grid row */
+    --gap-header-cards: 18px;
+    /* between section header and its card row */
+
+    /* Right sidebar width — matches the profile card in the design */
+    --sidebar-w: 292px;
+
+    /* Typography */
+    --font-sans: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #1a1714;
+    --color-ink-muted: #9a9088;
+    --color-ink-faint: #b5ada6;
+    --color-brand: #f97316;
+    --color-brand-hover: #ea6a0d;
+
+    /* Section title */
+    --title-size: 18px;
+    --title-weight: 800;
+
+    /* Profile card */
+    --profile-card-bg: #ffffff;
+    --profile-card-radius: 16px;
+    --profile-card-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+    --profile-avatar-size: 70px;
+
+    /* Quote banner */
+    --banner-bg: #fdf9f6;
+    --banner-border: #f1ede9;
+    --banner-radius: 16px;
+    --banner-photo-w: 200px;
 }
 
-.dashboard-page__header {
-    margin-bottom: 2rem;
+/* ─── Block ──────────────────────────────────────────────────────────────────── */
+.dp {
+    display: grid;
+    grid-template-columns: 1fr var(--sidebar-w);
+    grid-template-rows: auto;
+    /* all rows are height-of-content */
+    grid-template-areas:
+        "stats-row  profile"
+        "favorites  promo"
+        "explore    promo"
+        "banner     banner";
+    column-gap: var(--gap-col);
+    row-gap: var(--gap-section);
+    font-family: var(--font-sans);
+    /* Fills the scrollable main area from DashboardLayout */
+    min-height: 100%;
+    align-items: start;
+    /* each area hugs its natural height */
 }
 
-.dashboard-page__greeting {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #333;
-}
+/* =============================================================================
+   STATS ROW — grid area "stats-row"
+   Three equal-width StatsCard components in a horizontal row.
+   ============================================================================= */
 
-.dashboard-page__stats {
+.dp__stats-row {
+    grid-area: stats-row;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    gap: var(--gap-card);
 }
 
-.dashboard-page__main-grid {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    /* Main content + Sidebar */
-    gap: 2rem;
-}
+/* =============================================================================
+   PROFILE CARD — grid area "profile"
+   Sits in the right column, row 1. It spans row 1 only; the promo column
+   takes over from row 2 onward in the same CSS column.
+   ============================================================================= */
 
-.dashboard-page__section {
-    margin-bottom: 3rem;
-}
-
-.dashboard-page__section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.dashboard-page__section-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-}
-
-.dashboard-page__link {
-    color: #ff6b00;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.dashboard-page__recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Sidebar Styles */
-.dashboard-page__sidebar {
+.dp__profile-card {
+    grid-area: profile;
+    background: var(--profile-card-bg);
+    border-radius: var(--profile-card-radius);
+    box-shadow: var(--profile-card-shadow);
+    padding: 22px 20px 20px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    /* Vertically centre content against the taller stats row */
+    justify-content: center;
 }
 
-.dashboard-page__user-brief {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
+.dp__profile-avatar {
+    width: var(--profile-avatar-size);
+    height: var(--profile-avatar-size);
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    /* Placeholder colour while the image loads */
+    background: #f0ebe7;
+    flex-shrink: 0;
+    /* Subtle ring that matches the design */
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f1ede9;
+}
+
+.dp__profile-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
+    width: 100%;
+}
+
+.dp__profile-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    /* Prevent overflow on very long names */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.dp__profile-email {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.dp__profile-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 7px 16px;
+    border-radius: 9px;
+    border: 1.5px solid #e8e2dd;
+    background: transparent;
+    color: #6b6560;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease;
+    white-space: nowrap;
+}
+
+.dp__profile-edit-btn:hover {
+    background-color: #faf7f5;
+    border-color: #d4ceca;
+    color: var(--color-ink);
+}
+
+.dp__profile-edit-btn-icon {
+    width: 13px;
+    height: 13px;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
 }
 
-.dashboard-page__user-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+.dp__profile-edit-btn-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
-.dashboard-page__quote-card {
-    margin-top: auto;
-    padding: 1.5rem;
-    background: #fff5ed;
-    border-radius: 12px;
+/* =============================================================================
+   SHARED SECTION PATTERNS — reused by .dp__favorites and .dp__explore
+   ============================================================================= */
+
+.dp__section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section header: title (left) + "View all" button (right) */
+.dp__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--gap-header-cards);
+}
+
+.dp__section-title {
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+/* "View all" / "View all recipes" button */
+.dp__view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-brand);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+}
+
+.dp__view-all-btn:hover {
+    color: var(--color-brand-hover);
+}
+
+.dp__view-all-btn-icon {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.dp__view-all-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* 4-column card grid — shared by both favorites and explore rows */
+.dp__card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap-card);
+}
+
+/* =============================================================================
+   FAVORITES — grid area "favorites"
+   ============================================================================= */
+
+.dp__favorites {
+    grid-area: favorites;
+}
+
+/* =============================================================================
+   PROMO COLUMN — grid area "promo"
+   Spans rows 2–3 in the right column, stacking three PromotionalCards.
+   ============================================================================= */
+
+.dp__promo-column {
+    grid-area: promo;
+    /* Span rows 2 AND 3 so it aligns with both favorites and explore */
+    grid-row: 2 / 4;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    /* Stick to the top of the grid area so it doesn't float downward */
+    align-self: start;
+}
+
+/* =============================================================================
+   EXPLORE — grid area "explore"
+   ============================================================================= */
+
+.dp__explore {
+    grid-area: explore;
+}
+
+/* =============================================================================
+   QUOTE BANNER — grid area "banner"
+   Full-width strip that spans both columns.
+   ============================================================================= */
+
+.dp__quote-banner {
+    grid-area: banner;
+    display: flex;
+    align-items: stretch;
+    background: var(--banner-bg);
+    border: 1.5px solid var(--banner-border);
+    border-radius: var(--banner-radius);
+    overflow: hidden;
+    min-height: 92px;
+    /* A small bottom margin so the page doesn't feel cut off at the scroll end */
+    margin-bottom: 2px;
+}
+
+/* Left: icon + quote text */
+.dp__quote-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 28px;
+}
+
+.dp__quote-chef-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dp__quote-chef-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.dp__quote-block {
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-width: 0;
+}
+
+.dp__quote-text {
+    font-size: 13.5px;
     font-style: italic;
-    color: #888;
+    color: #4a4540;
+    line-height: 1.65;
+    margin: 0 0 5px;
 }
 
-/* Responsive Handling */
-@media (max-width: 1024px) {
-    .dashboard-page__main-grid {
+.dp__quote-author {
+    font-size: 12.5px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--color-brand);
+    display: block;
+}
+
+/* Right: decorative food photograph */
+.dp__quote-photo {
+    width: var(--banner-photo-w);
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.dp__quote-photo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    /* Fade the left edge so the photo blends into the banner background */
+    mask-image: linear-gradient(to right, transparent 0%, black 25%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+}
+
+/* =============================================================================
+   RESPONSIVE BREAKPOINTS
+   Strategy: the grid degrades gracefully from 2-column → single column.
+   ============================================================================= */
+
+/* ── 1280 px+ — reference design size, tokens unchanged ── */
+
+/* ── 1100 px–1279 px — tighten sidebar to prevent squeeze ── */
+@media (max-width: 1279px) {
+    .dp {
+        --sidebar-w: 260px;
+        --gap-col: 14px;
+    }
+}
+
+/* ── 960 px–1099 px — narrow sidebar further, reduce card count ── */
+@media (max-width: 1099px) {
+    .dp {
+        --sidebar-w: 240px;
+    }
+
+    .dp__card-grid {
+        /* Switch to 2 cards per row in the narrower left column */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── 768 px–959 px — collapse to single column, restack sidebar content ── */
+@media (max-width: 959px) {
+    .dp {
+        /* Single column — sidebar elements reflow into the document order */
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "stats-row"
+            "profile"
+            "favorites"
+            "promo"
+            "explore"
+            "banner";
+        --gap-section: 22px;
+    }
+
+    /* Reset sidebar's multi-row span — it's single column now */
+    .dp__promo-column {
+        grid-row: auto;
+        /* Display as a 3-column row of cards instead of a stacked column */
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--gap-card);
+    }
+
+    /* Profile card goes horizontal when it's full-width */
+    .dp__profile-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 18px;
+        padding: 18px 20px;
+    }
+
+    .dp__profile-meta {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .dp__profile-edit-btn {
+        margin-top: 0;
+    }
+
+    /* Cards back to 4-column on wider tablet where they fit */
+    .dp__card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── 600 px–767 px — tablet portrait ── */
+@media (max-width: 767px) {
+    .dp__promo-column {
+        /* 2-column promo row on narrower tablets */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dp__stats-row {
+        /* 2-column stats on narrow screens (third card wraps) */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dp__quote-photo {
+        /* Hide decorative photo — not worth the space at this width */
+        display: none;
+    }
+}
+
+/* ── < 600 px — mobile ── */
+@media (max-width: 599px) {
+    .dp {
+        --gap-section: 18px;
+        --gap-card: 10px;
+        --gap-header-cards: 14px;
+    }
+
+    .dp__stats-row {
         grid-template-columns: 1fr;
     }
 
-    .dashboard-page__sidebar {
-        order: -1;
-        /* Move profile to top on mobile */
+    .dp__card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dp__promo-column {
+        grid-template-columns: 1fr;
+    }
+
+    .dp__profile-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .dp__profile-meta {
+        align-items: center;
+        text-align: center;
+    }
+
+    .dp__section-title {
+        font-size: 16px;
+    }
+
+    .dp__quote-body {
+        padding: 18px 16px;
+        gap: 12px;
+    }
+
+    .dp__quote-text {
+        font-size: 12.5px;
+    }
+
+    .dp__quote-chef-icon {
+        width: 32px;
+        height: 32px;
     }
 }
