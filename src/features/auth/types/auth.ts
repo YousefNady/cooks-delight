@@ -17,6 +17,7 @@ export interface FormErrors {
 export interface SignupRequest {
   firstName: string;
   lastName: string;
+  
   email: string;
   password: string;
 }
@@ -31,6 +32,7 @@ export interface SignupResponse {
  
 export interface SignupFormErrors {
   fullName?: string;
+  username?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;

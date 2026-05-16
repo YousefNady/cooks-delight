@@ -589,3 +589,91 @@
         /* Body button already handles navigation tap */
     }
 }
+
+/* ── Filter Panel ── */
+.rv-page__filter-panel {
+    background: #ffffff;
+    border: 1.5px solid #f1ede9;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.rv-page__filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rv-page__filter-group-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #b0a89f;
+    margin: 0;
+}
+
+.rv-page__filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rv-page__filter-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #e8e0d8;
+    background: #faf7f5;
+    color: #6b6560;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rv-page__filter-chip:hover {
+    border-color: #f97316;
+    color: #f97316;
+}
+
+.rv-page__filter-chip--active {
+    background: #fff4ed;
+    border-color: #f97316;
+    color: #f97316;
+    font-weight: 700;
+}
+
+.rv-page__filter-reset {
+    align-self: flex-start;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #fca5a5;
+    background: #fff1f2;
+    color: #e53e3e;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.rv-page__filter-reset:hover {
+    background: #fee2e2;
+}
+
+/* ── Filter dot indicator ── */
+.rv-page__filter-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f97316;
+    flex-shrink: 0;
+}
+
+.rv-page__filter-btn--applied {
+    border-color: #f97316;
+    color: #f97316;
+}

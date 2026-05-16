@@ -15,6 +15,15 @@ import "./Recentlyviewedpage.css";
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+type TimeFilter = "all" | "today" | "this-week" | "older";
+type MealFilter =
+  | "all"
+  | "Breakfast"
+  | "Lunch"
+  | "Dinner"
+  | "Snack"
+  | "Dessert";
+type DifficultyFilter = "all" | "Easy" | "Medium" | "Hard";
 
 interface ViewedRecipe {
   recipe: Recipe;
@@ -39,6 +48,9 @@ const IconSearch: React.FC = () => (
     <line x1="16.5" y1="16.5" x2="22" y2="22" />
   </svg>
 );
+
+
+
 
 const IconFilter: React.FC = () => (
   <svg
@@ -131,6 +143,17 @@ function formatTotalTime(prep: number, cook: number): string {
   const h = Math.floor(total / 60);
   const m = total % 60;
   return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
+}
+
+// ✅ Pure helper — no Date.now() during render
+function matchesTimeFilter(viewedAt: string, filter: TimeFilter): boolean {
+  if (filter === "all") return true;
+  const diffMs = Date.now() - new Date(viewedAt).getTime();
+  const diffDays = diffMs / 86_400_000;
+  if (filter === "today"     && diffDays >= 1) return false;
+  if (filter === "this-week" && diffDays >= 7) return false;
+  if (filter === "older"     && diffDays < 7)  return false;
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -245,6 +268,10 @@ const RecentlyViewedPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>("all");
+  const [mealFilter, setMealFilter] = useState<MealFilter>("all");
+  const [difficultyFilter, setDifficultyFilter] =
+    useState<DifficultyFilter>("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -282,18 +309,37 @@ const RecentlyViewedPage: React.FC = () => {
     };
   }, []);
 
+  // ✅ No Date.now() here anymore
   const filteredItems = useMemo<ViewedRecipe[]>(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return viewedItems;
-    return viewedItems.filter(
-      ({ recipe }) =>
-        recipe.name.toLowerCase().includes(q) ||
-        recipe.tags.some((tag) => tag.toLowerCase().includes(q)) ||
-        recipe.cuisine.toLowerCase().includes(q) ||
-        recipe.mealType.some((meal) => meal.toLowerCase().includes(q)),
-    );
-  }, [searchQuery, viewedItems]);
 
+    return viewedItems.filter(({ recipe, viewedAt }) => {
+      if (q) {
+        const matchesSearch =
+          recipe.name.toLowerCase().includes(q) ||
+          recipe.tags.some((tag) => tag.toLowerCase().includes(q)) ||
+          recipe.cuisine.toLowerCase().includes(q) ||
+          recipe.mealType.some((meal) => meal.toLowerCase().includes(q));
+        if (!matchesSearch) return false;
+      }
+
+      if (!matchesTimeFilter(viewedAt, timeFilter)) return false; // ✅ pure helper
+
+      if (mealFilter !== "all") {
+        const matchesMeal =
+          recipe.mealType.some((m) => m === mealFilter) ||
+          recipe.tags.includes(mealFilter);
+        if (!matchesMeal) return false;
+      }
+
+      if (difficultyFilter !== "all") {
+        if (recipe.difficulty !== difficultyFilter) return false;
+      }
+
+      return true;
+    });
+  }, [searchQuery, viewedItems, timeFilter, mealFilter, difficultyFilter]); 
+  
   const handleNavChange = (id: NavId): void => {
     setActiveNavId(id);
     const routes: Partial<Record<NavId, string>> = {
@@ -388,23 +434,170 @@ const RecentlyViewedPage: React.FC = () => {
               aria-label="Search recently viewed recipes"
             />
           </div>
-          <button
-            className={[
-              "rv-page__filter-btn",
-              isFilterOpen ? "rv-page__filter-btn--active" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            type="button"
-            onClick={() => setIsFilterOpen((v) => !v)}
-            aria-pressed={isFilterOpen}
-            aria-label="Toggle recipe filters"
-          >
-            <span className="rv-page__filter-btn-icon" aria-hidden="true">
-              <IconFilter />
-            </span>
-            Filter
-          </button>
+          {/* ── Toolbar ── */}
+          <div className="rv-page__toolbar" role="search">
+            <div className="rv-page__search-wrap">
+              <span className="rv-page__search-icon" aria-hidden="true">
+                <IconSearch />
+              </span>
+              <input
+                className="rv-page__search-input"
+                type="search"
+                placeholder="Search recently viewed..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === "Escape" && setSearchQuery("")}
+                aria-label="Search recently viewed recipes"
+              />
+            </div>
+            <button
+              className={[
+                "rv-page__filter-btn",
+                isFilterOpen ? "rv-page__filter-btn--active" : "",
+                // show active state if any filter is applied
+                timeFilter !== "all" ||
+                mealFilter !== "all" ||
+                difficultyFilter !== "all"
+                  ? "rv-page__filter-btn--applied"
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              type="button"
+              onClick={() => setIsFilterOpen((v) => !v)}
+              aria-pressed={isFilterOpen}
+              aria-label="Toggle recipe filters"
+            >
+              <span className="rv-page__filter-btn-icon" aria-hidden="true">
+                <IconFilter />
+              </span>
+              Filter
+              {/* show dot if any filter is active */}
+              {(timeFilter !== "all" ||
+                mealFilter !== "all" ||
+                difficultyFilter !== "all") && (
+                <span className="rv-page__filter-dot" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+
+          {/* ── Filter Panel ── */}
+          {isFilterOpen && (
+            <div
+              className="rv-page__filter-panel"
+              role="group"
+              aria-label="Filter options"
+            >
+              {/* Time */}
+              <div className="rv-page__filter-group">
+                <p className="rv-page__filter-group-label">When</p>
+                <div className="rv-page__filter-chips">
+                  {(["all", "today", "this-week", "older"] as TimeFilter[]).map(
+                    (v) => (
+                      <button
+                        key={v}
+                        className={[
+                          "rv-page__filter-chip",
+                          timeFilter === v
+                            ? "rv-page__filter-chip--active"
+                            : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        type="button"
+                        onClick={() => setTimeFilter(v)}
+                        aria-pressed={timeFilter === v}
+                      >
+                        {v === "all"
+                          ? "Any time"
+                          : v === "today"
+                            ? "Today"
+                            : v === "this-week"
+                              ? "This week"
+                              : "Older"}
+                      </button>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              {/* Meal type */}
+              <div className="rv-page__filter-group">
+                <p className="rv-page__filter-group-label">Meal Type</p>
+                <div className="rv-page__filter-chips">
+                  {(
+                    [
+                      "all",
+                      "Breakfast",
+                      "Lunch",
+                      "Dinner",
+                      "Snack",
+                      "Dessert",
+                    ] as MealFilter[]
+                  ).map((v) => (
+                    <button
+                      key={v}
+                      className={[
+                        "rv-page__filter-chip",
+                        mealFilter === v ? "rv-page__filter-chip--active" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      type="button"
+                      onClick={() => setMealFilter(v)}
+                      aria-pressed={mealFilter === v}
+                    >
+                      {v === "all" ? "Any" : v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Difficulty */}
+              <div className="rv-page__filter-group">
+                <p className="rv-page__filter-group-label">Difficulty</p>
+                <div className="rv-page__filter-chips">
+                  {(
+                    ["all", "Easy", "Medium", "Hard"] as DifficultyFilter[]
+                  ).map((v) => (
+                    <button
+                      key={v}
+                      className={[
+                        "rv-page__filter-chip",
+                        difficultyFilter === v
+                          ? "rv-page__filter-chip--active"
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      type="button"
+                      onClick={() => setDifficultyFilter(v)}
+                      aria-pressed={difficultyFilter === v}
+                    >
+                      {v === "all" ? "Any" : v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reset */}
+              {(timeFilter !== "all" ||
+                mealFilter !== "all" ||
+                difficultyFilter !== "all") && (
+                <button
+                  className="rv-page__filter-reset"
+                  type="button"
+                  onClick={() => {
+                    setTimeFilter("all");
+                    setMealFilter("all");
+                    setDifficultyFilter("all");
+                  }}
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Content ── */}

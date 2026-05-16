@@ -23,7 +23,9 @@ import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 // Single import covers BOTH storage keys (cd_recently_viewed + cd_total_explored).
 // The Dashboard hook reads both keys and will reflect the update on next render
 // or immediately if the Dashboard is already mounted (via the storage event listener).
-import { persistRecentlyViewed } from "../../dashboard/hooks/Userecentlyviewed";
+// import { persistRecentlyViewed } from "../../dashboard/hooks/Userecentlyviewed";
+import { markRecipeAsViewed } from "../../dashboard/utils/recentlyViewedStorage";
+
 
 
 export default function RecipeDetails() {
@@ -42,7 +44,7 @@ export default function RecipeDetails() {
     //
     // This fires for EVERY route that leads to a recipe detail page:
     //   /recipes/:id, /explore/:id, /favorites/:id, /recently-viewed/:id, etc.
-    persistRecentlyViewed(numericId);
+    markRecipeAsViewed(numericId);
 
     getRecipeById(id).then((data) => setRecipe(data ?? null));
     getRecipes().then((data) => setAllRecipes(data.recipes));

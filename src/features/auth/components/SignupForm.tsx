@@ -21,6 +21,8 @@ const SignupForm: React.FC = () => {
     apiError,
     successMessage,
     errors,
+    username,
+setUsername,
     setFullName,
     setEmail,
     setPassword,
@@ -91,7 +93,39 @@ const SignupForm: React.FC = () => {
             </span>
           )}
         </div>
+{/* Username */}
+<div className="signup-form__field">
+  <label htmlFor="username" className="signup-form__label">
+    USERNAME
+  </label>
 
+  <input
+    id="username"
+    type="text"
+    className={`signup-form__input${
+      errors.username ? ' signup-form__input--error' : ''
+    }`}
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    autoComplete="username"
+    disabled={isLoading}
+    placeholder="user-name"
+    aria-describedby={
+      errors.username ? 'username-error' : undefined
+    }
+    aria-invalid={!!errors.username}
+  />
+
+  {errors.username && (
+    <span
+      id="username-error"
+      className="signup-form__error"
+      role="alert"
+    >
+      {errors.username}
+    </span>
+  )}
+</div>
         {/* Email */}
         <div className="signup-form__field">
           <label htmlFor="email" className="signup-form__label">

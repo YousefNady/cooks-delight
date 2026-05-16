@@ -33,6 +33,11 @@
   flex-shrink: 0;
 }
 
+/* Hidden on desktop — sidebar logo handles it */
+.header__home-btn {
+  display: none;
+}
+
 /* ── Greeting ── */
 .header__greeting {
   display: flex;
@@ -86,6 +91,8 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  border: none;
+  background: transparent;
 }
 
 .header__search-icon svg {
@@ -244,5 +251,21 @@
   /* Search moves to a mobile drawer — collapse here */
   .header__search {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__home-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #fff4ed;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
   }
 }

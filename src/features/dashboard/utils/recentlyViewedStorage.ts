@@ -46,5 +46,5 @@ export function writeRecentlyViewed(entries: StoredViewEntry[]): void {
 export function markRecipeAsViewed(id: number): void {
   const entries = readRecentlyViewed().filter((e) => e.id !== id);
   entries.unshift({ id, viewedAt: new Date().toISOString() });
-  writeRecentlyViewed(entries.slice(0, 20));
+  writeRecentlyViewed(entries.slice(0, 10));
 }

@@ -12,6 +12,10 @@
 // =============================================================================
 
 import { useCallback, useEffect, useState } from "react";
+import {
+  markRecipeAsViewed,
+  readRecentlyViewed,
+} from "../utils/recentlyViewedStorage";
 
 // --------------------------------------------------------------------------
 // Constants
@@ -20,7 +24,7 @@ import { useCallback, useEffect, useState } from "react";
 /** Ordered, capped list — newest first. */
 export const RECENTLY_VIEWED_KEY = "cd_recently_viewed";
 /** Unordered, unbounded unique set — all recipe IDs ever opened. */
-export const TOTAL_EXPLORED_KEY  = "cd_total_explored";
+export const TOTAL_EXPLORED_KEY = "cd_total_explored";
 
 /** Maximum length of the "recently viewed" list. */
 export const MAX_RECENTLY_VIEWED = 10;
@@ -29,51 +33,9 @@ export const MAX_RECENTLY_VIEWED = 10;
 // Types
 // --------------------------------------------------------------------------
 
-interface StoredViewEntry {
-  id: number;
-  viewedAt: string; // ISO string — real timestamp of when user visited
-}
-
 // --------------------------------------------------------------------------
 // Low-level localStorage helpers
 // --------------------------------------------------------------------------
-
-/**
- * Read {id, viewedAt} entries from cd_recently_viewed.
- * Handles legacy format (plain number IDs) gracefully.
- */
-function readViewedEntries(): StoredViewEntry[] {
-  try {
-    const raw = localStorage.getItem(RECENTLY_VIEWED_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed
-      .map((item: unknown): StoredViewEntry | null => {
-        // Legacy format — plain number ID, no timestamp
-        if (typeof item === "number") {
-          return { id: item, viewedAt: new Date().toISOString() };
-        }
-        if (item && typeof item === "object" && "id" in item) {
-          const entry = item as { id: unknown; viewedAt?: unknown };
-          const id = Number(entry.id);
-          if (!Number.isFinite(id) || id <= 0) return null;
-          return {
-            id,
-            viewedAt:
-              typeof entry.viewedAt === "string"
-                ? entry.viewedAt
-                : new Date().toISOString(),
-          };
-        }
-        return null;
-      })
-      .filter((e): e is StoredViewEntry => e !== null);
-  } catch {
-    return [];
-  }
-}
 
 /** Read and validate a stored JSON number array; returns [] on any error. */
 function readNumericArray(key: string): number[] {
@@ -105,7 +67,7 @@ function writeNumericArray(key: string, ids: number[]): void {
 
 /** Returns the capped recently-viewed ID list (newest first). */
 export function readRecentlyViewedIds(): number[] {
-  return readViewedEntries().map((e) => e.id);
+  return readRecentlyViewed().map((e) => e.id);
 }
 
 /** Returns the full unique set of all explored recipe IDs. */
@@ -135,29 +97,19 @@ export function persistRecentlyViewed(id: number): {
   recentlyViewed: number[];
   totalExplored: number[];
 } {
-  // -- recently viewed (capped, ordered, with real timestamps) --------------
-  const prevEntries = readViewedEntries().filter((e) => e.id !== id); // deduplicate
-  const newEntry: StoredViewEntry = {
-    id,
-    viewedAt: new Date().toISOString(), // ✅ real visit timestamp
-  };
-  const nextEntries = [newEntry, ...prevEntries].slice(0, MAX_RECENTLY_VIEWED);
-
-  try {
-    localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(nextEntries)); // ✅ save full objects
-  } catch {
-    // localStorage may be unavailable
-  }
+  // -- recently viewed: delegate to the single source of truth --------------
+  markRecipeAsViewed(id); // ✅ writes {id, viewedAt} to cd_recently_viewed
+  const nextViewed = readRecentlyViewed().map((e) => e.id);
 
   // -- total explored (unbounded unique set, plain IDs) ---------------------
   const prevExplored = readTotalExploredIds();
   const nextExplored = prevExplored.includes(id)
-    ? prevExplored          // revisit — set unchanged
-    : [...prevExplored, id]; // first visit — append
+    ? prevExplored
+    : [...prevExplored, id];
   writeNumericArray(TOTAL_EXPLORED_KEY, nextExplored);
 
   return {
-    recentlyViewed: nextEntries.map((e) => e.id),
+    recentlyViewed: nextViewed,
     totalExplored: nextExplored,
   };
 }
@@ -195,9 +147,8 @@ export function useRecentlyViewed(): UseRecentlyViewedReturn {
   const [recentlyViewedIds, setRecentlyViewedIds] = useState<number[]>(
     readRecentlyViewedIds, // lazy initialiser — reads localStorage once
   );
-  const [totalExploredIds, setTotalExploredIds] = useState<number[]>(
-    readTotalExploredIds,
-  );
+  const [totalExploredIds, setTotalExploredIds] =
+    useState<number[]>(readTotalExploredIds);
 
   // Re-sync when RecipeDetails (potentially in a different tab) writes
   // to localStorage while the Dashboard is already mounted.

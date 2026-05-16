@@ -21,7 +21,11 @@ import Recentlyviewed from './features/dashboard/pages/Recentlyviewedpage';
 import Explore from './features/dashboard/pages/ExplorePage';
 import ProfileDashboard from './features/dashboard/pages/Profilepage';
 import SettingsPage from './features/dashboard/pages/Settingspage';
-import ProtectedRoute from './shared/components/ProtectedRoute/ProtectedRoute'; // 👈 new
+import ProtectedRoute from './shared/components/ProtectedRoute/ProtectedRoute'; // 👈 newimport  ComingSoon  from './features/coming-soon/ComingSoon';
+import AIChef from './features/chatbot/components/chatbot';
+import SmartChefPage from './features/chatbot/components/SmartChefPage';
+import { ComingSoon } from './features/coming-soon';
+
 
 function App() {
   return (
@@ -29,7 +33,7 @@ function App() {
       <FavoritesProvider>
         <BrowserRouter>
           <ScrollRestoration />
-
+            <AIChef />
           <Routes>
             {/* ── Public routes inside shared Layout ── */}
             <Route path="/" element={<Layout />}>
@@ -78,6 +82,18 @@ function App() {
                 </PageTitle>
               } />
 
+              <Route
+              path="/coming-soon"
+              element={
+                <PageTitle title="Coming Soon | Cooks Delight">
+                  <ComingSoon/>
+                </PageTitle>
+              }
+            />
+                            <Route
+                path="smart-chef"
+                element={<SmartChefPage />}
+              />
               <Route path="*" element={
                 <PageTitle title="Page Not Found | Cooks Delight">
                   <NotFound />

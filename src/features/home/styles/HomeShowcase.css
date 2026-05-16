@@ -107,7 +107,7 @@
 
 @media (max-width: 768px) {
   .home-showcase {
-    padding: 48px 16px 16px;
+    padding: 48px 0 0;
   }
 
   .home-showcase__heading {

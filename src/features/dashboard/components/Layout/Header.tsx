@@ -164,6 +164,7 @@ const Header: React.FC<HeaderProps> = ({
   onProfileClick = () => {},
 }) => {
   const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState("");
   // Only run the fetch hook when no user prop is provided
   const { user: fetchedUser, loading } = useFetchUser(
     userProp ? -1 : fetchUserId, // pass -1 as a sentinel so the hook skips the fetch
@@ -187,12 +188,18 @@ const fallbackUrl = defaultAvatarImg;
     : "User avatar";
 
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === "Enter") onSearchSubmit(e.currentTarget.value);
-  };
 
   return (
     <header className="header">
+      {/* ── Home button — visible only on mobile ── */}
+      <button
+        className="header__home-btn"
+        type="button"
+        onClick={() => navigate("/")}
+        aria-label="Go to home page"
+      >
+        🏠
+      </button>
       {/* ── Greeting ── */}
       <div className="header__greeting">
         <h1 className="header__greeting-title">
@@ -210,18 +217,31 @@ const fallbackUrl = defaultAvatarImg;
       <div className="header__controls">
         {/* Search */}
         <div className="header__search">
-          <span className="header__search-icon" aria-hidden="true">
+          <button
+            className="header__search-icon"
+            type="button"
+            onClick={() => {
+              if (inputValue.trim()) onSearchSubmit(inputValue.trim());
+            }}
+            aria-label="Submit search"
+          >
             <IconSearch />
-          </span>
+          </button>
           <input
             className="header__search-input"
             type="search"
             placeholder={searchPlaceholder}
             aria-label="Search recipes and ingredients"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onSearchChange(e.target.value)
-            }
-            onKeyDown={handleKeyDown}
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              onSearchChange(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && inputValue.trim()) {
+                onSearchSubmit(inputValue.trim());
+              }
+            }}
           />
         </div>
 
@@ -272,7 +292,7 @@ const fallbackUrl = defaultAvatarImg;
             onError={(e) => {
               const target = e.currentTarget;
               target.onerror = null;
-              target.src = fallbackUrl; 
+              target.src = fallbackUrl;
             }}
           />
           <span className="header__profile-chevron">
