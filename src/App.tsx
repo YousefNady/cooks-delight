@@ -19,8 +19,8 @@ import ComponentShowcase from './features/dashboard/components/ComponentShowcase
 import Favorites from './features/dashboard/pages/FavoritesPage';
 import Recentlyviewed from './features/dashboard/pages/Recentlyviewedpage';
 import Explore from './features/dashboard/pages/ExplorePage';
-import ProfileDashboard from './features/dashboard/pages/Profilepage';
-import SettingsPage from './features/dashboard/pages/SettingsPage';
+import ProfileDashboard from './features/dashboard/pages/ProfilePage';
+import Settings from './features/dashboard/pages/SettingsPage';
 import ProtectedRoute from './shared/components/ProtectedRoute/ProtectedRoute'; // 👈 newimport  ComingSoon  from './features/coming-soon/ComingSoon';
 import AIChef from './features/chatbot/components/chatbot';
 import SmartChefPage from './features/chatbot/components/SmartChefPage';
@@ -159,7 +159,7 @@ function App() {
             <Route path="settings" element={
               <ProtectedRoute>
                 <PageTitle title="Settings | Cooks Delight">
-                  <SettingsPage />
+                  <Settings/>
                 </PageTitle>
               </ProtectedRoute>
             } />
