@@ -5,9 +5,9 @@ import { DashboardLayout } from "../components/Layout";
 import type { NavId } from "../components/Layout";
 import { useAuth } from "../../auth/context";
 import { useFavoritesContext } from "../../profile";
-import "./ProfilePage.css";
+import "./ProfilePage.css"; // fixing the import 
 import defaultAvatarImg from "../../../assets/profile/default-avatar.png";
-
+// fixing the import 
 
 // =============================================================================
 // Icons
