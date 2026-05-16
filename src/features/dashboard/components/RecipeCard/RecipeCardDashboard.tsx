@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { Recipe } from "../../types";
-import "./RecipeCard.css";
+import "./RecipeCardDashboard.css";
 
 // ---------------------------------------------------------------------------
 // Icons (inline SVGs — no external library)
@@ -201,7 +201,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
   return (
     <article
-      className={`recipe-card recipe-card--${mode}`}
+      className={`recipe-card-dashboard recipe-card-dashboard--${mode}`}
       aria-label={`${name}, ${totalTime}, ${category}`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
@@ -209,9 +209,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
       tabIndex={0}
     >
       {/* ── Image area ── */}
-      <div className="recipe-card__image-wrapper">
+      <div className="recipe-card-dashboard__image-wrapper">
         <img
-          className="recipe-card__image"
+          className="recipe-card-dashboard__image"
           src={imgSrc}
           alt={name}
           loading="lazy"
@@ -222,7 +222,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
 
         {/* Meal-type chip — explore mode only (top-left of image) */}
         {isExplore && (
-          <span className="recipe-card__meal-chip" aria-label={`Meal type: ${category}`}>
+          <span className="recipe-card-dashboard__meal-chip" aria-label={`Meal type: ${category}`}>
             {category}
           </span>
         )}
@@ -230,8 +230,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         {/* Heart / favourite badge — always visible, top-right of image */}
         <button
           className={[
-            "recipe-card__heart-btn",
-            isFavorite ? "recipe-card__heart-btn--active" : "",
+            "recipe-card-dashboard__heart-btn",
+            isFavorite ? "recipe-card-dashboard__heart-btn--active" : "",
           ].filter(Boolean).join(" ")}
           type="button"
           onClick={handleFavoriteClick}
@@ -243,26 +243,26 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
       </div>
 
       {/* ── Content area ── */}
-      <div className="recipe-card__content">
+      <div className="recipe-card-dashboard__content">
 
         {/* Rating row — explore mode only */}
         {isExplore && (
-          <div className="recipe-card__rating" aria-label={`Rated ${rating} out of 5 from ${reviewCount} reviews`}>
-            <span className="recipe-card__rating-star">
+          <div className="recipe-card-dashboard__rating" aria-label={`Rated ${rating} out of 5 from ${reviewCount} reviews`}>
+            <span className="recipe-card-dashboard__rating-star">
               <IconStar />
             </span>
-            <span className="recipe-card__rating-score">{rating.toFixed(1)}</span>
-            <span className="recipe-card__rating-count">({reviewCount})</span>
+            <span className="recipe-card-dashboard__rating-score">{rating.toFixed(1)}</span>
+            <span className="recipe-card-dashboard__rating-count">({reviewCount})</span>
           </div>
         )}
 
         {/* Title row */}
-        <div className="recipe-card__title-row">
-          <h3 className="recipe-card__title">{name}</h3>
+        <div className="recipe-card-dashboard__title-row">
+          <h3 className="recipe-card-dashboard__title">{name}</h3>
           {/* Overflow menu — shown in favorite mode (three-dot button in design) */}
           {!isExplore && (
             <button
-              className="recipe-card__menu-btn"
+              className="recipe-card-dashboard__menu-btn"
               type="button"
               onClick={handleMenuClick}
               aria-label={`More options for ${name}`}
@@ -273,17 +273,17 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         </div>
 
         {/* Meta row: time + bullet + category/difficulty */}
-        <div className="recipe-card__meta" aria-label={`${totalTime}, ${isExplore ? difficulty : category}`}>
-          <span className="recipe-card__meta-item recipe-card__meta-item--time">
+        <div className="recipe-card-dashboard__meta" aria-label={`${totalTime}, ${isExplore ? difficulty : category}`}>
+          <span className="recipe-card-dashboard__meta-item recipe-card-dashboard__meta-item--time">
             {!isExplore && (
-              <span className="recipe-card__meta-icon">
+              <span className="recipe-card-dashboard__meta-icon">
                 <IconClock />
               </span>
             )}
             {totalTime}
           </span>
-          <span className="recipe-card__meta-separator" aria-hidden="true">•</span>
-          <span className="recipe-card__meta-item">
+          <span className="recipe-card-dashboard__meta-separator" aria-hidden="true">•</span>
+          <span className="recipe-card-dashboard__meta-item">
             {isExplore ? difficulty : category}
           </span>
         </div>

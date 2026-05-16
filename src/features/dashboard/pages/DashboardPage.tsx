@@ -31,6 +31,8 @@ import "./DashboardPage.css";
 // SVG icon atoms
 // =============================================================================
 
+import defaultAvatarImg from "../../../assets/profile/default-avatar.png";
+
 const IconHeart: React.FC = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -119,15 +121,15 @@ const DashboardPage: React.FC = () => {
 
   // ── Recipe data ───────────────────────────────────────────────────────────
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
-  const [recipesError, setRecipesError] = useState<string | null>(null);
+const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
+const [recipesError, setRecipesError] = useState<string | null>(null);
   const [dashboardUser, setDashboardUser] = useState<DummyJSONUser | null>(null);
 
   // Preview grid — 8 recipes for display, NOT used for any stat
   useEffect(() => {
     let cancelled = false;
-    setRecipesLoading(true);
-    setRecipesError(null);
+    // setRecipesLoading(true);
+    // setRecipesError(null);
 
     getDashboardRecipes(8)
       .then((data) => { if (!cancelled) setRecipes(data); })
@@ -182,25 +184,28 @@ const DashboardPage: React.FC = () => {
         mealType: [favorite.cuisine ?? "Recipe"],
       };
     });
-  }, [authUser?.userId, favorites, recipes]);
+  }, [authUser?.userId, recipes, favorites]);
 
   const exploreRecipes = useMemo(
     () => recipes.filter((r) => !isFavorited(r.id)).slice(0, 4),
-    [recipes, isFavorited, favorites],
+    [recipes, isFavorited],
   );
 
   // ── Profile object (always dynamic — never hardcoded) ────────────────────
   const profileUser: User = {
-    id:        dashboardUser?.id        ?? Number(authUser?.userId) ?? 0,
-    firstName: dashboardUser?.firstName ?? authUser?.username       ?? "Guest",
-    lastName:  dashboardUser?.lastName  ?? "",
-    email:     dashboardUser?.email     ?? authUser?.email          ?? "Sign in to save favorites",
-    image:
-      dashboardUser?.image ??
-      authUser?.image ??
-      `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        authUser?.username ?? "Guest",
-      )}&background=f97316&color=fff&size=128`,
+    // Actually the problem is this specific pattern — Number() never returns null:
+    id: dashboardUser?.id ?? (authUser?.userId ? Number(authUser.userId) : 0),
+    firstName: dashboardUser?.firstName ?? authUser?.username ?? "Guest",
+    lastName: dashboardUser?.lastName ?? "",
+    email:
+      dashboardUser?.email ?? authUser?.email ?? "Sign in to save favorites",
+    // image:
+    //   dashboardUser?.image ??
+    //   authUser?.image ??
+    //   `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    //     authUser?.username ?? "Guest",
+    //   )}&background=f97316&color=fff&size=128`,
+    image: authUser?.image ?? defaultAvatarImg,
   };
 
   // ── Stats — three genuinely independent values ────────────────────────────
@@ -247,15 +252,15 @@ const DashboardPage: React.FC = () => {
       onNavChange={handleNavChange}
       onLogout={logout}
       onUpgrade={() => console.log("[DashboardPage] upgrade")}
-      user={dashboardUser ?? undefined}
       notificationCount={2}
       onSearchSubmit={(q: string) => console.log("[DashboardPage] search:", q)}
-      onSearchChange={(q: string) => console.log("[DashboardPage] search change:", q)}
+      onSearchChange={(q: string) =>
+        console.log("[DashboardPage] search change:", q)
+      }
       onNotificationsClick={() => console.log("[DashboardPage] notifications")}
       onProfileClick={() => navigate("/profile-dashboard")}
     >
       <div className="dp">
-
         {/* ── STATS ROW ── */}
         <div className="dp__stats-row">
           <StatsCard
@@ -297,10 +302,9 @@ const DashboardPage: React.FC = () => {
             width={72}
             height={72}
             onError={(e) => {
-              const el = e.currentTarget as HTMLImageElement;
-              el.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                `${profileUser.firstName} ${profileUser.lastName}`,
-              )}&background=f97316&color=fff&size=128`;
+              const target = e.currentTarget;
+              target.onerror = null; // ✅ prevent infinite loop
+              target.src = defaultAvatarImg; // ✅ grey silhouette, no ui-avatars
             }}
           />
           <div className="dp__profile-meta">
@@ -323,7 +327,10 @@ const DashboardPage: React.FC = () => {
         </aside>
 
         {/* ── FAVORITES SECTION ── */}
-        <section className="dp__section dp__favorites" aria-labelledby="dp-favorites-title">
+        <section
+          className="dp__section dp__favorites"
+          aria-labelledby="dp-favorites-title"
+        >
           <header className="dp__section-header">
             <h2 className="dp__section-title" id="dp-favorites-title">
               Your Favorite Recipes
@@ -331,7 +338,9 @@ const DashboardPage: React.FC = () => {
             <button
               className="dp__view-all-btn"
               type="button"
-              onClick={() => isAuthenticated ? navigate("/favorites") : navigate("/login")}
+              onClick={() =>
+                isAuthenticated ? navigate("/favorites") : navigate("/login")
+              }
               aria-label="View all favorite recipes"
             >
               View all
@@ -341,50 +350,69 @@ const DashboardPage: React.FC = () => {
             </button>
           </header>
 
-          <div className="dp__card-grid" role="list" aria-label="Favorite recipes">
+          <div
+            className="dp__card-grid"
+            role="list"
+            aria-label="Favorite recipes"
+          >
             {recipesLoading && <p role="status">Loading recipes…</p>}
-            {recipesError  && <p role="alert">{recipesError}</p>}
-            {!recipesLoading && !recipesError && favoriteRecipes.length === 0 && (
-              <p role="status">No favorite recipes yet.</p>
-            )}
-            {!recipesLoading && !recipesError && favoriteRecipes.map((recipe) => (
-              <div key={recipe.id} role="listitem">
-                <RecipeCard
-                  recipe={recipe}
-                  mode="favorite"
-                  isFavorite={isFavorited(recipe.id)}
-                  onFavoriteToggle={handleFavoriteToggle}
-                  onMenuOpen={(id) => console.log("[DashboardPage] menu for recipe", id)}
-                />
-              </div>
-            ))}
+            {recipesError && <p role="alert">{recipesError}</p>}
+            {!recipesLoading &&
+              !recipesError &&
+              favoriteRecipes.length === 0 && (
+                <p role="status">No favorite recipes yet.</p>
+              )}
+            {!recipesLoading &&
+              !recipesError &&
+              favoriteRecipes.map((recipe) => (
+                <div key={recipe.id} role="listitem">
+                  <RecipeCard
+                    recipe={recipe}
+                    mode="favorite"
+                    isFavorite={isFavorited(recipe.id)}
+                    onFavoriteToggle={handleFavoriteToggle}
+                    onMenuOpen={(id) =>
+                      console.log("[DashboardPage] menu for recipe", id)
+                    }
+                  />
+                </div>
+              ))}
           </div>
         </section>
 
         {/* ── PROMO COLUMN ── */}
         <aside className="dp__promo-column" aria-label="Upcoming features">
           <PromotionalCard
-            variant="orange" icon={<IconCrown />}
+            variant="orange"
+            icon={<IconCrown />}
             title="Try Premium"
             description="Get early access to exclusive recipes and powerful features."
-            hasNotificationBadge onNotify={handleNotify("premium")}
+            hasNotificationBadge
+            onNotify={handleNotify("premium")}
           />
           <PromotionalCard
-            variant="blue" icon={<IconStarOutline />}
+            variant="blue"
+            icon={<IconStarOutline />}
             title="Leave Reviews"
             description="Share your thoughts and help others discover great recipes."
-            hasNotificationBadge onNotify={handleNotify("reviews")}
+            hasNotificationBadge
+            onNotify={handleNotify("reviews")}
           />
           <PromotionalCard
-            variant="green" icon={<IconCart />}
+            variant="green"
+            icon={<IconCart />}
             title="Shopping List"
             description="Plan your meals and shop everything in one place."
-            hasNotificationBadge onNotify={handleNotify("shopping")}
+            hasNotificationBadge
+            onNotify={handleNotify("shopping")}
           />
         </aside>
 
         {/* ── EXPLORE SECTION ── */}
-        <section className="dp__section dp__explore" aria-labelledby="dp-explore-title">
+        <section
+          className="dp__section dp__explore"
+          aria-labelledby="dp-explore-title"
+        >
           <header className="dp__section-header">
             <h2 className="dp__section-title" id="dp-explore-title">
               Continue Exploring
@@ -402,22 +430,30 @@ const DashboardPage: React.FC = () => {
             </button>
           </header>
 
-          <div className="dp__card-grid" role="list" aria-label="Recipes to explore">
+          <div
+            className="dp__card-grid"
+            role="list"
+            aria-label="Recipes to explore"
+          >
             {recipesLoading && <p role="status">Loading recipes…</p>}
-            {recipesError  && <p role="alert">{recipesError}</p>}
-            {!recipesLoading && !recipesError && exploreRecipes.length === 0 && (
-              <p role="status">No recipes to explore yet.</p>
-            )}
-            {!recipesLoading && !recipesError && exploreRecipes.map((recipe) => (
-              <div key={recipe.id} role="listitem">
-                <RecipeCard
-                  recipe={recipe}
-                  mode="explore"
-                  isFavorite={isFavorited(recipe.id)}
-                  onFavoriteToggle={handleFavoriteToggle}
-                />
-              </div>
-            ))}
+            {recipesError && <p role="alert">{recipesError}</p>}
+            {!recipesLoading &&
+              !recipesError &&
+              exploreRecipes.length === 0 && (
+                <p role="status">No recipes to explore yet.</p>
+              )}
+            {!recipesLoading &&
+              !recipesError &&
+              exploreRecipes.map((recipe) => (
+                <div key={recipe.id} role="listitem">
+                  <RecipeCard
+                    recipe={recipe}
+                    mode="explore"
+                    isFavorite={isFavorited(recipe.id)}
+                    onFavoriteToggle={handleFavoriteToggle}
+                  />
+                </div>
+              ))}
           </div>
         </section>
 
@@ -444,7 +480,6 @@ const DashboardPage: React.FC = () => {
             />
           </div>
         </footer>
-
       </div>
     </DashboardLayout>
   );

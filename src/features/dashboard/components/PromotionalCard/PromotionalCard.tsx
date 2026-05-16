@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./PromotionalCard.css";
 
 // ---------------------------------------------------------------------------
@@ -81,6 +82,7 @@ const PromotionalCard: React.FC<PromotionalCardProps> = ({
   variant = "orange",
   onNotify,
 }) => {
+  const navigate = useNavigate();
   return (
     <article
       className={`promo-card promo-card--${variant}`}
@@ -112,7 +114,10 @@ const PromotionalCard: React.FC<PromotionalCardProps> = ({
         <button
           className="promo-card__notify-btn"
           type="button"
-          onClick={onNotify}
+          onClick={() => {
+            if (onNotify) onNotify();   
+            navigate("/coming-soon");   // 👈
+          }}
           aria-label={`Notify me when ${title} is available`}
         >
           <span className="promo-card__notify-btn-icon" aria-hidden="true">

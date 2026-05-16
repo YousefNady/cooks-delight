@@ -9,7 +9,7 @@
    Modifiers (el)  : __heart-btn--active
    ============================================================================= */
 
-.recipe-card {
+.recipe-card-dashboard {
     --card-bg: #ffffff;
     --card-radius: 14px;
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -37,7 +37,7 @@
 }
 
 /* ── Block ── */
-.recipe-card {
+.recipe-card-dashboard {
     background: var(--card-bg);
     border-radius: var(--card-radius);
     box-shadow: var(--card-shadow);
@@ -52,7 +52,7 @@
     box-sizing: border-box;
 }
 
-.recipe-card:hover {
+.recipe-card-dashboard:hover {
     box-shadow: var(--card-shadow-hover);
     transform: translateY(-2px);
 }
@@ -61,7 +61,7 @@
    Image wrapper
    ============================================================================= */
 
-.recipe-card__image-wrapper {
+.recipe-card-dashboard__image-wrapper {
     position: relative;
     width: 100%;
     /* Aspect-ratio padding trick for consistent image height */
@@ -73,7 +73,7 @@
     flex-shrink: 0;
 }
 
-.recipe-card__image {
+.recipe-card-dashboard__image {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -84,12 +84,12 @@
     transition: transform 0.4s ease;
 }
 
-.recipe-card:hover .recipe-card__image {
+.recipe-card-dashboard:hover .recipe-card-dashboard__image {
     transform: scale(1.04);
 }
 
 /* ── Meal-type chip (explore mode, top-left) ── */
-.recipe-card__meal-chip {
+.recipe-card-dashboard__meal-chip {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -108,7 +108,7 @@
 }
 
 /* ── Heart / Favourite button (top-right of image) ── */
-.recipe-card__heart-btn {
+.recipe-card-dashboard__heart-btn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -126,22 +126,22 @@
         box-shadow 0.15s ease;
 }
 
-.recipe-card__heart-btn svg {
+.recipe-card-dashboard__heart-btn svg {
     width: 15px;
     height: 15px;
 }
 
-.recipe-card__heart-btn:hover {
+.recipe-card-dashboard__heart-btn:hover {
     transform: scale(1.12);
     box-shadow: 0 2px 8px rgba(249, 115, 22, 0.22);
 }
 
-.recipe-card__heart-btn:active {
+.recipe-card-dashboard__heart-btn:active {
     transform: scale(0.96);
 }
 
 /* Modifier: favourite is active */
-.recipe-card__heart-btn--active {
+.recipe-card-dashboard__heart-btn--active {
     background: var(--heart-active-bg);
 }
 
@@ -164,7 +164,7 @@
     }
 }
 
-.recipe-card__heart-btn--pop {
+.recipe-card-dashboard__heart-btn--pop {
     animation: recipe-card-heart-pop 0.35s ease forwards;
 }
 
@@ -172,7 +172,7 @@
    Content area
    ============================================================================= */
 
-.recipe-card__content {
+.recipe-card-dashboard__content {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -180,13 +180,13 @@
 }
 
 /* ── Rating row (explore mode only) ── */
-.recipe-card__rating {
+.recipe-card-dashboard__rating {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-.recipe-card__rating-star {
+.recipe-card-dashboard__rating-star {
     width: 14px;
     height: 14px;
     display: flex;
@@ -194,19 +194,19 @@
     flex-shrink: 0;
 }
 
-.recipe-card__rating-star svg {
+.recipe-card-dashboard__rating-star svg {
     width: 100%;
     height: 100%;
 }
 
-.recipe-card__rating-score {
+.recipe-card-dashboard__rating-score {
     font-size: 12.5px;
     font-weight: 700;
     color: var(--rating-score-color);
     line-height: 1;
 }
 
-.recipe-card__rating-count {
+.recipe-card-dashboard__rating-count {
     font-size: 11.5px;
     color: var(--rating-count-color);
     font-weight: 400;
@@ -214,14 +214,14 @@
 }
 
 /* ── Title row ── */
-.recipe-card__title-row {
+.recipe-card-dashboard__title-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 6px;
 }
 
-.recipe-card__title {
+.recipe-card-dashboard__title {
     font-size: 14px;
     font-weight: 700;
     color: var(--title-color);
@@ -235,7 +235,7 @@
 }
 
 /* ── Overflow "⋮" menu button ── */
-.recipe-card__menu-btn {
+.recipe-card-dashboard__menu-btn {
     flex-shrink: 0;
     width: 26px;
     height: 26px;
@@ -253,25 +253,25 @@
     /* optical vertical align with title first line */
 }
 
-.recipe-card__menu-btn svg {
+.recipe-card-dashboard__menu-btn svg {
     width: 16px;
     height: 16px;
 }
 
-.recipe-card__menu-btn:hover {
+.recipe-card-dashboard__menu-btn:hover {
     background-color: #f5f0ed;
     color: #7a6f68;
 }
 
 /* ── Meta row (time + separator + category/difficulty) ── */
-.recipe-card__meta {
+.recipe-card-dashboard__meta {
     display: flex;
     align-items: center;
     gap: 5px;
     flex-wrap: wrap;
 }
 
-.recipe-card__meta-item {
+.recipe-card-dashboard__meta-item {
     font-size: 12px;
     color: var(--meta-color);
     font-weight: 500;
@@ -280,13 +280,13 @@
     gap: 4px;
 }
 
-.recipe-card__meta-item--time {
+.recipe-card-dashboard__meta-item--time {
     display: flex;
     align-items: center;
     gap: 3px;
 }
 
-.recipe-card__meta-icon {
+.recipe-card-dashboard__meta-icon {
     width: 13px;
     height: 13px;
     display: flex;
@@ -294,12 +294,12 @@
     color: #b5ada6;
 }
 
-.recipe-card__meta-icon svg {
+.recipe-card-dashboard__meta-icon svg {
     width: 100%;
     height: 100%;
 }
 
-.recipe-card__meta-separator {
+.recipe-card-dashboard__meta-separator {
     color: #d4ceca;
     font-size: 11px;
     line-height: 1;
@@ -310,12 +310,12 @@
    ============================================================================= */
 
 /* Favorite mode: slightly taller image for the bigger card feel in the design */
-.recipe-card--favorite {
+.recipe-card-dashboard--favorite {
     --image-aspect: 63%;
 }
 
 /* Explore mode: slightly shorter image since rating row adds height below */
-.recipe-card--explore {
+.recipe-card-dashboard--explore {
     --image-aspect: 56%;
 }
 
@@ -324,11 +324,11 @@
    ============================================================================= */
 
 @media (max-width: 480px) {
-    .recipe-card__content {
+    .recipe-card-dashboard__content {
         padding: 10px 12px 12px;
     }
 
-    .recipe-card__title {
+    .recipe-card-dashboard__title {
         font-size: 13px;
     }
 }

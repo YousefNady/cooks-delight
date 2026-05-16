@@ -48,6 +48,7 @@
   align-items: center;
   gap: 10px;
   padding: 0 6px 28px;
+  cursor: pointer;
 }
 
 .sidebar__logo-icon {

@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../auth/context";
 import "./Sidebar.css";
+import logo from "../../../../assets/logo/Logo.svg";
 
 // ---------------------------------------------------------------------------
 // Icon sub-components (inline SVGs — no external icon-lib dependency)
@@ -154,29 +155,23 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside className="sidebar">
-
       {/* ── Logo ── */}
-      <div className="sidebar__logo">
-        <div className="sidebar__logo-icon" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="20" fill="#F97316" />
-            <path
-              d="M12 26c0-4.4 3.6-8 8-8s8 3.6 8 8"
-              stroke="#fff"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            <circle cx="20" cy="15" r="3.5" fill="#fff" />
-            <path
-              d="M20 10v2M15.5 11.5l1.2 1.2M24.5 11.5l-1.2 1.2"
-              stroke="#fff"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
+      <div
+        className="sidebar__logo"
+        onClick={() => navigate("/")}
+        role="button"
+        tabIndex={0}
+      >
+  <img
+    src={logo}
+    alt="Cooks Delight"
+    className="sidebar__logo-image"
+  />
+
         <span className="sidebar__logo-text">
-          Cooks<br />Delight
+          Cooks
+          <br />
+          Delight
         </span>
       </div>
 
@@ -189,7 +184,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                 className={[
                   "sidebar__nav-item",
                   activeNavId === id ? "sidebar__nav-item--active" : "",
-                ].filter(Boolean).join(" ")}
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 onClick={() => handleNavClick(id)}
                 aria-current={activeNavId === id ? "page" : undefined}
                 type="button"
@@ -203,9 +200,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* ── Coming Soon section ── */}
-      <p className="sidebar__section-label" aria-hidden="true">Coming Soon</p>
+      <p className="sidebar__section-label" aria-hidden="true">
+        Coming Soon
+      </p>
 
-      <nav className="sidebar__nav sidebar__nav--secondary" aria-label="Coming soon features">
+      <nav
+        className="sidebar__nav sidebar__nav--secondary"
+        aria-label="Coming soon features"
+      >
         <ul className="sidebar__nav-list" role="list">
           {COMING_SOON_NAV.map(({ id, label, icon }) => (
             <li key={id}>
@@ -256,7 +258,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         </span>
         Logout
       </button>
-
     </aside>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { DummyJSONUser } from "../../../../shared/types/dashboard.types";
 import "./Header.css";
+import defaultAvatarImg from "../../../../assets/profile/default-avatar.png";
+
 
 // ---------------------------------------------------------------------------
 // Icons
@@ -29,7 +31,13 @@ const IconBell: React.FC = () => (
 );
 
 const IconChevronDown: React.FC = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="14" height="14">
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    width="14"
+    height="14"
+  >
     <path d="M7 10l5 5 5-5z" />
   </svg>
 );
@@ -61,7 +69,7 @@ function useFetchUser(userId: number): UseFetchUserResult {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`https://dummyjson.com/icon/${userId || 'default'}/128`)
+    fetch(`https://dummyjson.com/icon/${userId || "default"}/128`)
       .then<DummyJSONUser>((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
@@ -138,6 +146,7 @@ export interface HeaderProps {
 
   /** Called when the avatar / profile button is clicked */
   onProfileClick?: () => void;
+
 }
 
 // ---------------------------------------------------------------------------
@@ -157,19 +166,26 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   // Only run the fetch hook when no user prop is provided
   const { user: fetchedUser, loading } = useFetchUser(
-    userProp ? -1 : fetchUserId // pass -1 as a sentinel so the hook skips the fetch
+    userProp ? -1 : fetchUserId, // pass -1 as a sentinel so the hook skips the fetch
   );
 
   // Resolved user — prop wins; fallback to fetched; fallback to null
   const user: DummyJSONUser | null = userProp ?? fetchedUser;
 
   // Derived display values — graceful fallbacks while loading or on error
-  const displayName: string = user ? user.firstName : loading ? "…" : "Guest";
-  const avatarUrl: string =
-    user?.image ?? `https://ui-avatars.com/api/?name=Guest&background=f97316&color=fff&size=80`;
+  const displayName: string = user?.firstName ?? "Guest";
+
+  // Build avatar URL from the user object.
+  // user.image is already set by AuthContext as:
+  //   `https://dummyjson.com/icon/${userId}/128`
+  // The fallback only fires if user is null (not logged in).
+ const avatarUrl: string = user?.image ?? defaultAvatarImg;
+const fallbackUrl = defaultAvatarImg;
+
   const avatarAlt: string = user
     ? `${user.firstName} ${user.lastName}`
     : "User avatar";
+
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") onSearchSubmit(e.currentTarget.value);
@@ -177,12 +193,13 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="header">
-
       {/* ── Greeting ── */}
       <div className="header__greeting">
         <h1 className="header__greeting-title">
           Welcome back, {displayName}!{" "}
-          <span role="img" aria-label="waving hand">👋</span>
+          <span role="img" aria-label="waving hand">
+            👋
+          </span>
         </h1>
         <p className="header__greeting-subtitle">
           Let's continue your culinary journey.
@@ -191,7 +208,6 @@ const Header: React.FC<HeaderProps> = ({
 
       {/* ── Right cluster ── */}
       <div className="header__controls">
-
         {/* Search */}
         <div className="header__search">
           <span className="header__search-icon" aria-hidden="true">
@@ -233,7 +249,9 @@ const Header: React.FC<HeaderProps> = ({
           className={[
             "header__profile",
             loading && !userProp ? "header__profile--loading" : "",
-          ].filter(Boolean).join(" ")}
+          ]
+            .filter(Boolean)
+            .join(" ")}
           type="button"
           onClick={() => {
             onProfileClick();
@@ -243,17 +261,24 @@ const Header: React.FC<HeaderProps> = ({
         >
           <img
             className="header__profile-avatar"
-            src={avatarUrl}
+            src={
+              avatarUrl ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(avatarAlt || "User")}&background=f97316&color=fff&size=64`
+            }
             alt={avatarAlt}
             width={36}
             height={36}
             loading="eager"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.onerror = null;
+              target.src = fallbackUrl; 
+            }}
           />
           <span className="header__profile-chevron">
             <IconChevronDown />
           </span>
         </button>
-
       </div>
     </header>
   );

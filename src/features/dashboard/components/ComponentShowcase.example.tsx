@@ -10,7 +10,7 @@
 
 import React, { useState } from "react";
 import StatsCard  from "./StatsCard/StatsCard";
-import RecipeCard  from "./RecipeCard/RecipeCard";
+import RecipeCard  from "./RecipeCard/RecipeCardDashboard";
 import PromotionalCard  from "./PromotionalCard/PromotionalCard";
 import type { DummyJSONRecipe }  from "../../../shared/types/dashboard.types";
 

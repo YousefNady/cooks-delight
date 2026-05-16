@@ -6,14 +6,23 @@ import type { NavId } from "../components/Layout";
 import { useAuth } from "../../auth/context";
 import { useFavoritesContext } from "../../profile";
 import "./ProfilePage.css";
+import defaultAvatarImg from "../../../assets/profile/default-avatar.png";
+
 
 // =============================================================================
 // Icons
 // =============================================================================
 
 const IconPencil: React.FC = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
@@ -38,23 +47,38 @@ const IconUsers: React.FC = () => (
 );
 
 const IconClock: React.FC = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
   </svg>
 );
 
 const IconPlus: React.FC = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
   </svg>
 );
 
 // =============================================================================
 // Local types
 // =============================================================================
-
 
 interface ActivityItem {
   id: number;
@@ -63,27 +87,60 @@ interface ActivityItem {
   emoji: string;
 }
 
-type FoodPref = "Vegetarian" | "Vegan" | "Gluten Free" | "Keto" | "Halal" | "Pescatarian";
+type FoodPref =
+  | "Vegetarian"
+  | "Vegan"
+  | "Gluten Free"
+  | "Keto"
+  | "Halal"
+  | "Pescatarian";
 
 type FavoriteCategory =
-  | "Pasta" | "Desserts" | "Healthy"
-  | "Seafood" | "Breakfast" | "Dinner";
+  | "Pasta"
+  | "Desserts"
+  | "Healthy"
+  | "Seafood"
+  | "Breakfast"
+  | "Dinner";
 
 // =============================================================================
 const ALL_FOOD_PREFS: FoodPref[] = [
-  "Vegetarian", "Vegan", "Gluten Free", "Keto", "Halal", "Pescatarian",
+  "Vegetarian",
+  "Vegan",
+  "Gluten Free",
+  "Keto",
+  "Halal",
+  "Pescatarian",
 ];
 
 const ALL_FAV_CATEGORIES: FavoriteCategory[] = [
-  "Pasta", "Desserts", "Healthy", "Seafood", "Breakfast", "Dinner",
+  "Pasta",
+  "Desserts",
+  "Healthy",
+  "Seafood",
+  "Breakfast",
+  "Dinner",
 ];
 
 const CUISINE_OPTIONS = [
-  "Italian", "Asian", "Mexican", "Mediterranean", "American",
-  "French", "Indian", "Japanese", "Greek",
+  "Italian",
+  "Asian",
+  "Mexican",
+  "Mediterranean",
+  "American",
+  "French",
+  "Indian",
+  "Japanese",
+  "Greek",
 ];
 
-const SKILL_OPTIONS = ["Beginner", "Home Cook", "Intermediate", "Advanced", "Chef"];
+const SKILL_OPTIONS = [
+  "Beginner",
+  "Home Cook",
+  "Intermediate",
+  "Advanced",
+  "Chef",
+];
 
 // =============================================================================
 // ProfilePage
@@ -95,7 +152,6 @@ const ProfilePage: React.FC = () => {
   const { favorites } = useFavoritesContext();
   const [activeNavId, setActiveNavId] = useState<NavId>("profile");
 
-  // â”€â”€ Editable profile state â€” derived from authenticated user â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [bio, setBio] = useState<string>(
     "I love cooking healthy meals for my family and trying new recipes from different cuisines.",
   );
@@ -109,11 +165,17 @@ const ProfilePage: React.FC = () => {
   );
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  // â”€â”€ Derived â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const firstName = user?.username?.split(/[._\s-]/)[0] || user?.username || "Guest";
+  const firstName =
+    user?.username?.split(/[._\s-]/)[0] || user?.username || "Guest";
   const displayName = user?.username || "Guest";
   const displayEmail = user?.email || "Sign in to manage your profile";
-  const avatarUrl = user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff&size=128`;
+ const defaultAvatar = defaultAvatarImg;
+
+
+  // user.image = `https://dummyjson.com/icon/${userId}/128` (set by AuthContext)
+  // Falls back to ui-avatars only when user is null (logged out)
+  const avatarUrl = user?.image ?? defaultAvatar;
+
   const memberSince = "your first sign in";
   const activityItems = useMemo<ActivityItem[]>(
     () =>
@@ -128,16 +190,14 @@ const ProfilePage: React.FC = () => {
   const bioLength = bio.length;
   const BIO_MAX = 200;
 
-  // â”€â”€ Handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
   const toggleFoodPref = (pref: FoodPref): void => {
     setFoodPrefs((prev) => {
       const next = new Set(prev);
-         if (next.has(pref)) {
-      next.delete(pref);
-    } else {
-      next.add(pref);
-    }
+      if (next.has(pref)) {
+        next.delete(pref);
+      } else {
+        next.add(pref);
+      }
       return next;
     });
     setIsSaved(false);
@@ -146,11 +206,11 @@ const ProfilePage: React.FC = () => {
   const toggleFavCategory = (cat: FavoriteCategory): void => {
     setFavCategories((prev) => {
       const next = new Set(prev);
-         if (next.has(cat)) {
-      next.delete(cat);
-    } else {
-      next.add(cat);
-    }
+      if (next.has(cat)) {
+        next.delete(cat);
+      } else {
+        next.add(cat);
+      }
       return next;
     });
     setIsSaved(false);
@@ -158,13 +218,18 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = (): void => {
     setIsSaved(true);
-    console.log("[ProfilePage] save profile:", { bio, foodPrefs: [...foodPrefs], favCuisine, skillLevel, favCategories: [...favCategories] });
+    console.log("[ProfilePage] save profile:", {
+      bio,
+      foodPrefs: [...foodPrefs],
+      favCuisine,
+      skillLevel,
+      favCategories: [...favCategories],
+    });
     // TODO: PATCH /users/1
   };
 
-  const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff&size=128`;
+  // const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f97316&color=fff&size=128`;
 
-  // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return (
     <DashboardLayout
       activeNavId={activeNavId}
@@ -190,10 +255,6 @@ const ProfilePage: React.FC = () => {
       onProfileClick={() => navigate("/profile-dashboard")}
     >
       <div className="prof-page">
-
-        {/* ================================================================
-            PROFILE HERO â€” avatar Â· name Â· email Â· Edit Profile Â· stats row
-            ================================================================ */}
         <section className="prof-page__hero" aria-label="Profile overview">
           {/* Avatar */}
           <div className="prof-page__avatar-wrap">
@@ -204,7 +265,9 @@ const ProfilePage: React.FC = () => {
               width={96}
               height={96}
               onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = avatarFallback;
+                const target = e.currentTarget;
+                target.onerror = null; // 👈
+                target.src = defaultAvatar;
               }}
             />
             <button
@@ -218,9 +281,7 @@ const ProfilePage: React.FC = () => {
 
           {/* Identity */}
           <div className="prof-page__identity">
-            <h1 className="prof-page__name">
-              {firstName}
-            </h1>
+            <h1 className="prof-page__name">{firstName}</h1>
             <p className="prof-page__email">{displayEmail}</p>
             <p className="prof-page__since">Member since {memberSince}</p>
           </div>
@@ -242,13 +303,23 @@ const ProfilePage: React.FC = () => {
           <div className="prof-page__stats" aria-label="Profile statistics">
             {(
               [
-                { icon: <IconBook />,  value: 0,                label: "Recipes Posted"   },
-                { icon: <IconHeart />, value: favorites.length, label: "Total Favorites"  },
-                { icon: <IconUsers />, value: 0,                label: "Followers"        },
+                { icon: <IconBook />, value: 0, label: "Recipes Posted" },
+                {
+                  icon: <IconHeart />,
+                  value: favorites.length,
+                  label: "Total Favorites",
+                },
+                { icon: <IconUsers />, value: 0, label: "Followers" },
               ] as const
             ).map(({ icon, value, label }) => (
-              <div key={label} className="prof-page__stat-card" aria-label={`${label}: ${value}`}>
-                <span className="prof-page__stat-icon" aria-hidden="true">{icon}</span>
+              <div
+                key={label}
+                className="prof-page__stat-card"
+                aria-label={`${label}: ${value}`}
+              >
+                <span className="prof-page__stat-icon" aria-hidden="true">
+                  {icon}
+                </span>
                 <strong className="prof-page__stat-value">{value}</strong>
                 <span className="prof-page__stat-label">{label}</span>
               </div>
@@ -262,9 +333,11 @@ const ProfilePage: React.FC = () => {
             Right: Recent Activity
             ================================================================ */}
         <div className="prof-page__content">
-
           {/* â”€â”€ LEFT â€” About Me form â”€â”€ */}
-          <section className="prof-page__about" aria-labelledby="prof-about-title">
+          <section
+            className="prof-page__about"
+            aria-labelledby="prof-about-title"
+          >
             <div className="prof-page__card">
               <h2 className="prof-page__card-title" id="prof-about-title">
                 About Me
@@ -275,7 +348,9 @@ const ProfilePage: React.FC = () => {
 
               {/* Bio textarea */}
               <div className="prof-page__field">
-                <label className="prof-page__label" htmlFor="prof-bio">Bio</label>
+                <label className="prof-page__label" htmlFor="prof-bio">
+                  Bio
+                </label>
                 <div className="prof-page__textarea-wrap">
                   <textarea
                     id="prof-bio"
@@ -284,15 +359,22 @@ const ProfilePage: React.FC = () => {
                     maxLength={BIO_MAX}
                     rows={4}
                     placeholder="Write a short bioâ€¦"
-                    onChange={(e) => { setBio(e.target.value); setIsSaved(false); }}
+                    onChange={(e) => {
+                      setBio(e.target.value);
+                      setIsSaved(false);
+                    }}
                     aria-describedby="prof-bio-count"
                   />
                   <span
                     id="prof-bio-count"
                     className={[
                       "prof-page__char-count",
-                      bioLength >= BIO_MAX ? "prof-page__char-count--limit" : "",
-                    ].filter(Boolean).join(" ")}
+                      bioLength >= BIO_MAX
+                        ? "prof-page__char-count--limit"
+                        : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                     aria-live="polite"
                   >
                     {bioLength}/{BIO_MAX}
@@ -304,7 +386,11 @@ const ProfilePage: React.FC = () => {
               <div className="prof-page__field">
                 <p className="prof-page__label">Food Preferences</p>
                 <p className="prof-page__field-hint">Select all that apply</p>
-                <div className="prof-page__checkbox-grid" role="group" aria-label="Food preferences">
+                <div
+                  className="prof-page__checkbox-grid"
+                  role="group"
+                  aria-label="Food preferences"
+                >
                   {ALL_FOOD_PREFS.map((pref) => (
                     <label key={pref} className="prof-page__checkbox-item">
                       <input
@@ -330,10 +416,15 @@ const ProfilePage: React.FC = () => {
                     id="prof-cuisine"
                     className="prof-page__select"
                     value={favCuisine}
-                    onChange={(e) => { setFavCuisine(e.target.value); setIsSaved(false); }}
+                    onChange={(e) => {
+                      setFavCuisine(e.target.value);
+                      setIsSaved(false);
+                    }}
                   >
                     {CUISINE_OPTIONS.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -349,10 +440,15 @@ const ProfilePage: React.FC = () => {
                     id="prof-skill"
                     className="prof-page__select"
                     value={skillLevel}
-                    onChange={(e) => { setSkillLevel(e.target.value); setIsSaved(false); }}
+                    onChange={(e) => {
+                      setSkillLevel(e.target.value);
+                      setIsSaved(false);
+                    }}
                   >
                     {SKILL_OPTIONS.map((s) => (
-                      <option key={s} value={s}>{s}</option>
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -361,15 +457,25 @@ const ProfilePage: React.FC = () => {
               {/* Favorite Categories chips */}
               <div className="prof-page__field">
                 <p className="prof-page__label">Favorite Categories</p>
-                <p className="prof-page__field-hint">What do you enjoy cooking the most?</p>
-                <div className="prof-page__cat-chips" role="group" aria-label="Favorite recipe categories">
+                <p className="prof-page__field-hint">
+                  What do you enjoy cooking the most?
+                </p>
+                <div
+                  className="prof-page__cat-chips"
+                  role="group"
+                  aria-label="Favorite recipe categories"
+                >
                   {ALL_FAV_CATEGORIES.map((cat) => (
                     <button
                       key={cat}
                       className={[
                         "prof-page__cat-chip",
-                        favCategories.has(cat) ? "prof-page__cat-chip--active" : "",
-                      ].filter(Boolean).join(" ")}
+                        favCategories.has(cat)
+                          ? "prof-page__cat-chip--active"
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
                       type="button"
                       onClick={() => toggleFavCategory(cat)}
                       aria-pressed={favCategories.has(cat)}
@@ -377,7 +483,11 @@ const ProfilePage: React.FC = () => {
                       {cat}
                     </button>
                   ))}
-                  <button className="prof-page__cat-chip-add" type="button" aria-label="Add category">
+                  <button
+                    className="prof-page__cat-chip-add"
+                    type="button"
+                    aria-label="Add category"
+                  >
                     <IconPlus />
                     Add more
                   </button>
@@ -390,18 +500,23 @@ const ProfilePage: React.FC = () => {
                   className={[
                     "prof-page__save-btn",
                     isSaved ? "prof-page__save-btn--saved" : "",
-                  ].filter(Boolean).join(" ")}
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                   type="button"
                   onClick={handleSave}
                 >
-                  {isSaved ? "âœ“ Saved" : "Save Changes"}
+                  {isSaved ? "✓ Saved" : "Save Changes"}
                 </button>
               </div>
             </div>
           </section>
 
           {/* â”€â”€ RIGHT â€” Recent Activity â”€â”€ */}
-          <aside className="prof-page__activity" aria-labelledby="prof-activity-title">
+          <aside
+            className="prof-page__activity"
+            aria-labelledby="prof-activity-title"
+          >
             <div className="prof-page__card">
               <h2 className="prof-page__card-title" id="prof-activity-title">
                 Recent Activity
@@ -411,21 +526,33 @@ const ProfilePage: React.FC = () => {
                 {activityItems.map((item, index) => (
                   <React.Fragment key={item.id}>
                     <li className="prof-page__activity-item" role="listitem">
-                      <span className="prof-page__activity-emoji" aria-hidden="true">
+                      <span
+                        className="prof-page__activity-emoji"
+                        aria-hidden="true"
+                      >
                         {item.emoji}
                       </span>
                       <div className="prof-page__activity-body">
                         <p className="prof-page__activity-text">{item.text}</p>
                         <div className="prof-page__activity-meta">
-                          <span className="prof-page__activity-clock" aria-hidden="true">
+                          <span
+                            className="prof-page__activity-clock"
+                            aria-hidden="true"
+                          >
                             <IconClock />
                           </span>
-                          <span className="prof-page__activity-time">{item.timeAgo}</span>
+                          <span className="prof-page__activity-time">
+                            {item.timeAgo}
+                          </span>
                         </div>
                       </div>
                     </li>
                     {index < activityItems.length - 1 && (
-                      <li className="prof-page__activity-divider" role="separator" aria-hidden="true" />
+                      <li
+                        className="prof-page__activity-divider"
+                        role="separator"
+                        aria-hidden="true"
+                      />
                     )}
                   </React.Fragment>
                 ))}
@@ -433,10 +560,9 @@ const ProfilePage: React.FC = () => {
             </div>
           </aside>
         </div>
-
       </div>
     </DashboardLayout>
   );
-};
+};;
 
 export default ProfilePage;

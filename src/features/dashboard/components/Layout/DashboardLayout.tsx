@@ -3,36 +3,17 @@ import type { DummyJSONUser } from "../../../../shared/types/dashboard.types";
 import Sidebar, { type SidebarProps, type NavId } from "./Sidebar";
 import Header, { type HeaderProps } from "./Header";
 import "./DashboardLayout.css";
+import { useAuth } from "../../../auth/context";
 
-// ---------------------------------------------------------------------------
-// Props interface
-// ---------------------------------------------------------------------------
-
-/**
- * DashboardLayout composes Sidebar + Header + scrollable main content.
- *
- * Sidebar props and Header props are forwarded verbatim so this wrapper
- * stays thin and purely structural. Your page components should wire the
- * handlers (onNavChange, onSearchSubmit, etc.) from their own state or
- * routing layer.
- */
 export interface DashboardLayoutProps {
-  // ── Sidebar ────────────────────────────────────────────────────────────────
+  // ── Sidebar ──────────────────────────────────────────────────────────────
   activeNavId?: NavId;
   onNavChange?: SidebarProps["onNavChange"];
   onLogout?: SidebarProps["onLogout"];
   onUpgrade?: SidebarProps["onUpgrade"];
 
-  // ── Header ─────────────────────────────────────────────────────────────────
-  /**
-   * Pass a resolved DummyJSONUser here (from your auth store / React Query).
-   * If omitted, Header falls back to fetching `/users/:fetchUserId` itself.
-   */
-  user?: DummyJSONUser;
-  /**
-   * Used only when `user` is not provided.
-   * @default 1
-   */
+  // ── Header ───────────────────────────────────────────────────────────────
+  // ✅ removed `user?: DummyJSONUser` — layout always reads from auth context now
   fetchUserId?: HeaderProps["fetchUserId"];
   notificationCount?: HeaderProps["notificationCount"];
   searchPlaceholder?: HeaderProps["searchPlaceholder"];
@@ -41,14 +22,9 @@ export interface DashboardLayoutProps {
   onNotificationsClick?: HeaderProps["onNotificationsClick"];
   onProfileClick?: HeaderProps["onProfileClick"];
 
-  // ── Layout ─────────────────────────────────────────────────────────────────
-  /** Page content rendered in the scrollable main area */
+  // ── Layout ────────────────────────────────────────────────────────────────
   children: React.ReactNode;
 }
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   // Sidebar
@@ -58,7 +34,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onUpgrade,
 
   // Header
-  user,
+  // ✅ `user` removed from destructuring — no longer a prop
   fetchUserId,
   notificationCount,
   searchPlaceholder,
@@ -70,10 +46,21 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   // Layout
   children,
 }) => {
+  const { user: authUser } = useAuth();
+
+  // ✅ Cast to DummyJSONUser — Header only reads id, firstName, email, image
+  const headerUser = authUser
+    ? ({
+        id: Number(authUser.userId),
+        firstName: authUser.username,
+        lastName: "",
+        email: authUser.email,
+        image: authUser.image,
+      } as DummyJSONUser)
+    : undefined;
+
   return (
     <div className="dashboard-layout">
-
-      {/* ── Left: fixed sidebar ── */}
       <Sidebar
         activeNavId={activeNavId}
         onNavChange={onNavChange}
@@ -81,10 +68,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         onUpgrade={onUpgrade}
       />
 
-      {/* ── Right: sticky header + scrollable content ── */}
       <div className="dashboard-layout__body">
         <Header
-          user={user}
+          user={headerUser}
           fetchUserId={fetchUserId}
           notificationCount={notificationCount}
           searchPlaceholder={searchPlaceholder}
@@ -94,10 +80,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           onProfileClick={onProfileClick}
         />
 
-        {/*
-          id="main-content" → target for a skip-navigation link (<a href="#main-content">)
-          tabIndex={-1}     → programmatically focusable (e.g. after route change)
-        */}
         <main
           className="dashboard-layout__main"
           id="main-content"
@@ -106,7 +88,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {children}
         </main>
       </div>
-
     </div>
   );
 };

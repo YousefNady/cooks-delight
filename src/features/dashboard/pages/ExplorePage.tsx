@@ -146,8 +146,8 @@ const ExplorePage: React.FC = () => {
   // -- Navigation -------------------------------------------------------------
   const [activeNavId, setActiveNavId] = useState<NavId>("explore");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
-  const [recipesError, setRecipesError] = useState<string | null>(null);
+const [recipesLoading, setRecipesLoading] = useState<boolean>(true);
+const [recipesError, setRecipesError] = useState<string | null>(null);
 
   // -- Filter state -----------------------------------------------------------
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
@@ -161,8 +161,6 @@ const ExplorePage: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
 
-    setRecipesLoading(true);
-    setRecipesError(null);
 
     getAllDashboardRecipes()
       .then((data) => {
@@ -305,7 +303,7 @@ const ExplorePage: React.FC = () => {
           <div className="exp-page__header-titles">
             <h1 className="exp-page__title">
               Explore All Recipes
-              <span className="exp-page__title-emoji" aria-hidden="true"> ??</span>
+              <span className="exp-page__title-emoji" aria-hidden="true">🍳</span>
             </h1>
             <p className="exp-page__subtitle">
               {totalFiltered === recipes.length
@@ -414,7 +412,7 @@ const ExplorePage: React.FC = () => {
                   >
                     {opt.label}
                     {opt.value === sortKey && (
-                      <span className="exp-page__sort-option-check" aria-hidden="true">?</span>
+                      <span className="exp-page__sort-option-check" aria-hidden="true">✓</span>
                     )}
                   </li>
                 ))}
