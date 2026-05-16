@@ -12,6 +12,7 @@ import { useSpeechRecognition } from '../../shared/hooks/useSpeechRecognition';
 // new 
 import MobileSearchModal from '../../features/search/components/MobileSearchModal'; // new 
 import { FiSearch as FiSearchMobile } from 'react-icons/fi'; // new 
+// import { FiSettings } from 'react-icons/fi'; // new
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen]   = useState(false);

@@ -94,6 +94,10 @@ function App() {
                 path="smart-chef"
                 element={<SmartChefPage />}
               />
+                            <Route
+                path="smart-chef"
+                element={<SmartChefPage />}
+              />
               <Route path="*" element={
                 <PageTitle title="Page Not Found | Cooks Delight">
                   <NotFound />

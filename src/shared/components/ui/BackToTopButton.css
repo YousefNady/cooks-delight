@@ -5,6 +5,7 @@
 
 :root {
     --backto-top-bg: #064420;
+    --backto-top-bg: #064420;
     --backto-top-text: #ffffff;
     --backto-top-hover-bg: #c97c20;
     --backto-top-shadow: rgba(224, 140, 46, 0.40);
@@ -34,6 +35,7 @@
     /* Brand colors */
     background-color: var(--backto-top-bg);
     color: var(--backto-top-text);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     /* Center the icon */
     display: flex;
@@ -96,6 +98,8 @@
 
 /* Icon size */
 .scroll-to-top__icon {
+    width: 35px;
+    height: 35px;
     width: 35px;
     height: 35px;
     stroke-width: 2.5px;
