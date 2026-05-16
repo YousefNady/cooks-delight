@@ -13,8 +13,11 @@ import {
   FiMail,
   FiUser,
   // FiHeart,
-  FiSettings,
+  // FiSettings,
   FiChevronRight,
+  FiVideo,
+  FiCalendar,
+  FiGrid,
 } from 'react-icons/fi';
 import logo from '../../assets/logo/Logo.svg';
 import './styles/MobileMenu.css';
@@ -34,9 +37,11 @@ const NAV_ITEMS = [
 ];
 
 const ACCOUNT_ITEMS = [
-  { to: '/profile',   label: 'My Profile', icon: <FiUser aria-hidden="true" /> },
+  { to: "/profile", label: "My Profile", icon: <FiUser aria-hidden="true" /> },
   // { to: '/profile#favorites-section', label: 'Favorites',  icon: <FiHeart aria-hidden="true" /> },
-  { to: '/coming-soon',  label: 'Settings',   icon: <FiSettings aria-hidden="true" /> },
+  { to: "/dashboard", label: "Dashboard", icon: <FiGrid aria-hidden="true" /> },
+  { to: "/coming-soon", label: "Meal Planner", icon: <FiCalendar aria-hidden="true" /> },
+  { to: "/coming-soon", label: "Cooking Classes", icon: <FiVideo aria-hidden="true" /> },
 ];
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {

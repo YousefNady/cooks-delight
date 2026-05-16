@@ -17,13 +17,16 @@
     /* Position — fixed to viewport, bottom-right */
     position: fixed;
     bottom: 25px;
-    right: 20px;
+    left: 20px;
     z-index: 100;
+    padding: 10px 20px;
+    gap: 8px;
+    font-weight: 800;
 
     /* Size & shape */
-    width: 62px;
-    height: 62px;
-    border-radius: 50%;
+    /* width: 62px; */
+    /* height: 62px; */
+    border-radius: 50px;
     border: none;
     cursor: pointer;
     overflow: hidden;
@@ -132,14 +135,19 @@
    ========================================================= */
 @media (max-width: 768px) {
     .scroll-to-top {
-        width: 42px;
-        height: 42px;
+        width: 62px;
+        height: 62px;
         bottom: 20px;
         right: 20px;
+        padding: 0;
     }
 
     .scroll-to-top__icon {
-        width: 18px;
-        height: 18px;
+        width: 35px;
+        height: 33px;
     }
+
+        .scroll-to-top__text {
+            display: none;
+        }
 }

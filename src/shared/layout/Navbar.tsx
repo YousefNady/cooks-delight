@@ -3,7 +3,7 @@
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo/Logo.svg';
 import './styles/navbar.css';
-import { FiSearch, FiMenu, FiLogOut, FiUser, FiHeart, FiChevronDown, FiMic } from 'react-icons/fi';
+import { FiSearch, FiMenu, FiLogOut, FiUser, FiHeart, FiChevronDown, FiMic, FiGrid, FiCalendar, FiVideo } from 'react-icons/fi';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MobileMenu from './Mobilemenu';
 import { useAuth } from '../../features/auth/context/useAuth';
@@ -12,7 +12,6 @@ import { useSpeechRecognition } from '../../shared/hooks/useSpeechRecognition';
 // new 
 import MobileSearchModal from '../../features/search/components/MobileSearchModal'; // new 
 import { FiSearch as FiSearchMobile } from 'react-icons/fi'; // new 
-import { FiSettings } from 'react-icons/fi'; // new
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen]   = useState(false);
@@ -62,7 +61,6 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         <div className="navbar__content">
-
           {/* ── Logo ── */}
           <Link to="/" className="navbar__logo">
             <img src={logo} alt="Cooks Delight" />
@@ -80,7 +78,9 @@ const Navbar = () => {
                   to={to}
                   end={end}
                   className={({ isActive }) =>
-                    isActive ? 'navbar__link navbar__link--active' : 'navbar__link'
+                    isActive
+                      ? "navbar__link navbar__link--active"
+                      : "navbar__link"
                   }
                 >
                   {label}
@@ -91,7 +91,7 @@ const Navbar = () => {
 
           {/* ── Voice-enabled search bar ── */}
           <form
-            className={`navbar__search-bar${isListening ? ' navbar__search-bar--listening' : ''}`}
+            className={`navbar__search-bar${isListening ? " navbar__search-bar--listening" : ""}`}
             onSubmit={(e) => handleSearchSubmit(e)}
             role="search"
           >
@@ -108,11 +108,13 @@ const Navbar = () => {
 
             {/* Mic button */}
             <button
-              className={`navbar__search-mic${isListening ? ' navbar__search-mic--listening' : ''}`}
+              className={`navbar__search-mic${isListening ? " navbar__search-mic--listening" : ""}`}
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => toggleListening(searchTerm)}
-              aria-label={isListening ? 'Stop voice search' : 'Start voice search'}
+              aria-label={
+                isListening ? "Stop voice search" : "Start voice search"
+              }
               aria-pressed={isListening}
               title={voiceError || undefined}
             >
@@ -139,22 +141,23 @@ const Navbar = () => {
                     className="navbar__avatar"
                     onError={(e) => {
                       const img = e.currentTarget;
-                      img.style.display = 'none';
-                      const fallback = img.nextElementSibling as HTMLElement | null;
-                      if (fallback) fallback.style.display = 'flex';
+                      img.style.display = "none";
+                      const fallback =
+                        img.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.style.display = "flex";
                     }}
                   />
                   {/* Initials fallback — hidden by default */}
                   <div
                     className="navbar__avatar-fallback"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     aria-hidden="true"
                   >
                     {user!.username.slice(0, 2).toUpperCase()}
                   </div>
 
                   <FiChevronDown
-                    className={`navbar__profile-chevron${isDropdownOpen ? ' navbar__profile-chevron--open' : ''}`}
+                    className={`navbar__profile-chevron${isDropdownOpen ? " navbar__profile-chevron--open" : ""}`}
                     aria-hidden="true"
                   />
                 </button>
@@ -182,13 +185,31 @@ const Navbar = () => {
                       <span>Favorites</span>
                     </Link>
                     <Link
+                      to="/dashboard"
+                      className="navbar__dropdown-item"
+                      role="menuitem"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FiGrid aria-hidden="true" />
+                      <span>Dashboard</span>
+                    </Link>
+                    <Link
                       to="/coming-soon"
                       className="navbar__dropdown-item"
                       role="menuitem"
                       onClick={() => setIsDropdownOpen(false)}
                     >
-                      <FiSettings aria-hidden="true" />
-                      <span>Settings</span>
+                      <FiCalendar aria-hidden="true" />
+                      <span>Meal Planner</span>
+                    </Link>
+                    <Link
+                      to="/coming-soon"
+                      className="navbar__dropdown-item"
+                      role="menuitem"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <FiVideo aria-hidden="true" />
+                      <span>Cooking Classes</span>
                     </Link>
                     <button
                       type="button"
@@ -212,15 +233,14 @@ const Navbar = () => {
           </div>
 
           {/* ── Mobile search icon (mobile only) ── */}
-            <button
-              className="navbar__mobile-search-icon"
-              type="button"
-              aria-label="Open search"
-              onClick={() => setIsMobileSearchOpen(true)}
-            >
-              <FiSearchMobile />
-            </button>
-
+          <button
+            className="navbar__mobile-search-icon"
+            type="button"
+            aria-label="Open search"
+            onClick={() => setIsMobileSearchOpen(true)}
+          >
+            <FiSearchMobile />
+          </button>
 
           {/* ── Hamburger (mobile only) ── */}
           <button
@@ -232,7 +252,6 @@ const Navbar = () => {
           >
             <FiMenu />
           </button>
-
         </div>
       </nav>
 

@@ -24,11 +24,12 @@ const ScrollToTop = () => {
 
   return (
     <button
-      className={`scroll-to-top${isVisible ? ' scroll-to-top--visible' : ''}`}
+      className={`scroll-to-top${isVisible ? " scroll-to-top--visible" : ""}`}
       onClick={scrollToTop}
       aria-label="Scroll to top"
       type="button"
     >
+      <span className="scroll-to-top__text">Back to Top</span>
       <FiArrowUp className="scroll-to-top__icon" />
     </button>
   );

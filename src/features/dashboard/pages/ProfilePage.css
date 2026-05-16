@@ -1,0 +1,615 @@
+/* =============================================================================
+   ProfilePage — BEM component
+   Block     : .prof-page
+   Elements  : __hero  __avatar-wrap  __avatar  __avatar-edit-btn
+               __identity  __name  __email  __since  __edit-btn  __edit-btn-icon
+               __stats  __stat-card  __stat-icon  __stat-value  __stat-label
+               __content  __about  __activity
+               __card  __card-title  __card-hint
+               __field  __label  __field-hint
+               __textarea-wrap  __textarea  __char-count
+               __checkbox-grid  __checkbox-item  __checkbox  __checkbox-label
+               __select-wrap  __select
+               __cat-chips  __cat-chip  __cat-chip-add
+               __form-footer  __save-btn
+               __activity-list  __activity-item  __activity-emoji  __activity-body
+               __activity-text  __activity-meta  __activity-clock  __activity-time
+               __activity-divider
+   Modifiers : __char-count--limit  __cat-chip--active  __save-btn--saved
+   ============================================================================= */
+
+.prof-page {
+    --gap-section: 24px;
+    --gap-card: 14px;
+
+    --font-sans: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #1a1714;
+    --color-ink-muted: #9a9088;
+    --color-ink-faint: #b5ada6;
+    --color-brand: #f97316;
+    --color-brand-hover: #ea6a0d;
+    --color-surface: #ffffff;
+    --color-bg-subtle: #f8f5f2;
+    --color-border: #e8e2dd;
+
+    --avatar-size: 96px;
+    --avatar-edit-size: 28px;
+
+    --card-radius: 16px;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+    --card-padding: 24px;
+
+    --input-height: 40px;
+    --input-radius: 10px;
+    --input-bg: #f8f5f2;
+    --input-border: #e8e2dd;
+    --input-border-focus: #f97316;
+}
+
+/* ── Block ───────────────────────────────────────────────────────────────────── */
+.prof-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+    font-family: var(--font-sans);
+    min-height: 100%;
+}
+
+/* =============================================================================
+   PROFILE HERO
+   ============================================================================= */
+
+.prof-page__hero {
+    background: var(--color-surface);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: var(--card-padding) var(--card-padding) 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    text-align: center;
+}
+
+/* Edit Profile button — absolute top-right */
+.prof-page__edit-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 9px;
+    border: 1.5px solid var(--color-border);
+    background: transparent;
+    color: #6b6560;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+}
+
+.prof-page__edit-btn:hover {
+    background: var(--color-bg-subtle);
+    border-color: #d4ceca;
+    color: var(--color-ink);
+}
+
+.prof-page__edit-btn-icon {
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+}
+
+.prof-page__edit-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Avatar */
+.prof-page__avatar-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.prof-page__avatar {
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    background: #f0ebe7;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5px #f1ede9;
+}
+
+.prof-page__avatar-edit-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: var(--avatar-edit-size);
+    height: var(--avatar-edit-size);
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: var(--color-brand);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    padding: 0;
+}
+
+.prof-page__avatar-edit-btn:hover {
+    background: var(--color-brand-hover);
+}
+
+.prof-page__avatar-edit-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Identity text */
+.prof-page__identity {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.prof-page__name {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.prof-page__email {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    margin: 0;
+}
+
+.prof-page__since {
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    margin: 0;
+}
+
+/* Stats row */
+.prof-page__stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.prof-page__stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: var(--color-bg-subtle);
+    border-radius: 12px;
+    padding: 14px 24px;
+    min-width: 110px;
+    transition: box-shadow 0.2s ease;
+}
+
+.prof-page__stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .07);
+}
+
+.prof-page__stat-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-brand);
+    display: flex;
+    align-items: center;
+}
+
+.prof-page__stat-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.prof-page__stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.prof-page__stat-label {
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* =============================================================================
+   TWO-COLUMN CONTENT
+   ============================================================================= */
+
+.prof-page__content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--gap-section);
+    align-items: start;
+}
+
+/* Shared card shell */
+.prof-page__card {
+    background: var(--color-surface);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: var(--card-padding);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.prof-page__card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.prof-page__card-hint {
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+    margin: -12px 0 0;
+}
+
+/* =============================================================================
+   FORM FIELDS (shared)
+   ============================================================================= */
+
+.prof-page__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.prof-page__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.prof-page__field-hint {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    margin: -4px 0 0;
+}
+
+/* Textarea */
+.prof-page__textarea-wrap {
+    position: relative;
+}
+
+.prof-page__textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: var(--input-radius);
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    line-height: 1.55;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.prof-page__textarea:focus {
+    border-color: var(--input-border-focus);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+}
+
+.prof-page__char-count {
+    position: absolute;
+    bottom: 9px;
+    right: 12px;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    pointer-events: none;
+}
+
+.prof-page__char-count--limit {
+    color: #e53e3e;
+}
+
+/* Checkbox grid */
+.prof-page__checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+}
+
+.prof-page__checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.prof-page__checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1.5px solid var(--color-border);
+    accent-color: var(--color-brand);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.prof-page__checkbox-label {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    font-weight: 500;
+}
+
+.prof-page__checkbox-item:has(.prof-page__checkbox:checked) .prof-page__checkbox-label {
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+/* Select */
+.prof-page__select-wrap {
+    position: relative;
+}
+
+.prof-page__select {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 36px 0 14px;
+    border-radius: var(--input-radius);
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a9088' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+    box-sizing: border-box;
+}
+
+.prof-page__select:focus {
+    border-color: var(--input-border-focus);
+    background-color: var(--color-surface);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+}
+
+/* Category chips */
+.prof-page__cat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.prof-page__cat-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.prof-page__cat-chip:hover:not(.prof-page__cat-chip--active) {
+    border-color: #d4ceca;
+    color: var(--color-ink);
+}
+
+.prof-page__cat-chip--active {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(249, 115, 22, .25);
+}
+
+.prof-page__cat-chip-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 20px;
+    border: 1.5px dashed var(--color-border);
+    background: transparent;
+    color: var(--color-ink-faint);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.prof-page__cat-chip-add:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+}
+
+.prof-page__cat-chip-add svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Save button */
+.prof-page__form-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-border);
+}
+
+.prof-page__save-btn {
+    padding: 9px 24px;
+    border-radius: 9px;
+    border: none;
+    background: var(--color-brand);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, .28);
+}
+
+.prof-page__save-btn:hover {
+    background: var(--color-brand-hover);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, .35);
+    transform: translateY(-1px);
+}
+
+.prof-page__save-btn:active {
+    transform: translateY(0);
+}
+
+.prof-page__save-btn--saved {
+    background: #22c55e;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, .28);
+}
+
+/* =============================================================================
+   RECENT ACTIVITY
+   ============================================================================= */
+
+.prof-page__activity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.prof-page__activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+}
+
+.prof-page__activity-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.prof-page__activity-emoji {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.prof-page__activity-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.prof-page__activity-text {
+    font-size: 13.5px;
+    color: var(--color-ink);
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.prof-page__activity-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.prof-page__activity-clock {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    color: var(--color-ink-faint);
+    flex-shrink: 0;
+}
+
+.prof-page__activity-clock svg {
+    width: 100%;
+    height: 100%;
+}
+
+.prof-page__activity-time {
+    font-size: 12px;
+    color: var(--color-ink-faint);
+    font-weight: 400;
+}
+
+/* =============================================================================
+   RESPONSIVE
+   ============================================================================= */
+
+@media (max-width: 959px) {
+    .prof-page__content {
+        grid-template-columns: 1fr;
+    }
+
+    .prof-page__edit-btn {
+        position: static;
+        align-self: center;
+    }
+
+    .prof-page__hero {
+        padding-top: 28px;
+    }
+}
+
+@media (max-width: 599px) {
+    .prof-page__stats {
+        gap: 8px;
+    }
+
+    .prof-page__stat-card {
+        padding: 12px 16px;
+        min-width: 90px;
+    }
+
+    .prof-page__checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prof-page__card {
+        padding: 18px;
+    }
+}

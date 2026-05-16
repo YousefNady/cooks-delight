@@ -22,11 +22,10 @@
 
 /* ─── HERO SECTION ──────────────────────────── */
 .scs-hero {
-  padding: 0 0 65px 0;
+  padding: 5%;
   background: linear-gradient(180deg, var(--bg), var(--bg2));
   font-family: 'DM Sans', sans-serif;
-  margin: 16px 24px;
-  padding-left: 100px;
+  margin: 16px auto;
   padding-top:24px;
   border-radius: 32px;
 }
@@ -413,9 +412,10 @@
 .scs-features-section {
   background: white;
   font-family: 'DM Sans', sans-serif;
-  margin: 16px 24px;
+  margin: 16px auto;
   padding: 24px;
   border-radius: 32px;
+  max-width: 1312px;
 }
 
 .scs-features-container {
@@ -498,9 +498,10 @@
  
   background: var(--bg);
   font-family: 'DM Sans', sans-serif;
-  margin: 16px 24px;
+  margin: 16px auto;
   padding: 24px;
   border-radius: 32px;
+  max-width: 1312px;
 }
 
 .scs-demo-container {
@@ -660,9 +661,10 @@
   background: white;
   font-family: 'DM Sans', sans-serif;
   text-align: center;
-  margin: 16px 24px;
+  margin: 16px auto;
   padding: 24px;
   border-radius: 32px;
+  max-width: 1312px;
 }
 
 .scs-cta-title {

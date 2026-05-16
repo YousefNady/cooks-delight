@@ -1,0 +1,334 @@
+/* =============================================================================
+   RecipeCard — BEM component
+   Block   : .recipe-card
+   Elements: __image-wrapper  __image  __meal-chip  __heart-btn
+             __content  __rating  __rating-star  __rating-score  __rating-count
+             __title-row  __title  __menu-btn
+             __meta  __meta-item  __meta-item--time  __meta-icon  __meta-separator
+   Modifiers (block): --favorite  --explore
+   Modifiers (el)  : __heart-btn--active
+   ============================================================================= */
+
+.recipe-card-dashboard {
+    --card-bg: #ffffff;
+    --card-radius: 14px;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
+
+    --image-radius: 12px;
+    --image-aspect: 55%;
+    /* height / width — portrait-ish for food */
+
+    --chip-bg: rgba(255, 255, 255, 0.92);
+    --chip-color: #1a1714;
+    --chip-radius: 20px;
+
+    --heart-bg: #ffffff;
+    --heart-active-bg: #ffffff;
+    --heart-size: 32px;
+    --heart-radius: 50%;
+
+    --title-color: #1a1714;
+    --meta-color: #9a9088;
+    --rating-score-color: #1a1714;
+    --rating-count-color: #b5ada6;
+
+    --font-sans: "Lato", "Helvetica Neue", sans-serif;
+}
+
+/* ── Block ── */
+.recipe-card-dashboard {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    transition: box-shadow 0.22s ease, transform 0.22s ease;
+    cursor: pointer;
+    /* Width is always controlled by the parent grid/flex */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.recipe-card-dashboard:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* =============================================================================
+   Image wrapper
+   ============================================================================= */
+
+.recipe-card-dashboard__image-wrapper {
+    position: relative;
+    width: 100%;
+    /* Aspect-ratio padding trick for consistent image height */
+    padding-top: var(--image-aspect);
+    overflow: hidden;
+    border-radius: var(--image-radius) var(--image-radius) 0 0;
+    background-color: #f0ebe7;
+    /* placeholder bg while image loads */
+    flex-shrink: 0;
+}
+
+.recipe-card-dashboard__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Subtle zoom on card hover */
+    transition: transform 0.4s ease;
+}
+
+.recipe-card-dashboard:hover .recipe-card-dashboard__image {
+    transform: scale(1.04);
+}
+
+/* ── Meal-type chip (explore mode, top-left) ── */
+.recipe-card-dashboard__meal-chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--chip-bg);
+    color: var(--chip-color);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: var(--chip-radius);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    white-space: nowrap;
+    pointer-events: none;
+    /* Prevent layout shift — always rendered in DOM when in explore mode */
+}
+
+/* ── Heart / Favourite button (top-right of image) ── */
+.recipe-card-dashboard__heart-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: var(--heart-size);
+    height: var(--heart-size);
+    border-radius: var(--heart-radius);
+    border: none;
+    background: var(--heart-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+    transition: background-color 0.15s ease, transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.recipe-card-dashboard__heart-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.recipe-card-dashboard__heart-btn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.22);
+}
+
+.recipe-card-dashboard__heart-btn:active {
+    transform: scale(0.96);
+}
+
+/* Modifier: favourite is active */
+.recipe-card-dashboard__heart-btn--active {
+    background: var(--heart-active-bg);
+}
+
+/* ── Subtle pulse on first activation (JS can add/remove a class) ── */
+@keyframes recipe-card-heart-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.3);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.recipe-card-dashboard__heart-btn--pop {
+    animation: recipe-card-heart-pop 0.35s ease forwards;
+}
+
+/* =============================================================================
+   Content area
+   ============================================================================= */
+
+.recipe-card-dashboard__content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 14px 14px;
+}
+
+/* ── Rating row (explore mode only) ── */
+.recipe-card-dashboard__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.recipe-card-dashboard__rating-star {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.recipe-card-dashboard__rating-star svg {
+    width: 100%;
+    height: 100%;
+}
+
+.recipe-card-dashboard__rating-score {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--rating-score-color);
+    line-height: 1;
+}
+
+.recipe-card-dashboard__rating-count {
+    font-size: 11.5px;
+    color: var(--rating-count-color);
+    font-weight: 400;
+    line-height: 1;
+}
+
+/* ── Title row ── */
+.recipe-card-dashboard__title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.recipe-card-dashboard__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--title-color);
+    margin: 0;
+    line-height: 1.3;
+    /* Two-line clamp */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+/* ── Overflow "⋮" menu button ── */
+.recipe-card-dashboard__menu-btn {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #c4bbb5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    padding: 0;
+    margin-top: 1px;
+    /* optical vertical align with title first line */
+}
+
+.recipe-card-dashboard__menu-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.recipe-card-dashboard__menu-btn:hover {
+    background-color: #f5f0ed;
+    color: #7a6f68;
+}
+
+/* ── Meta row (time + separator + category/difficulty) ── */
+.recipe-card-dashboard__meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.recipe-card-dashboard__meta-item {
+    font-size: 12px;
+    color: var(--meta-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.recipe-card-dashboard__meta-item--time {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.recipe-card-dashboard__meta-icon {
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    color: #b5ada6;
+}
+
+.recipe-card-dashboard__meta-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.recipe-card-dashboard__meta-separator {
+    color: #d4ceca;
+    font-size: 11px;
+    line-height: 1;
+}
+
+/* =============================================================================
+   Mode-specific overrides
+   ============================================================================= */
+
+/* Favorite mode: slightly taller image for the bigger card feel in the design */
+.recipe-card-dashboard--favorite {
+    --image-aspect: 63%;
+}
+
+/* Explore mode: slightly shorter image since rating row adds height below */
+.recipe-card-dashboard--explore {
+    --image-aspect: 56%;
+}
+
+/* =============================================================================
+   Responsive
+   ============================================================================= */
+
+@media (max-width: 480px) {
+    .recipe-card-dashboard__content {
+        padding: 10px 12px 12px;
+    }
+
+    .recipe-card-dashboard__title {
+        font-size: 13px;
+    }
+}

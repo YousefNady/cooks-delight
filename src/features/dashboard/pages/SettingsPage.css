@@ -1,0 +1,590 @@
+/* =============================================================================
+   SettingsPage — BEM component
+   Block     : .settings-page
+   Elements  : __header  __title  __subtitle
+               __body  __tab-nav  __tab-btn  __tab-btn-icon
+               __panel  __panel-title
+
+   Sub-blocks (used inside section components, scoped here):
+   .settings-section   — container for each tab's content
+     __group  __group-title  __row  __field  __field--half  __field--inline
+     __label  __input  __input--error  __select-wrap  __select
+     __divider  __error-msg  __danger-text  __confirm  __confirm-text
+     __confirm-actions
+     __btn  __btn--primary  __btn--saved  __btn--danger  __btn--ghost
+     __future-list  __future-item  __future-icon  __future-label
+     __coming-soon-badge
+
+   .settings-toggle  — reusable toggle switch sub-block
+     __text  __label  __desc  __track  __track--on  __track--disabled  __thumb
+
+   Modifiers: __tab-btn--active  __group--danger  __group-title--danger
+   ============================================================================= */
+
+/* ── Shared design tokens — identical to all other pages ── */
+.settings-page {
+    --gap-section: 24px;
+
+    --font-sans: "Lato", "Helvetica Neue", Arial, sans-serif;
+    --color-ink: #1a1714;
+    --color-ink-muted: #9a9088;
+    --color-ink-faint: #b5ada6;
+    --color-brand: #f97316;
+    --color-brand-hover: #ea6a0d;
+    --color-surface: #ffffff;
+    --color-bg-subtle: #f8f5f2;
+    --color-border: #e8e2dd;
+    --color-danger: #e53e3e;
+    --color-success: #22c55e;
+
+    --card-radius: 16px;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+    --card-padding: 24px;
+
+    --input-height: 40px;
+    --input-radius: 10px;
+    --input-bg: #f8f5f2;
+    --input-border: #e8e2dd;
+    --input-border-focus: #f97316;
+
+    /* Tab nav */
+    --tab-nav-w: 200px;
+}
+
+/* ── Block ── */
+.settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+    font-family: var(--font-sans);
+    min-height: 100%;
+}
+
+/* =============================================================================
+   PAGE HEADER
+   ============================================================================= */
+
+.settings-page__header {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.settings-page__title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.settings-page__subtitle {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+    margin: 0;
+}
+
+/* =============================================================================
+   BODY — tab nav (left) + panel (right)
+   ============================================================================= */
+
+.settings-page__body {
+    display: grid;
+    grid-template-columns: var(--tab-nav-w) 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* ── Tab navigation ── */
+.settings-page__tab-nav {
+    background: var(--color-surface);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.settings-page__tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--color-ink-muted);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.settings-page__tab-btn:hover:not(.settings-page__tab-btn--active) {
+    background: var(--color-bg-subtle);
+    color: var(--color-ink);
+}
+
+.settings-page__tab-btn--active {
+    background: #fff4ed;
+    color: var(--color-brand);
+    font-weight: 700;
+}
+
+.settings-page__tab-btn-icon {
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.settings-page__tab-btn-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Content panel ── */
+.settings-page__panel {
+    background: var(--color-surface);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: var(--card-padding);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.settings-page__panel-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin: 0;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--color-border);
+    letter-spacing: -0.01em;
+}
+
+/* =============================================================================
+   SETTINGS SECTION — groups inside each tab panel
+   ============================================================================= */
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.settings-section__group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.settings-section__group--danger {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1.5px solid #fecdd3;
+    background: #fff5f5;
+}
+
+.settings-section__group-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+    padding-bottom: 4px;
+}
+
+.settings-section__group-title--danger {
+    color: var(--color-danger);
+}
+
+/* Field */
+.settings-section__row {
+    display: flex;
+    gap: 14px;
+}
+
+.settings-section__field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    flex: 1;
+}
+
+.settings-section__field--half {
+    flex: 1;
+    min-width: 0;
+}
+
+.settings-section__field--inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.settings-section__label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+/* Input */
+.settings-section__input {
+    height: var(--input-height);
+    padding: 0 14px;
+    border-radius: var(--input-radius);
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.settings-section__input::placeholder {
+    color: var(--color-ink-faint);
+}
+
+.settings-section__input:focus {
+    border-color: var(--input-border-focus);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+}
+
+.settings-section__input--error {
+    border-color: var(--color-danger);
+    background: #fff5f5;
+}
+
+.settings-section__input--error:focus {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, .12);
+}
+
+/* Select */
+.settings-section__select-wrap {
+    position: relative;
+    width: 160px;
+    flex-shrink: 0;
+}
+
+.settings-section__select {
+    width: 100%;
+    height: var(--input-height);
+    padding: 0 32px 0 12px;
+    border-radius: var(--input-radius);
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a9088' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.settings-section__select:focus {
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+}
+
+/* Divider */
+.settings-section__divider {
+    height: 1px;
+    background: var(--color-border);
+    border: none;
+    margin: 0;
+}
+
+/* Error message */
+.settings-section__error-msg {
+    font-size: 12px;
+    color: var(--color-danger);
+    margin: -2px 0 0;
+    font-weight: 500;
+}
+
+/* Danger text */
+.settings-section__danger-text {
+    font-size: 13px;
+    color: #9b2c2c;
+    margin: -4px 0 0;
+    line-height: 1.55;
+}
+
+/* Confirm block */
+.settings-section__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-section__confirm-text {
+    font-size: 13px;
+    color: var(--color-danger);
+    font-weight: 600;
+    margin: 0;
+}
+
+.settings-section__confirm-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.settings-section__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border-radius: 9px;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+    white-space: nowrap;
+}
+
+.settings-section__btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.settings-section__btn--primary {
+    background: var(--color-brand);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(249, 115, 22, .28);
+    align-self: flex-start;
+}
+
+.settings-section__btn--primary:hover {
+    background: var(--color-brand-hover);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, .35);
+    transform: translateY(-1px);
+}
+
+.settings-section__btn--primary:active {
+    transform: translateY(0);
+}
+
+.settings-section__btn--saved {
+    background: var(--color-success) !important;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, .28) !important;
+}
+
+.settings-section__btn--danger {
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(229, 62, 62, .22);
+}
+
+.settings-section__btn--danger:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+}
+
+.settings-section__btn--ghost {
+    background: transparent;
+    color: var(--color-ink-muted);
+    border: 1.5px solid var(--color-border);
+}
+
+.settings-section__btn--ghost:hover {
+    background: var(--color-bg-subtle);
+    color: var(--color-ink);
+}
+
+/* Future features list */
+.settings-section__future-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-section__future-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-section__future-icon {
+    font-size: 18px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-subtle);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.settings-section__future-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    flex: 1;
+}
+
+.settings-section__coming-soon-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #f3f4f6;
+    color: #9ca3af;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   TOGGLE SWITCH — .settings-toggle sub-block
+   ============================================================================= */
+
+.settings-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.settings-toggle__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.settings-toggle__label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-ink);
+    cursor: pointer;
+}
+
+.settings-toggle__desc {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* Track (the pill shape) */
+.settings-toggle__track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    border: none;
+    background: #e0d8d2;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color 0.22s ease;
+    padding: 0;
+}
+
+.settings-toggle__track--on {
+    background: var(--color-brand);
+}
+
+.settings-toggle__track--disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+/* Thumb (the circle) */
+.settings-toggle__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+    transition: transform 0.22s ease;
+}
+
+.settings-toggle__track--on .settings-toggle__thumb {
+    transform: translateX(20px);
+}
+
+/* =============================================================================
+   RESPONSIVE
+   ============================================================================= */
+
+@media (max-width: 959px) {
+    .settings-page {
+        --tab-nav-w: 170px;
+    }
+}
+
+@media (max-width: 767px) {
+    .settings-page__body {
+        grid-template-columns: 1fr;
+    }
+
+    /* Horizontal scroll tabs on mobile */
+    .settings-page__tab-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 4px;
+        padding: 6px;
+        scrollbar-width: none;
+    }
+
+    .settings-page__tab-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .settings-page__tab-btn {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 8px 14px;
+        font-size: 12.5px;
+    }
+
+    .settings-section__row {
+        flex-direction: column;
+    }
+
+    .settings-section__field--inline {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 539px) {
+    .settings-page__panel {
+        padding: 18px;
+    }
+
+    .settings-page__title {
+        font-size: 20px;
+    }
+}

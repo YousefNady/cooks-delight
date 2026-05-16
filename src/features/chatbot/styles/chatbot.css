@@ -32,7 +32,7 @@
 ============================================== */
 .aic-widget-container {
   position: fixed;
-  bottom: 100px;
+  bottom: 25px;
   right:  20px;
   z-index: 10000;
   font-family: 'DM Sans', sans-serif;
@@ -185,11 +185,11 @@
 ============================================== */
 .aic-chat-window {
   position: absolute;
-  bottom: 76px;
+  bottom: 0;
   right: 0;
   width:  400px;
-  height: 580px;
-
+  height: 600px;
+  max-height: 100vh;
   background: var(--chef-bg);
   border-radius: var(--chef-radius);
   box-shadow: var(--chef-shadow-lg);
@@ -208,6 +208,8 @@
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   transform-origin: bottom right;
+
+  z-index: 9999;
 }
 
 .aic-chat-window.open {

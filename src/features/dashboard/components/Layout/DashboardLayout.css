@@ -1,0 +1,62 @@
+/* =============================================================================
+   DashboardLayout — BEM component
+   Block: .dashboard-layout
+   ============================================================================= */
+
+/* ── Block ── */
+.dashboard-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f8f5f2;
+  font-family: "Lato", "Helvetica Neue", sans-serif;
+}
+
+/* ── Right column: header + scrollable content ── */
+.dashboard-layout__body {
+  flex: 1;
+  min-width: 0;
+  /* prevent flex children from overflowing */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Scrollable main area ── */
+.dashboard-layout__main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 40px;
+  box-sizing: border-box;
+  /* styled scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #e5e0db transparent;
+  /* focus ring suppressed — managed programmatically */
+  outline: none;
+}
+
+.dashboard-layout__main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dashboard-layout__main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-layout__main::-webkit-scrollbar-thumb {
+  background-color: #ddd8d3;
+  border-radius: 20px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-layout__main {
+    padding: 16px 16px 32px;
+  }
+}

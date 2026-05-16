@@ -1,0 +1,139 @@
+/* =============================================================================
+   StatsCard — BEM component
+   Block   : .stats-card
+   Elements: __icon-bubble  __body  __label  __value  __helper
+   Modifiers (on block): --orange  --green  --purple
+   ============================================================================= */
+
+/* ── Shared design tokens (inherit global CSS vars when available) ── */
+.stats-card {
+    --stats-card-bg: #ffffff;
+    --stats-card-radius: 16px;
+    --stats-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --stats-card-padding: 20px 22px;
+    --stats-card-gap: 16px;
+
+    /* Bubble sizing */
+    --bubble-size: 54px;
+    --bubble-radius: 50%;
+
+    /* Typography */
+    --font-sans: "Lato", "Helvetica Neue", sans-serif;
+    --color-label: #9a9088;
+    --color-value: #1a1714;
+    --color-helper: #b5ada6;
+}
+
+/* ── Block ── */
+.stats-card {
+    display: flex;
+    align-items: center;
+    gap: var(--stats-card-gap);
+    background: var(--stats-card-bg);
+    border-radius: var(--stats-card-radius);
+    padding: var(--stats-card-padding);
+    box-shadow: var(--stats-card-shadow);
+    font-family: var(--font-sans);
+    /* Smooth lift on hover — gives subtle interactive feel */
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    cursor: default;
+    /* Let the parent grid/flex control width */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stats-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09), 0 2px 4px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+/* ── Icon bubble ── */
+.stats-card__icon-bubble {
+    flex-shrink: 0;
+    width: var(--bubble-size);
+    height: var(--bubble-size);
+    border-radius: var(--bubble-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Background and icon color are set per variant below */
+}
+
+.stats-card__icon-bubble svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ── Text body ── */
+.stats-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.stats-card__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-label);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stats-card__value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-value);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stats-card__helper {
+    font-size: 11.5px;
+    color: var(--color-helper);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =============================================================================
+   Color variants
+   Each variant sets the bubble background and icon tint.
+   ============================================================================= */
+
+/* ── Orange (Saved Recipes) ── */
+.stats-card--orange .stats-card__icon-bubble {
+    background-color: #fff0e8;
+    color: #f97316;
+}
+
+/* ── Green (Recently Viewed) ── */
+.stats-card--green .stats-card__icon-bubble {
+    background-color: #edf7f2;
+    color: #22c55e;
+}
+
+/* ── Purple (Recipes Explored) ── */
+.stats-card--purple .stats-card__icon-bubble {
+    background-color: #f0edfb;
+    color: #8b5cf6;
+}
+
+/* ── Responsive: reduce padding on narrow viewports ── */
+@media (max-width: 480px) {
+    .stats-card {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .stats-card__value {
+        font-size: 24px;
+    }
+
+    .stats-card__icon-bubble {
+        --bubble-size: 46px;
+    }
+}

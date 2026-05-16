@@ -1,35 +1,62 @@
+// src/features/recipe-details/pages/RecipeDetails.tsx
+//
+// Global tracking guarantee:
+//   persistRecentlyViewed(id) is called inside the useEffect that fires on
+//   every mount of this component, regardless of which page or navigation
+//   route the user came from (Recipes tab, Search, Dashboard, Similar Recipes,
+//   direct URL — all routes converge here). No additional call sites are needed.
+//
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getRecipeById, getRecipes } from "../../recipes/services/API";
 import type { Recipe } from "../../recipes/types/Recipe";
 import "../styles/recipe-details.css";
 
-import filledStar from "../../../assets/recipe-details/Vector2.svg";
-import unfilledStar from "../../../assets/recipe-details/Vector.svg";
-import timeIcon from "../../../assets/recipe-details/timer.svg";
-import servingsIcon from "../../../assets/recipe-details/servings.svg";
+import filledStar     from "../../../assets/recipe-details/Vector2.svg";
+import unfilledStar   from "../../../assets/recipe-details/Vector.svg";
+import timeIcon       from "../../../assets/recipe-details/timer.svg";
+import servingsIcon   from "../../../assets/recipe-details/servings.svg";
 import difficultyIcon from "../../../assets/recipe-details/temp-icon.svg";
 import SimilarRecipesSection from "../components/SimilarRecipes";
 import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
+// Single import covers BOTH storage keys (cd_recently_viewed + cd_total_explored).
+// The Dashboard hook reads both keys and will reflect the update on next render
+// or immediately if the Dashboard is already mounted (via the storage event listener).
+// import { persistRecentlyViewed } from "../../dashboard/hooks/Userecentlyviewed";
+import { markRecipeAsViewed } from "../../dashboard/utils/recentlyViewedStorage";
+
+
+
 export default function RecipeDetails() {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [recipe,     setRecipe]     = useState<Recipe | null>(null);
   const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
     if (!id) return;
+    const numericId = Number(id);
+
+    // ── Track this visit globally ────────────────────────────────────────────
+    // Writes to both localStorage keys in one atomic call:
+    //   cd_recently_viewed → prepend + deduplicate + cap at 10
+    //   cd_total_explored  → append only on first-ever visit (unique set)
+    //
+    // This fires for EVERY route that leads to a recipe detail page:
+    //   /recipes/:id, /explore/:id, /favorites/:id, /recently-viewed/:id, etc.
+    markRecipeAsViewed(numericId);
+
     getRecipeById(id).then((data) => setRecipe(data ?? null));
     getRecipes().then((data) => setAllRecipes(data.recipes));
   }, [id]);
 
-  if (!recipe) return <p>Loading...</p>;
+  if (!recipe) return <p>Loading…</p>;
 
   const totalMinutes = (recipe.prepTimeMinutes || 0) + (recipe.cookTimeMinutes || 0);
-  const hours = Math.floor(totalMinutes / 60);
+  const hours   = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
-  const tags = recipe?.tags ?? [];
+  const tags = recipe.tags ?? [];
 
   const renderStars = (rating: number) =>
     Array.from({ length: 5 }, (_, i) => (
@@ -53,7 +80,7 @@ export default function RecipeDetails() {
 
           <p className="recipe-intro">
             Welcome to Cooks Delight, where culinary dreams come alive! Today,
-            we embark on a journey of flavors with a dish that promises to
+            we embark on a journey of flavours with a dish that promises to
             elevate your dining experience – our {recipe.name}.
           </p>
 
@@ -120,40 +147,24 @@ export default function RecipeDetails() {
             <div className="share-section">
               <p className="share-text">Share</p>
               <div className="story__social">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Facebook"
-                className="story__social-link"
-              >
-                <FaFacebookF />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram"
-                className="story__social-link"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="YouTube"
-                className="story__social-link"
-              >
-                <FaYoutube />
-              </a>
-            </div>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer"
+                  aria-label="Facebook" className="story__social-link">
+                  <FaFacebookF />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noreferrer"
+                  aria-label="Instagram" className="story__social-link">
+                  <FaInstagram />
+                </a>
+                <a href="https://youtube.com" target="_blank" rel="noreferrer"
+                  aria-label="YouTube" className="story__social-link">
+                  <FaYoutube />
+                </a>
+              </div>
             </div>
           </div>
 
           {/* Right: sidebar */}
           <div className="recipe-details__side">
-            {/* Ingredients */}
             <div className="recipe-details__ingredients">
               <h3 className="ingredients-title">Ingredients</h3>
               <ul className="ingredients-sublist">
@@ -163,7 +174,6 @@ export default function RecipeDetails() {
               </ul>
             </div>
 
-            {/* Nutrition */}
             <div className="recipe-details__nutrition">
               <h3 className="nutrition-title">Nutritional Value</h3>
               <p className="nutrition-text">Per serving:</p>
@@ -181,7 +191,7 @@ export default function RecipeDetails() {
         </div>
       </div>
 
-      {/* ── Similar recipes (shared component – untouched) ── */}
+      {/* ── Similar recipes ── */}
       <div className="similar-recipes-container">
         <SimilarRecipesSection recipes={allRecipes} currentRecipe={recipe} />
       </div>
